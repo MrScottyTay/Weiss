@@ -14,7 +14,8 @@ import weiss.message.*;
  * If the object is found, it passes the message on to the selected object. If not, the object is passed to its assigned {@link weiss.agent.Router Router}.
  * 
  *
- * @author Adam Young
+ * @author Adam Young, Teesside University Sch. of Computing
+ * @author Scott Taylor, Teesside University Sch.of Computing
  */
 public class Portal extends MetaAgent
 {

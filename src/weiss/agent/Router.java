@@ -18,6 +18,7 @@ import weiss.message.*;
  * the message couldn't be sent.
  *
  * @author Adam Young, Teesside University Sch. of Computing
+ * @author Scott Taylor, Teesside University Sch. of Computing
  */
 public class Router extends MetaAgent
 {

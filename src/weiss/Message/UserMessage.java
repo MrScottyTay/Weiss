@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package weiss.Message;
+package weiss.message;
 
 /** Class extending the {@link Message Message} class, to be used for user to user message transmission.
  * This type of message is to be read by user implemented classes, rather than the middleware infrastructure.
