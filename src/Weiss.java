@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package weiss;
+
 
 /**
  * @author Scott Taylor, Teesside University Sch. of Computing
