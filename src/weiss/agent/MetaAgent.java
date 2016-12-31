@@ -1,6 +1,6 @@
-package weiss;
+package weiss.agent;
 
-import weiss.Message.Message;
+import weiss.message.Message;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -16,20 +16,25 @@ public abstract class MetaAgent extends LinkedBlockingQueue
 {
     private String name;
     private MetaAgent portal;
+    private int scope;  //0 = global, 1 = router-wide, 2 = portal-wide
     //NodeMonitor monitor;
     
-    /**
-     * Constructor to initialise a MetaAgent object.
-     * @param n Name of MetaAgent.
-     * @param p {@link weiss.Portal Portal} belonging to MetaAgent.
-     */
     public MetaAgent(String n, MetaAgent p)
     {
         setName(n);
-        //need to check for validity of name;
-        
         setPortal(p);
-        //need to send messages for registration to portal
+        setScope(0);
+    }
+    /**
+     * Constructor to initialise a MetaAgent object.
+     * @param n Name of MetaAgent.
+     * @param p {@link weiss.agent.Portal Portal} belonging to MetaAgent.
+     */
+    public MetaAgent(String n, MetaAgent p, int s)
+    {
+        setName(n);
+        setPortal(p);
+        setScope(s);
     }
     
     //--------------------------------------------------------------------------
@@ -43,12 +48,16 @@ public abstract class MetaAgent extends LinkedBlockingQueue
         return name;
     }
     /**
-     * Getter for {@link weiss.Portal Portal} object.
-     * @return {@link weiss.Portal Portal} pointer.
+     * Getter for {@link weiss.agent.Portal Portal} object.
+     * @return {@link weiss.agent.Portal Portal} pointer.
      */
     public MetaAgent getPortal()
     {
         return portal;
+    }
+    public int getScope()
+    {
+        return scope;
     }
     //--------------------------------------------------------------------------
     //SETTERS
@@ -63,12 +72,18 @@ public abstract class MetaAgent extends LinkedBlockingQueue
         //need to check for validity of name
     }
     /**
-     * Setter for {@link weiss.Portal Portal} object.
-     * @param p {@link weiss.Portal Portal} object.
+     * Setter for {@link weiss.agent.Portal Portal} object.
+     * @param p {@link weiss.agent.Portal Portal} object.
      */
     public final void setPortal(MetaAgent p)
     {
         portal = p;
+        
+        //need to change registration and scope
+    }
+    public final void setScope(int s)
+    {
+        scope = s;
         
         //need to change registration and scope
     }
