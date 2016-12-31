@@ -1,7 +1,9 @@
 package weiss.agent;
 
+import java.util.HashMap;
 import weiss.message.Message;
 import java.util.concurrent.LinkedBlockingQueue;
+import weiss.message.UserMessage;
 
 /**
  * An abstract class detailing the construction of a MetaAgent object, to be implemented
@@ -15,26 +17,34 @@ import java.util.concurrent.LinkedBlockingQueue;
 public abstract class MetaAgent extends LinkedBlockingQueue
 {
     private String name;
-    private MetaAgent portal;
+    protected MetaAgent superAgent;
     private int scope;  //0 = global, 1 = router-wide, 2 = portal-wide
     //NodeMonitor monitor;
     
-    public MetaAgent(String n, MetaAgent p)
+    protected final HashMap routingTable = new HashMap();
+    
+    /**
+     * Constructor to initialise a MetaAgetn object.
+     * @param name {@link weiss.agent.Portal Portal} belonging to MetaAgent.
+     * @param superAgent Scope of the MetaAgent.
+     */
+    public MetaAgent(String name, MetaAgent superAgent)
     {
-        setName(n);
-        setPortal(p);
+        setName(name);
+        setSuperAgent(superAgent);
         setScope(0);
     }
     /**
-     * Constructor to initialise a MetaAgent object.
-     * @param n Name of MetaAgent.
-     * @param p {@link weiss.agent.Portal Portal} belonging to MetaAgent.
+     * Constructor to initialise a MetaAgent object, and setting the scope.
+     * @param name Name of MetaAgent.
+     * @param superAgent {@link weiss.agent.Portal Portal} belonging to MetaAgent.
+     * @param scope Scope of the MetaAgent.
      */
-    public MetaAgent(String n, MetaAgent p, int s)
+    public MetaAgent(String name, MetaAgent superAgent, int scope)
     {
-        setName(n);
-        setPortal(p);
-        setScope(s);
+        setName(name);
+        setSuperAgent(superAgent);
+        setScope(scope);
     }
     
     //--------------------------------------------------------------------------
@@ -53,8 +63,13 @@ public abstract class MetaAgent extends LinkedBlockingQueue
      */
     public MetaAgent getPortal()
     {
-        return portal;
+        return superAgent;
     }
+    
+    /**
+     * Method to set scope of MetaAgent
+     * @return Integer relating to the scope of the MetaAgent
+     */
     public int getScope()
     {
         return scope;
@@ -73,21 +88,39 @@ public abstract class MetaAgent extends LinkedBlockingQueue
     }
     /**
      * Setter for {@link weiss.agent.Portal Portal} object.
-     * @param p {@link weiss.agent.Portal Portal} object.
+     * @param superAgent {@link weiss.agent.Portal Portal} object.
      */
-    public final void setPortal(MetaAgent p)
+    public final void setSuperAgent(MetaAgent superAgent)
     {
-        portal = p;
+        if(superAgent.routingTable.containsKey(this.getName()))
+            this.superAgent = superAgent;
+        else
+        {
+           this.msgHandler(new UserMessage(superAgent.getName(), this.getName(),
+                   "This name is already taken, please try another."));
+        }
         
-        //need to change registration and scope
-    }
-    public final void setScope(int s)
-    {
-        scope = s;
-        
-        //need to change registration and scope
+        //need to change scope
     }
     
+    /**
+     * Method to set scope of MetaAgent
+     * @param scope Integer relating to the scope of the MetaAgent
+     */
+    public final void setScope(int scope)
+    {
+        this.scope = scope;
+        
+        //need to change registration and scope
+    }
+    /**
+     * Method to send message.
+     * @param message Message object.
+     */
+    public final void sendMessage(Message message)
+    {
+        superAgent.msgHandler(message);
+    }
     /**
      * Method to handle incoming messages.
      * @param msg Message object.
