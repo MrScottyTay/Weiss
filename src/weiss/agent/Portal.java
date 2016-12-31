@@ -1,6 +1,7 @@
 
 package weiss.agent;
 
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weiss.message.*;
@@ -18,7 +19,7 @@ import weiss.message.*;
  */
 public class Portal extends MetaAgent
 {
-
+    protected final HashMap routingTable = new HashMap();
     
     /**
      * Constructor for the Portal class.

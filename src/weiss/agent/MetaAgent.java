@@ -21,7 +21,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue
     private int scope;  //0 = global, 1 = router-wide, 2 = portal-wide
     //NodeMonitor monitor;
     
-    protected final HashMap routingTable = new HashMap();
+    
     
     /**
      * Constructor to initialise a MetaAgetn object.
@@ -91,15 +91,9 @@ public abstract class MetaAgent extends LinkedBlockingQueue
      * @param superAgent {@link weiss.agent.Portal Portal} object.
      */
     public final void setSuperAgent(MetaAgent superAgent)
-    {
-        if(superAgent.routingTable.containsKey(this.getName()))
+    {   
             this.superAgent = superAgent;
-        else
-        {
-           this.msgHandler(new UserMessage(superAgent.getName(), this.getName(),
-                   "This name is already taken, please try another."));
-        }
-        
+
         //need to change scope
     }
     

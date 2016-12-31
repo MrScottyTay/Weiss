@@ -19,7 +19,7 @@ import weiss.message.*;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class Router extends MetaAgent
+public class Router extends Portal
 {
     
     /**
