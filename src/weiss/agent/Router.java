@@ -1,7 +1,6 @@
 
 package weiss.agent;
 
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weiss.message.*;
@@ -20,36 +19,35 @@ import weiss.message.*;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class Router extends MetaAgent
+public class Router extends Portal
 {
-    /**
-     * HashMap holding references to MetaAgents stored in connected portals.
-     */
-    private HashMap routingTable = new HashMap();
     
     /**
      * Constructor for the Router class
-     * @param n String for the name variable.
-     * @param p String pointing to the next Router in the chain.
+     * @param name String for the name variable.
+     * @param nextRouter String pointing to the next Router in the chain.
      */
-    public Router(String n, MetaAgent p)
+    public Router(String name, MetaAgent nextRouter)
     {
-        super(n, p);
+        super(name, nextRouter);
     }
 
     //--------------------------------------------------------------------------
     //Message Handlers
     //--------------------------------------------------------------------------
+    
+    /**
+     * Method to handle messages coming into the MetaAgent
+     * @param msg A Message object.
+     */
     @Override
     public void msgHandler(Message msg)
     {
         String address = msg.getTo();   //puts the address of the message into a local variable
-        if(address.equals(getName()))   //if the address is for this Router...
+        if(address.equals(this.getName()))   //if the address is for this Router...
         {
             if(msg instanceof SysMessage)   //if it is a SysMessage
-            {
                 sysMsgHandler((SysMessage)msg); //gets sent to the SysMessageHandler
-            }
             //if(msg instanceof RouterMessage)
         }
         else
@@ -73,12 +71,20 @@ public class Router extends MetaAgent
         }
         
     }
-    
+    /**
+     * Method to handle system messages.
+     * @param msg A SysMessage object.
+     */
     private void sysMsgHandler(SysMessage msg)
     {
-        if(msg.getMsg().equals("Registration"))
+        switch(msg.getMsg())
         {
-            registration(msg);
+            case "reg":
+                this.registration(msg);
+                break;
+            case "dereg":
+                this.deregistration(msg);
+                break;
         }
     }
     
@@ -88,10 +94,23 @@ public class Router extends MetaAgent
     //Operations
     //--------------------------------------------------------------------------
     
+    /**
+     * Method to register subAgents to this MetaAgent.
+     * @param msg 
+     */
     private void registration(SysMessage msg)
     {
         MetaAgent agent = msg.getAgent();
         String n = agent.getName();
         routingTable.put(n, agent);
+    }
+    
+    /**
+     * Method to de-register subAgents from this MetaAgent.
+     * @param msg A SysMessage object.
+     */
+    private void deregistration(SysMessage msg)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
