@@ -7,9 +7,24 @@ package weiss.Message;
 
 /**
  *
- * @author Adam Young
+ * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class RouterMessage extends Message
+public class RouterMessage extends DecoratedMessage
 {
+    String origin;
+    
+    RouterMessage(String t, String f, String m, Message c, String o)
+    {
+        super(t, f, m, c);
+        origin = o;
+    }
+    
+    //--------------------------------------------------------------------------
+    //Getters
+    //--------------------------------------------------------------------------
+    public String getOrigin()
+    {
+        return origin;
+    }
     
 }

@@ -2,12 +2,10 @@ package weiss.agent;
 
 import java.util.HashMap;
 import java.util.Map;
-import weiss.message.Message;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import weiss.message.SysMessage;
-import weiss.message.UserMessage;
+import weiss.message.*;
 
 /**
  * An abstract class detailing the construction of a MetaAgent object, to be implemented
@@ -64,6 +62,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
     
     //--------------------------------------------------------------------------
     //GETTERS
+    //--------------------------------------------------------------------------
     /**
      * Getter for name variable.
      * @return name String.
@@ -91,6 +90,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
     }
     //--------------------------------------------------------------------------
     //SETTERS
+    //--------------------------------------------------------------------------
     /**
      * Setter for name variable.
      * @param n name String.
@@ -121,11 +121,6 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
         
         //need to change registration and scope
     }
-
-    /**
-     * Method to handle incoming messages.
-     * @param msg Message object.
-     */
     
     @Override
     public String toString()
@@ -156,6 +151,8 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
 
         if ((to.equals(this.getName()) && (msg instanceof SysMessage)))
             this.sysMsgHandler((SysMessage) msg); //it gets sent to the handler specifically for SysMessages
+        else if((to.equals(this.getName()) && (msg instanceof RouterMessage)))
+            this.RouterMsgHandler((RouterMessage) msg);//gets sent to the handler specifically for RouterMessages
         else
             this.userMsgHandler((UserMessage) msg);
     }
