@@ -1,8 +1,6 @@
 
 package weiss.agent;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import weiss.message.*;
 
 /** *  Class used for handling messages from {@link weiss.agent.Portal Portal} classes, and routing them to the correct
