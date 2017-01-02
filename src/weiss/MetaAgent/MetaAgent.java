@@ -1,12 +1,17 @@
 package weiss.MetaAgent;
 
+<<<<<<< HEAD:src/weiss/MetaAgent/MetaAgent.java
 import Weiss.Manager.NodeMonitor;
 import java.util.ArrayList;
 import weiss.message.Message;
+=======
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
+>>>>>>> refs/remotes/origin/master:src/weiss/agent/MetaAgent.java
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import weiss.message.SysMessage;
-import weiss.message.UserMessage;
+import weiss.message.*;
 
 /**
  * An abstract class detailing the construction of a MetaAgent object, to be implemented
@@ -60,6 +65,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     
     //--------------------------------------------------------------------------
     //GETTERS
+    //--------------------------------------------------------------------------
     /**
      * Getter for name variable.
      * @return name String.
@@ -87,6 +93,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     
     //--------------------------------------------------------------------------
     //SETTERS
+    //--------------------------------------------------------------------------
     /**
      * Setter for name variable.
      * @param n name String.
@@ -194,6 +201,8 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
 
         if ((to.equals(this.getName()) && (msg instanceof SysMessage)))
             this.sysMsgHandler((SysMessage) msg); //it gets sent to the handler specifically for SysMessages
+        else if((to.equals(this.getName()) && (msg instanceof RouterMessage)))
+            this.RouterMsgHandler((RouterMessage) msg);//gets sent to the handler specifically for RouterMessages
         else
             this.userMsgHandler((UserMessage) msg);
     }

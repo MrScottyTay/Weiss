@@ -40,4 +40,9 @@ public class UserMessage extends Message
         return id;
     }
     
+    @Override
+    public String toString()
+    {
+        return super.toString() + "\nID: " + id;
+    }
 }

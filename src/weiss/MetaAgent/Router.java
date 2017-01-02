@@ -1,6 +1,8 @@
 
 package weiss.MetaAgent;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import weiss.message.*;
 
 /** *  Class used for handling messages from {@link weiss.MetaAgent.Portal Portal} classes, and routing them to the correct
@@ -31,7 +33,40 @@ public class Router extends Portal implements Runnable
     }
     
     //--------------------------------------------------------------------------
+<<<<<<< HEAD:src/weiss/MetaAgent/Router.java
     //USER MESSAGE HANDLING
+=======
+    //Operations
+    //--------------------------------------------------------------------------
+    
+    private void UserMsgHandler(UserMessage msg)
+    {
+        if(routingTable.containsKey(msg.getTo()))
+        {
+            pushToAgent(msg.getTo(), msg);
+        }
+        else
+        {
+            RouterMessage rMsg = new RouterMessage(msg.getTo(), msg.getFrom(), msg.getMsg(), msg, getName());
+            pushToSuperAgent(rMsg);
+        }
+    }
+    
+    private void RouterMsgHandler(RouterMessage msg)
+    {
+        if(msg.getOrigin().equals(getName()))
+        {
+            Message contents = msg.getContents();
+            ReplyMessage reply = new ReplyMessage(getName(), contents.getFrom(), contents.toString(), contents);
+            pushToAgent(msg.getFrom(), reply);
+        }
+        else
+        {
+            pushToSuperAgent(msg);
+        }
+    }
+    
+>>>>>>> refs/remotes/origin/master:src/weiss/agent/Router.java
     /**
      * Method to register subAgents to this MetaAgent.
      * @param msg 
@@ -50,4 +85,6 @@ public class Router extends Portal implements Runnable
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    
 }

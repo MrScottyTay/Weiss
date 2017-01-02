@@ -73,10 +73,10 @@ public abstract class Message
     {
         return timestamp;
     }
-    /**
-     * Getter for the id variable.
-     * @return String of id variable.
-     */
-    
+    @Override
+    public String toString()
+    {
+        return "To: " + to + "\nFrom: " + from + "\nMessage: " + msg + "\nTime Sent: " + timestamp;
+    }
     
 }
