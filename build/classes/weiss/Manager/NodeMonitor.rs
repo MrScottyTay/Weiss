@@ -1,0 +1,1 @@
+Weiss.Manager.NodeMonitor
