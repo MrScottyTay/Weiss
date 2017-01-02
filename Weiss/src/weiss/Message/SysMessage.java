@@ -5,7 +5,7 @@
  */
 package weiss.message;
 
-import weiss.agent.MetaAgent;
+import weiss.MetaAgent.MetaAgent;
 
 /** Class extending the {@link Message Message} class, to be used for system message transmission.
  * This type of message can be read by all MetaAgents, and contains instructions rather than text.
@@ -31,6 +31,11 @@ public class SysMessage extends Message
         super(f, t, m);
         agent = a;
         //Needs additional fields adding.
+    }
+    
+    public SysMessage(String f, String t, String m)
+    {
+        super(f, t, m);
     }
     
     //--------------------------------------------------------------------------
