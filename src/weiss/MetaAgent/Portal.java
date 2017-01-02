@@ -1,4 +1,4 @@
-package weiss.agent;
+package weiss.MetaAgent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,16 +8,16 @@ import weiss.message.*;
 
 /**
  * * Class used for handling messages from both
- * {@link weiss.agent.MetaAgent MetaAgent} classes and
- * {@link weiss.agent.Router Router} classes, and routing them to the correct
- * destination. The class implements {@link weiss.agent.MetaAgent MetaAgent},
+ * {@link weiss.MetaAgent.MetaAgent MetaAgent} classes and
+ * {@link weiss.MetaAgent.Router Router} classes, and routing them to the correct
+ * destination. The class implements {@link weiss.MetaAgent.MetaAgent MetaAgent},
  * which is the basis for all of our MAS classes.
  * <p>
  * When the object receives a message, it checks it's own
  * {@link Portal#routingTable Routing Table} for the value found in the
  * {@link weiss.Message.Message#to To} field. If the object is found, it passes
  * the message on to the selected object. If not, the object is passed to its
- * assigned {@link weiss.agent.Router Router}.
+ * assigned {@link weiss.MetaAgent.Router Router}.
  *
  *
  * @author Adam Young, Teesside University Sch. of Computing
@@ -40,9 +40,9 @@ public class Portal extends MetaAgent implements Runnable
         this.routingTable = new HashMap<>();
 
     }
-
     /**
-     *
+     *  Constructor for the Portal class.
+     * 
      * @param name String of name variable.
      * @param superAgent MetaAgent pointer of Router.
      * @param scope Integer detailing scope of Router.
@@ -53,6 +53,63 @@ public class Portal extends MetaAgent implements Runnable
         this.routingTable = new HashMap<>();
     }
 
+    //--------------------------------------------------------------------------
+    //USER MESSAGE HANDLING
+    @Override
+    protected void userMsgHandler(UserMessage msg)
+    {
+        if (routingTable.containsKey(msg.getTo())) //checks if the routing table has address
+        {
+            this.pushToSubAgent(msg.getTo(), msg);
+        }
+            else   //if the portal does not have the addressed agent in its routing table... 
+            {
+                if (superAgent != null)
+                    this.pushToSuperAgent(msg.getTo(), msg);
+                else
+                {
+                    try
+                    {
+                        SysMessage error = new SysMessage(this.getName(), msg.getFrom(), "noAgent");
+                        routingTable.get(msg.getFrom()).put(error);
+                    } 
+                    catch (InterruptedException ex)
+                    {
+                        Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+            
+    }
+    
+    protected void pushToSubAgent(String address, Message msg)
+    {
+        MetaAgent agent = (MetaAgent) routingTable.get(address); //gets the addressed agent
+        try
+        {
+            agent.put((UserMessage) msg); //puts the message onto the agent's blocking queue
+        } catch (InterruptedException ex)
+        {
+            Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    protected void pushToSuperAgent(String to, Message msg)
+    {
+        try //passes the message to the next MetaAgent in the chain
+        {
+            superAgent.put(msg);    //puts the message onto the router's blocking queue
+        } catch (InterruptedException ex)
+        {
+            Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    //SYSTEM MESSAGE HANDLING
+    
+    //--------------------------------------------------------------------------
+    //REGISTRATION
     @Override
     protected void sysMsgHandler(SysMessage msg)
     {
@@ -66,65 +123,6 @@ public class Portal extends MetaAgent implements Runnable
                 break;
         }
     }
-    
-    @Override
-    protected void userMsgHandler(UserMessage msg)
-    {
-        if (routingTable.containsKey(msg.getTo())) //checks if the routing table has address
-        {
-            pushToAgent(msg.getTo(), msg);
-        }
-            else   //if the portal does not have the addressed agent in its routing table... 
-            {
-                if (superAgent != null)
-                    pushToSuperAgent(msg.getTo(), msg);
-                else
-                {
-                    try
-                    {
-                        (routingTable.get(msg.getFrom())).put(new SysMessage(this.getName(), msg.getFrom(), "noAgent"));
-                    } 
-                    catch (InterruptedException ex)
-                    {
-                        Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-            
-    }
-    
-    protected void pushToAgent(String address, Message msg)
-    {
-        MetaAgent agent = (MetaAgent) routingTable.get(address); //gets the addressed agent
-        try
-        {
-            agent.put((UserMessage) msg); //puts the message onto the agent's blocking queue
-        } catch (InterruptedException ex)
-        {
-            Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    protected void pushToSuperAgent(String address, Message msg)
-    {
-        try //passes the message to the next MetaAgent in the chain
-        {
-            superAgent.put(msg);    //puts the message onto the router's blocking queue
-        } catch (InterruptedException ex)
-        {
-            Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Method used to handle system messages
-     *
-     * @param msg A SysMessage variable.
-     */
-
-
-    //--------------------------------------------------------------------------
-    //Operations
     /**
      * Method to register a subAgent to this MetaAgent
      *
@@ -132,15 +130,7 @@ public class Portal extends MetaAgent implements Runnable
      */
     private void registration(SysMessage msg)
     {
-        MetaAgent agent = msg.getAgent();   //gets the agent from the message        
-        if (routingTable.containsKey(agent.getName()))
-        {
-            agent.msgHandler(new UserMessage(this.getName(), agent.getName(),
-                    "You cannot use this name, please try another."));
-        } else
-        {
-            routingTable.put(agent.getName(), agent); //puts the agent with its name as the key into the routingTable
-        }
+        this.localRegistration(msg);
         //if the scope is for router-wide or global AND this registration message did not come from the router
         //it will tell the router to also register this agent
         /*
@@ -159,11 +149,28 @@ public class Portal extends MetaAgent implements Runnable
         }
          */
     }
-
+    private void localRegistration(SysMessage msg)
+    {
+        MetaAgent agent = msg.getAgent();   //gets the agent from the message        
+        if (routingTable.containsKey(agent.getName()))
+        {
+            agent.msgHandler(new UserMessage(this.getName(), agent.getName(),
+                    "You cannot use this name, please try another."));
+        } else
+        {
+            routingTable.put(agent.getName(), agent); //puts the agent with its name as the key into the routingTable
+        }
+    }
+    
+    //--------------------------------------------------------------------------
+    //DEREGISTRATION
     private void deregistration(SysMessage msg)
     {
         //To do
     }
-
+    private void localDeregistration(SysMessage msg)
+    {
+        
+    }
 
 }

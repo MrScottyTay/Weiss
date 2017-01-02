@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package WeissManager;
+package Weiss.Manager;
 
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
@@ -14,7 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-import weiss.agent.MetaAgent;
+import weiss.MetaAgent.MetaAgent;
 
 /**
  *
@@ -61,8 +61,8 @@ public class TreePane
             @Override
             public void valueChanged(TreeSelectionEvent e)
             {
-                TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();               
-                
+                TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
+
                 switch (treeNode.getLevel())
                 {
                     case 0:
@@ -102,8 +102,7 @@ public class TreePane
         if (parentPath == null)
         {
             parentNode = rootNode;
-        }
-        else
+        } else
         {
             parentNode = (TreeNode) parentPath.getLastPathComponent();
         }
@@ -111,7 +110,7 @@ public class TreePane
 
         return addNode(parentNode, child, true);
     }
-    
+
     public TreeNode addNode(DefaultMutableTreeNode parent,
             MetaAgent child,
             boolean shouldBeVisible)
@@ -129,7 +128,7 @@ public class TreePane
         }
 
         child.start();
-        
+
         return childNode;
     }
 }

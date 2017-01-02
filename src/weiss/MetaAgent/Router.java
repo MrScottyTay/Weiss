@@ -1,9 +1,9 @@
 
-package weiss.agent;
+package weiss.MetaAgent;
 
 import weiss.message.*;
 
-/** *  Class used for handling messages from {@link weiss.agent.Portal Portal} classes, and routing them to the correct
+/** *  Class used for handling messages from {@link weiss.MetaAgent.Portal Portal} classes, and routing them to the correct
  * destination. Routers are linked together in a pseudo linked list.
  * <p>
  * The Router wraps the original message with its own name, and checks each message it receives for that name.
@@ -29,12 +29,9 @@ public class Router extends Portal implements Runnable
     {
         super(name, nextRouter);
     }
-
     
     //--------------------------------------------------------------------------
-    //Operations
-    //--------------------------------------------------------------------------
-    
+    //USER MESSAGE HANDLING
     /**
      * Method to register subAgents to this MetaAgent.
      * @param msg 
@@ -44,8 +41,7 @@ public class Router extends Portal implements Runnable
         
         MetaAgent agent = msg.getAgent();
         routingTable.put(agent.getName(), agent);
-    }
-    
+    } 
     /**
      * Method to de-register subAgents from this MetaAgent.
      * @param msg A SysMessage object.

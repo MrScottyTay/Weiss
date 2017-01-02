@@ -5,7 +5,7 @@
  */
 package weiss.message;
 
-import weiss.agent.MetaAgent;
+import weiss.MetaAgent.MetaAgent;
 
 /** Class extending the {@link Message Message} class, to be used for system message transmission.
  * This type of message can be read by all MetaAgents, and contains instructions rather than text.

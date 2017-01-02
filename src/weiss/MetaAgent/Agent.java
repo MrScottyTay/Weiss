@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package weiss.agent;
+package weiss.MetaAgent;
 
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import weiss.message.Message;
 import weiss.message.SysMessage;
 import weiss.message.UserMessage;
@@ -15,15 +18,14 @@ import weiss.message.UserMessage;
  */
 public class Agent extends MetaAgent implements Runnable
 {
-    Thread t;
-    
+
     public Agent(String name, MetaAgent superAgent)
     {
         super(name, superAgent);
-        
-        t = new Thread(this);
     }
 
+    //--------------------------------------------------------------------------
+    //MESSAGE HANDLING
     @Override
     protected void sysMsgHandler(SysMessage msg)
     {        
@@ -34,11 +36,12 @@ public class Agent extends MetaAgent implements Runnable
                 break;            
         }
     }
-
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
         Message message = msg;
+        this.updateClient(message);
+        
         System.out.println("--Agent " + this.getName() + "--" + "\n" +
                             "From: " + message.getFrom() + "\n" +
                             "To: " + message.getTo() + "\n" +

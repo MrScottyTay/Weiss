@@ -1,7 +1,10 @@
 
-import WeissManager.WeissManager;
+import weiss.MetaAgent.Agent;
+import weiss.MetaAgent.Portal;
+import weiss.MetaAgent.MetaAgent;
+import Weiss.Manager.NodeMonitor;
+import Weiss.Manager.WeissManager;
 import java.util.logging.*;
-import weiss.agent.*;
 import weiss.message.*;
 
 /*
@@ -24,7 +27,7 @@ public class Weiss {
         
         WeissManager manager = new WeissManager();
         
-        
+        /*
         MetaAgent portal = new Portal("P1", null);
         portal.start();
         
@@ -50,7 +53,7 @@ public class Weiss {
         
         
         
-        /*     
+        
         NodeMonitor n = new NodeMonitor();
         n.start();
         try
@@ -61,7 +64,6 @@ public class Weiss {
         {
             Logger.getLogger(Weiss.class.getName()).log(Level.SEVERE, null, ex);
         }
-`       */
+        */
     }
-
 }

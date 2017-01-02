@@ -3,27 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package weiss.agent;
+package Weiss.Manager;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Vector;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import weiss.MetaAgent.MetaAgent;
+import weiss.MetaAgent.WeissBase;
 import weiss.message.Message;
+import weiss.message.SysMessage;
+import weiss.message.UserMessage;
 
 /**
  *
  * @author Adam Young
  */
-public class NodeMonitor extends LinkedBlockingQueue implements Runnable
+public class NodeMonitor extends WeissBase implements Runnable
 {
     Thread t;
     Boolean shouldStop;
@@ -34,18 +35,15 @@ public class NodeMonitor extends LinkedBlockingQueue implements Runnable
     public NodeMonitor()
     {
         shouldStop = false;
-        
-        createGUI();
-        
         t = new Thread(this);
     }
     
-    private JDialog createGUI()
+    public void createGUI(MetaAgent agent)
     { 
         data = new Vector();
         
         dialog = new JDialog();
-        dialog.setTitle("Node Monitor");
+        dialog.setTitle("Node Monitor - " + agent.getName());
         dialog.setMinimumSize(new Dimension(200,200));
         dialog.setPreferredSize(new Dimension(400,400));
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -64,13 +62,14 @@ public class NodeMonitor extends LinkedBlockingQueue implements Runnable
         
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
         dialog.add(panel);
+        dialog.pack();
         
-        dialog.repaint();
+        dialog.setVisible(true);
         
-        return dialog;
-    }
+    }  
     
-    private void updateTable(Message msg)
+    @Override
+    protected void sysMsgHandler(SysMessage msg)
     {
         Vector row = new Vector();
         row.add(msg.getFrom());
@@ -80,34 +79,10 @@ public class NodeMonitor extends LinkedBlockingQueue implements Runnable
         data.add(row);
         panel.repaint();
     }
-        
-    public void start()
-    {
-        t.start();
-    }
-    
-    public void stop()
-    {
-        shouldStop = true;
-    }
-    
+
     @Override
-    public void run()
+    protected void userMsgHandler(UserMessage usrMsg)
     {
-        while(!shouldStop)
-        {
-            try
-            {
-                Message msg = (Message) this.take();
-                updateTable(msg);
-                System.out.println("From: " + msg.getFrom() + "\n" +
-                                   "To: " + msg.getTo() + "\n" + 
-                                   "Sent: " + msg.getTime() + "\n");
-            } 
-            catch (InterruptedException ex)
-            {
-                Logger.getLogger(NodeMonitor.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        System.out.println("Invalid target");
     }
 }

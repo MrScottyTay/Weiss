@@ -1,8 +1,8 @@
-package WeissManager;
+package Weiss.Manager;
 
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import weiss.agent.MetaAgent;
+import weiss.MetaAgent.MetaAgent;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
