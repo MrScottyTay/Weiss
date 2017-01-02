@@ -1,2 +1,2 @@
-# Weiß
-Weiß (pronounced Weeb)
+# Weiss
+Weiss 
