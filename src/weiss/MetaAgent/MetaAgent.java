@@ -1,8 +1,14 @@
-package weiss.agent;
+package weiss.MetaAgent;
 
+<<<<<<< HEAD:src/weiss/MetaAgent/MetaAgent.java
+import Weiss.Manager.NodeMonitor;
+import java.util.ArrayList;
+import weiss.message.Message;
+=======
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
+>>>>>>> refs/remotes/origin/master:src/weiss/agent/MetaAgent.java
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weiss.message.*;
@@ -16,48 +22,45 @@ import weiss.message.*;
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
+public abstract class MetaAgent extends WeissBase implements Runnable, Monitorable
 {
-    private final Thread t;
-    private boolean shouldStop;
     
-    private String name;
-    protected MetaAgent superAgent;
+    private String name;    
     private int scope;  //0 = global, 1 = router-wide, 2 = portal-wide
-    protected Map<String, NodeMonitor> nodeMonitorMap; 
-    
-    
+    private ArrayList<NodeMonitor> nodeMonitors;
+    protected NodeMonitor client;
+    protected MetaAgent superAgent;
     
     /**
      * Constructor to initialise a MetaAgetn object.
-     * @param name {@link weiss.agent.Portal Portal} belonging to MetaAgent.
+     * @param name {@link weiss.MetaAgent.Portal Portal} belonging to MetaAgent.
      * @param superAgent Scope of the MetaAgent.
      */
     public MetaAgent(String name, MetaAgent superAgent)
     {
-        this.nodeMonitorMap = new HashMap<>();
+        super();
+        this.nodeMonitors = new ArrayList();
+        this.client = null;
         this.name = name;
         this.superAgent = superAgent;
         this.scope = 0;
-        this.shouldStop = false;
         
-        t = new Thread(this);
     }
     /**
      * Constructor to initialise a MetaAgent object, and setting the scope.
      * @param name Name of MetaAgent.
-     * @param superAgent {@link weiss.agent.Portal Portal} belonging to MetaAgent.
+     * @param superAgent {@link weiss.MetaAgent.Portal Portal} belonging to MetaAgent.
      * @param scope Scope of the MetaAgent.
      */
     public MetaAgent(String name, MetaAgent superAgent, int scope)
     {
-        this.nodeMonitorMap = new HashMap<>();
+        super();
+        
+        this.nodeMonitors = new ArrayList();
+        this.client = null;
         this.name = name;
         this.superAgent = superAgent;
-        this.scope = scope;
-        this.shouldStop = false;
-        
-        t = new Thread(this);
+        this.scope = scope;        
     }
     
     //--------------------------------------------------------------------------
@@ -72,14 +75,13 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
         return name;
     }
     /**
-     * Getter for {@link weiss.agent.Portal Portal} object.
-     * @return {@link weiss.agent.Portal Portal} pointer.
+     * Getter for {@link weiss.MetaAgent.Portal Portal} object.
+     * @return {@link weiss.MetaAgent.Portal Portal} pointer.
      */
     public MetaAgent getPortal()
     {
         return superAgent;
     }
-    
     /**
      * Method to set scope of MetaAgent
      * @return Integer relating to the scope of the MetaAgent
@@ -88,6 +90,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
     {
         return scope;
     }
+    
     //--------------------------------------------------------------------------
     //SETTERS
     //--------------------------------------------------------------------------
@@ -101,16 +104,23 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
         //Validity checks present in superAgent
     }
     /**
-     * Setter for {@link weiss.agent.Portal Portal} object.
-     * @param superAgent {@link weiss.agent.Portal Portal} object.
+     * Setter for {@link weiss.MetaAgent.Portal Portal} object.
+     * @param superAgent {@link weiss.MetaAgent.Portal Portal} object.
      */
     public final void setSuperAgent(MetaAgent superAgent)
     {   
-            this.superAgent = superAgent;
-
-        //need to change scope
+        this.superAgent = superAgent;
+        try
+        {
+            if(this.superAgent != null)
+                this.superAgent.put(new SysMessage(this.getName(), this.superAgent.getName(),
+                    "reg", this));
+        } 
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
     /**
      * Method to set scope of MetaAgent
      * @param scope Integer relating to the scope of the MetaAgent
@@ -122,19 +132,25 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
         //need to change registration and scope
     }
     
+    //--------------------------------------------------------------------------
+    //INTERFACE METHODS
     @Override
-    public String toString()
+    public void addNodeMonitor(NodeMonitor nodeMonitor)
     {
-        return this.getName();
+        this.nodeMonitors.add(nodeMonitor);
     }
-    
-    protected void updateNodeMonitor(Message msg)
+    @Override
+    public void removeNodeMonitor(NodeMonitor nodeMonitor)
     {
-        for(String key : this.nodeMonitorMap.keySet())
+        this.nodeMonitors.remove(nodeMonitor);
+    }
+    public void updateNodeMonitor(Message msg)
+    {
+        for(NodeMonitor node : nodeMonitors)
         {
             try
             {
-                nodeMonitorMap.get(key).put(msg);
+                node.put(msg);
             } 
             catch (InterruptedException ex)
             {
@@ -142,10 +158,44 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
             }
         }
     }
+    @Override
+    public void addClient(NodeMonitor client)
+    {
+        this.client = client;
+    }
+    @Override
+    public void removeClient(NodeMonitor client)
+    {
+        this.client = null;
+    }
+    public void updateClient(Message msg)
+    {
+        try
+        {
+            client.put(msg);
+        } 
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    @Override
+    public boolean hasClient()
+    {
+        return this.client != null;
+    }
+    @Override
+    public boolean hasMonitor()
+    {
+        return !nodeMonitors.isEmpty();
+    }
     
+    //--------------------------------------------------------------------------
+    //CLASS SPECIFIC METHODS
+    @Override
     protected void msgHandler(Message msg)
     {
-        //this.updateNodeMonitor(msg);
+        this.updateNodeMonitor(msg);
         String to = msg.getTo();   //puts the address of the message into a local variable
         String from = msg.getFrom();
 
@@ -156,10 +206,6 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
         else
             this.userMsgHandler((UserMessage) msg);
     }
-
-    protected abstract void sysMsgHandler(SysMessage msg);
-    
-    protected abstract void userMsgHandler(UserMessage msg);
 
     public void sendMessage(String to, String message)
     {
@@ -173,31 +219,9 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
         }
     }
     
-    public void start()
-    {
-        t.start();
-    }
     
-    public void stop()
-    {
-        shouldStop = true;
-    }
     
-    @Override
-    public void run()
-    {
-        while(!shouldStop)
-        {
-            try
-            {
-                Message msg = (Message) this.take();
-                msgHandler(msg);
-            } 
-            catch (InterruptedException ex)
-            {
-                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        
-        }
-    }
+    
+    
+
 }
