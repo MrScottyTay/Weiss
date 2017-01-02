@@ -45,9 +45,4 @@ public class SysMessage extends Message
         return agent;
     }
     
-    @Override
-    public String toString()
-    {
-        return super.toString() + "\nAgent: " + agent.getName();
-    }
 }
