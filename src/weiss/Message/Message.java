@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
 
 /** Class detailing the basic message structure to be used within Weiss. 
  * Uses String variables to provide easier extension with other systems.
@@ -14,11 +13,10 @@ import java.util.UUID;
  */
 public abstract class Message
 {
-    private String from;
-    private String to;
-    private String msg;
-    private String timestamp;
-    private String id;
+    private final String from;
+    private final String to;
+    private final String msg;
+    private final String timestamp;
     
     /**
      * Constructor to create a generic message object.
@@ -38,7 +36,7 @@ public abstract class Message
         timestamp = df.format(now);
         
         //Using UUID as message identifier
-        id = UUID.randomUUID().toString();
+        
     }
     
     //--------------------------------------------------------------------------
@@ -79,9 +77,6 @@ public abstract class Message
      * Getter for the id variable.
      * @return String of id variable.
      */
-    public String getId()
-    {
-        return id;
-    }
+    
     
 }

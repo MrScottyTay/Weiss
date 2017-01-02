@@ -19,7 +19,7 @@ import weiss.message.*;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class Router extends Portal
+public class Router extends Portal implements Runnable
 {
     
     /**
@@ -32,63 +32,6 @@ public class Router extends Portal
         super(name, nextRouter);
     }
 
-    //--------------------------------------------------------------------------
-    //Message Handlers
-    //--------------------------------------------------------------------------
-    
-    /**
-     * Method to handle messages coming into the MetaAgent
-     * @param msg A Message object.
-     */
-    @Override
-    public void msgHandler(Message msg)
-    {
-        String address = msg.getTo();   //puts the address of the message into a local variable
-        if(address.equals(this.getName()))   //if the address is for this Router...
-        {
-            if(msg instanceof SysMessage)   //if it is a SysMessage
-                sysMsgHandler((SysMessage)msg); //gets sent to the SysMessageHandler
-            //if(msg instanceof RouterMessage)
-        }
-        else
-        {
-            if(routingTable.containsKey(address))   //if the routingTable contais the addressed 
-            {
-                MetaAgent agent = (MetaAgent)routingTable.get(address);
-                try
-                {
-                    agent.put(msg);
-                }
-                catch (InterruptedException ex)
-                {
-                    Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            else
-            {
-                //create RouterMessage and send it to next Router in line
-            }
-        }
-        
-    }
-    /**
-     * Method to handle system messages.
-     * @param msg A SysMessage object.
-     */
-    private void sysMsgHandler(SysMessage msg)
-    {
-        switch(msg.getMsg())
-        {
-            case "reg":
-                this.registration(msg);
-                break;
-            case "dereg":
-                this.deregistration(msg);
-                break;
-        }
-    }
-    
-    //private void routerMsgHandler(routerMessage msg)
     
     //--------------------------------------------------------------------------
     //Operations
@@ -100,9 +43,9 @@ public class Router extends Portal
      */
     private void registration(SysMessage msg)
     {
+        
         MetaAgent agent = msg.getAgent();
-        String n = agent.getName();
-        routingTable.put(n, agent);
+        routingTable.put(agent.getName(), agent);
     }
     
     /**

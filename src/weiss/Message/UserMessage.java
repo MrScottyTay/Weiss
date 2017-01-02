@@ -5,6 +5,8 @@
  */
 package weiss.message;
 
+import java.util.UUID;
+
 /** Class extending the {@link Message Message} class, to be used for user to user message transmission.
  * This type of message is to be read by user implemented classes, rather than the middleware infrastructure.
  * <p>
@@ -14,16 +16,28 @@ package weiss.message;
  */
 public class UserMessage extends Message
 {
+    private String id;
     /**
      * Constructor for the UserMessage class.
-     * @param f String of message sender.
-     * @param t String of message receiver.
-     * @param m String of message contents.
+     * @param from String of message sender.
+     * @param to String of message receiver.
+     * @param message String of message contents.
      */
-    public UserMessage(String f, String t, String m)
+    
+    public UserMessage(String from, String to, String message)
     {
-        super(f, t, m);
-        //Needs additional fields adding.
+        super(from, to, message);
+        id = UUID.randomUUID().toString();
+    }
+    
+    public UserMessage(String from, String to, String message, String id)
+    {
+        super(from, to, message);
+    }
+    
+    public String getId()
+    {
+        return id;
     }
     
 }
