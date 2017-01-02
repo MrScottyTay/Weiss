@@ -1,0 +1,1 @@
+weiss.message.Message
