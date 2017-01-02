@@ -1,9 +1,11 @@
 package weiss.agent;
 
 import java.util.HashMap;
+import java.util.Map;
 import weiss.message.Message;
 import java.util.concurrent.LinkedBlockingQueue;
-import weiss.message.UserMessage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * An abstract class detailing the construction of a MetaAgent object, to be implemented
@@ -14,12 +16,15 @@ import weiss.message.UserMessage;
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public abstract class MetaAgent extends LinkedBlockingQueue
+public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
 {
+    private final Thread t;
+    private boolean shouldStop;
+    
     private String name;
     protected MetaAgent superAgent;
     private int scope;  //0 = global, 1 = router-wide, 2 = portal-wide
-    //NodeMonitor monitor;
+    protected Map<String, NodeMonitor> nodeMonitorMap; 
     
     
     
@@ -30,9 +35,13 @@ public abstract class MetaAgent extends LinkedBlockingQueue
      */
     public MetaAgent(String name, MetaAgent superAgent)
     {
-        setName(name);
-        setSuperAgent(superAgent);
-        setScope(0);
+        this.nodeMonitorMap = new HashMap<>();
+        this.name = name;
+        this.superAgent = superAgent;
+        this.scope = 0;
+        this.shouldStop = false;
+        
+        t = new Thread(this);
     }
     /**
      * Constructor to initialise a MetaAgent object, and setting the scope.
@@ -42,9 +51,13 @@ public abstract class MetaAgent extends LinkedBlockingQueue
      */
     public MetaAgent(String name, MetaAgent superAgent, int scope)
     {
-        setName(name);
-        setSuperAgent(superAgent);
-        setScope(scope);
+        this.nodeMonitorMap = new HashMap<>();
+        this.name = name;
+        this.superAgent = superAgent;
+        this.scope = scope;
+        this.shouldStop = false;
+        
+        t = new Thread(this);
     }
     
     //--------------------------------------------------------------------------
@@ -83,8 +96,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue
     public final void setName(String n)
     {
         name = n;
-        
-        //need to check for validity of name
+        //Validity checks present in superAgent
     }
     /**
      * Setter for {@link weiss.agent.Portal Portal} object.
@@ -119,5 +131,50 @@ public abstract class MetaAgent extends LinkedBlockingQueue
      * Method to handle incoming messages.
      * @param msg Message object.
      */
-    abstract public void msgHandler(Message msg);    
+    
+    public void updateNodeMonitor(Message msg)
+    {
+        for(String key : this.nodeMonitorMap.keySet())
+        {
+            try
+            {
+                nodeMonitorMap.get(key).put(msg);
+            } 
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public abstract void msgHandler(Message msg);    
+
+    
+    public void start()
+    {
+        t.start();
+    }
+    
+    public void stop()
+    {
+        shouldStop = true;
+    }
+    
+    @Override
+    public void run()
+    {
+        while(!shouldStop)
+        {
+            try
+            {
+                Message msg = (Message) this.take();
+                msgHandler(msg);
+            } 
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        }
+    }
 }
