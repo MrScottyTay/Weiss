@@ -8,14 +8,12 @@ package weiss.agent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -29,7 +27,7 @@ public class NodeMonitor extends LinkedBlockingQueue implements Runnable
 {
     Thread t;
     Boolean shouldStop;
-    JFrame frame;
+    JDialog dialog;
     JPanel panel;
     Vector data;
     
@@ -42,15 +40,16 @@ public class NodeMonitor extends LinkedBlockingQueue implements Runnable
         t = new Thread(this);
     }
     
-    private JFrame createGUI()
+    private JDialog createGUI()
     { 
         data = new Vector();
         
-        frame = new JFrame();
-        frame.setMinimumSize(new Dimension(200,200));
-        frame.setPreferredSize(new Dimension(400,400));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        dialog = new JDialog();
+        dialog.setTitle("Node Monitor");
+        dialog.setMinimumSize(new Dimension(200,200));
+        dialog.setPreferredSize(new Dimension(400,400));
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setVisible(true);
         
         panel = new JPanel();
         panel.setBackground(Color.WHITE);
@@ -64,11 +63,11 @@ public class NodeMonitor extends LinkedBlockingQueue implements Runnable
         JTable table = new JTable(data, columnNames); 
         
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
-        frame.add(panel);
+        dialog.add(panel);
         
-        frame.repaint();
+        dialog.repaint();
         
-        return frame;
+        return dialog;
     }
     
     private void updateTable(Message msg)

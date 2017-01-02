@@ -6,6 +6,8 @@ import weiss.message.Message;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import weiss.message.SysMessage;
+import weiss.message.UserMessage;
 
 /**
  * An abstract class detailing the construction of a MetaAgent object, to be implemented
@@ -119,20 +121,19 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
         
         //need to change registration and scope
     }
-    /**
-     * Method to send message.
-     * @param message Message object.
-     */
-    public final void sendMessage(Message message)
-    {
-        superAgent.msgHandler(message);
-    }
+
     /**
      * Method to handle incoming messages.
      * @param msg Message object.
      */
     
-    public void updateNodeMonitor(Message msg)
+    @Override
+    public String toString()
+    {
+        return this.getName();
+    }
+    
+    protected void updateNodeMonitor(Message msg)
     {
         for(String key : this.nodeMonitorMap.keySet())
         {
@@ -147,8 +148,33 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
         }
     }
     
-    public abstract void msgHandler(Message msg);    
+    protected void msgHandler(Message msg)
+    {
+        //this.updateNodeMonitor(msg);
+        String to = msg.getTo();   //puts the address of the message into a local variable
+        String from = msg.getFrom();
 
+        if ((to.equals(this.getName()) && (msg instanceof SysMessage)))
+            this.sysMsgHandler((SysMessage) msg); //it gets sent to the handler specifically for SysMessages
+        else
+            this.userMsgHandler((UserMessage) msg);
+    }
+
+    protected abstract void sysMsgHandler(SysMessage msg);
+    
+    protected abstract void userMsgHandler(UserMessage msg);
+
+    public void sendMessage(String to, String message)
+    {
+        try
+        {
+            superAgent.put(new UserMessage(this.getName(), to, message));
+        } 
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     public void start()
     {

@@ -33,6 +33,11 @@ public class SysMessage extends Message
         //Needs additional fields adding.
     }
     
+    public SysMessage(String f, String t, String m)
+    {
+        super(f, t, m);
+    }
+    
     //--------------------------------------------------------------------------
     //GETTERS
     public MetaAgent getAgent()
