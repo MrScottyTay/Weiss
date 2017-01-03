@@ -20,7 +20,7 @@ import weiss.MetaAgent.MetaAgent;
 import Weiss.Manager.NodeMonitor;
 import Weiss.Manager.WeissManager;
 import java.util.logging.*;
-import weiss.message.*;
+import weiss.Message.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

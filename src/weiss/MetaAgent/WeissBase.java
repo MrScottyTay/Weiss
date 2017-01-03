@@ -20,9 +20,9 @@ import Weiss.Manager.NodeMonitor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import weiss.message.Message;
-import weiss.message.SysMessage;
-import weiss.message.UserMessage;
+import weiss.Message.Message;
+import weiss.Message.SysMessage;
+import weiss.Message.UserMessage;
 
 /**
  *

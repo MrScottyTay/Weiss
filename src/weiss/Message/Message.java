@@ -1,20 +1,4 @@
-/* 
- * Copyright (C) 2017 Adam Young
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-package weiss.message;
+package weiss.Message;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,7 +10,6 @@ import java.util.Date;
  * <p>
  * To be used in classes implementing the {@link weiss.MetaAgent MetaAgent} abstract class.
  * @author Scott Taylor, Teesside University Sch. of Computing
- * @author Adam Young, Teesside University Sch. of Computing
  */
 public abstract class Message
 {
@@ -48,7 +31,7 @@ public abstract class Message
         msg = m;
         
         //Setting the time of creation
-        DateFormat df = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date now = Calendar.getInstance().getTime();
         timestamp = df.format(now);
         
@@ -90,10 +73,9 @@ public abstract class Message
     {
         return timestamp;
     }
-    /**
-     * Getter for the id variable.
-     * @return String of id variable.
-     */
-    
-    
+    @Override
+    public String toString()
+    {
+        return "From: " + from + "\nTo: " + to + "\nMessage: " + msg + "\nTime Sent: " + timestamp;
+    } 
 }

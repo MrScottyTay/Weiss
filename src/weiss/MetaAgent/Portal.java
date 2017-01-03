@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import weiss.message.*;
+import weiss.Message.*;
 
 /**
  * * Class used for handling messages from both
@@ -77,12 +77,12 @@ public class Portal extends MetaAgent implements Runnable
         if (routingTable.containsKey(msg.getTo())) //checks if the routing table has address
         {
             System.out.println("Sent to sub-agent");
-            this.pushToSubAgent(msg.getTo(), msg);
+            this.pushToSubAgent(msg);
         }
             else   //if the portal does not have the addressed agent in its routing table... 
             {
                 if (superAgent != null)
-                    this.pushToSuperAgent(msg.getTo(), msg);
+                    this.pushToSuperAgent(msg);
                 else
                 {
                     try
@@ -95,27 +95,15 @@ public class Portal extends MetaAgent implements Runnable
                         Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            }
-            
+            }    
     }
     
-    protected void pushToSubAgent(String address, Message msg)
+    protected void pushToSubAgent(Message msg)
     {
-        MetaAgent agent = (MetaAgent) routingTable.get(address); //gets the addressed agent
+        MetaAgent agent = (MetaAgent) routingTable.get(msg.getTo()); //gets the addressed agent
         try
         {
             agent.put((UserMessage) msg); //puts the message onto the agent's blocking queue
-        } catch (InterruptedException ex)
-        {
-            Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    protected void pushToSuperAgent(String to, Message msg)
-    {
-        try //passes the message to the next MetaAgent in the chain
-        {
-            superAgent.put(msg);    //puts the message onto the router's blocking queue
         } catch (InterruptedException ex)
         {
             Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
@@ -137,6 +125,9 @@ public class Portal extends MetaAgent implements Runnable
                 break;
             case "dereg":
                 this.deregistration(msg);
+                break;
+            case "NameCheck":
+                this.pushToSuperAgent(msg);
                 break;
         }
     }

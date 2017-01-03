@@ -18,12 +18,10 @@ package weiss.MetaAgent;
 
 import Weiss.Manager.NodeMonitor;
 import java.util.ArrayList;
-import weiss.message.Message;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import weiss.message.SysMessage;
-import weiss.message.UserMessage;
+import weiss.Message.*;
 
 /**
  * An abstract class detailing the construction of a MetaAgent object, to be implemented
@@ -114,6 +112,19 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
         name = n;
         //Validity checks present in superAgent
     }
+    
+    public void setName(String[] reply)//Reply about name change is handled here and determined whether name can be changed or not
+    {
+        switch (reply[2])
+        {
+            case "Approved":
+                this.name = reply[3];
+                break;
+            case "Declined":
+                break;
+        }
+    }
+    
     /**
      * Setter for {@link weiss.MetaAgent.Portal Portal} object.
      * @param superAgent {@link weiss.MetaAgent.Portal Portal} object.
@@ -203,7 +214,17 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     
     //--------------------------------------------------------------------------
     //CLASS SPECIFIC METHODS
-    @Override
+    protected void pushToSuperAgent(Message msg)
+    {
+        try //passes the message to the next MetaAgent in the chain
+        {
+            superAgent.put(msg);    //puts the message onto the router's blocking queue
+        } catch (InterruptedException ex)
+        {
+            Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     protected void msgHandler(Message msg)
     {
         System.out.println(this.getName() + "recieved message");
@@ -211,7 +232,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
         String to = msg.getTo();   //puts the address of the message into a local variable
         String from = msg.getFrom();
 
-        if ((to.equals(this.getName()) && (msg instanceof SysMessage)))
+        if (to.equals(this.getName()) && msg instanceof SysMessage)
             this.sysMsgHandler((SysMessage) msg); //it gets sent to the handler specifically for SysMessages
         else
             this.userMsgHandler((UserMessage) msg);
