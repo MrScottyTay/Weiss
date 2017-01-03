@@ -28,9 +28,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.KeyStroke;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -54,7 +54,7 @@ public class WeissManager extends JFrame
     {
         treePane = new TreePane();
         tree = treePane.getTree();
-        
+
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setMinimumSize(new Dimension(1000, 600));
         this.add(buildPanel());
@@ -66,20 +66,20 @@ public class WeissManager extends JFrame
     public JPanel buildPanel()
     {
         metaAgentInputField = new JTextField(10);
-        
+
         JPanel panel = new JPanel(new BorderLayout());
         JPanel leftPane = new JPanel(new BorderLayout());
         JPanel leftTopPane = new JPanel();
         JPanel leftBottomPane = new JPanel();
         JPanel centerPanel = new JPanel();
-        
+
         metaAgentSelectBtn = new JButton("Select an Item");
         metaAgentSelectBtn.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                
+
                 TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
                 MetaAgent treeSelection = treeNode.getAgentRef();
 
@@ -104,7 +104,7 @@ public class WeissManager extends JFrame
                             agentView.createGUI(treeSelection);
                             treeSelection.addClient(agentView);
                             agentView.start();
-                            
+
                             break;
                         default:
                             break;
@@ -112,27 +112,34 @@ public class WeissManager extends JFrame
                 }
             }
         });
-        
+
         JButton metaAgentNodeMonitorBtn = new JButton("Add Node Monitor");
-        metaAgentNodeMonitorBtn.addActionListener(new ActionListener(){
+        metaAgentNodeMonitorBtn.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
                 MetaAgent treeSelection = treeNode.getAgentRef();
-                
+
                 NodeMonitor node = new NodeMonitor();
+                
                 node.createGUI(treeSelection);
                 treeSelection.addNodeMonitor(node);
                 node.start();
+                
             }
         });
         leftBottomPane.add(metaAgentNodeMonitorBtn);
-        
+
         leftTopPane.add(metaAgentSelectBtn);
         leftTopPane.add(metaAgentInputField);
+        
 
-        leftPane.add(tree, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setViewportView(tree);
+        
+        leftPane.add(scrollPane, BorderLayout.CENTER);
         leftPane.add(leftTopPane, BorderLayout.NORTH);
         leftPane.add(leftBottomPane, BorderLayout.SOUTH);
 
@@ -140,9 +147,10 @@ public class WeissManager extends JFrame
         panel.add(centerPanel, BorderLayout.CENTER);
 
         this.getRootPane().setDefaultButton(metaAgentSelectBtn);
-        
+
         return panel;
     }
+
     public static JButton getAgentSelectBtn()
     {
         return metaAgentSelectBtn;

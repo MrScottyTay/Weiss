@@ -16,6 +16,7 @@
  */
 package Weiss.Manager;
 
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -173,9 +174,17 @@ public class TreePane
                 image = o.getImage();
             else
                 image = new ImageIcon("Images/weiss20px.png");
-            
             label.setIcon(image);
-            label.setText(o.getName());
+            
+            if(selected)
+                label.setForeground(Color.red);
+            else
+                label.setForeground(Color.black);
+            
+            if(o.getName() != null)
+                label.setText(o.getName());
+            else
+                label.setText("Weiss");
             return label;
         }
     }
