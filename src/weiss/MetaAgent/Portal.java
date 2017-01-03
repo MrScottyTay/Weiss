@@ -76,6 +76,7 @@ public class Portal extends MetaAgent implements Runnable
     {
         if (routingTable.containsKey(msg.getTo())) //checks if the routing table has address
         {
+            System.out.println("Sent to sub-agent");
             this.pushToSubAgent(msg.getTo(), msg);
         }
             else   //if the portal does not have the addressed agent in its routing table... 

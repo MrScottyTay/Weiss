@@ -66,6 +66,7 @@ public class NodeMonitor extends WeissBase implements Runnable
         columnNames.add("From");
         columnNames.add("To");
         columnNames.add("Sent");
+        columnNames.add("MsgType");
 
         JTable table = new JTable(data, columnNames); 
         
@@ -84,14 +85,22 @@ public class NodeMonitor extends WeissBase implements Runnable
         row.add(msg.getFrom());
         row.add(msg.getTo());
         row.add(msg.getTime());
+        row.add("SysMessage");
         
         data.add(row);
-        panel.repaint();
+        dialog.revalidate();
     }
 
     @Override
-    protected void userMsgHandler(UserMessage usrMsg)
+    protected void userMsgHandler(UserMessage msg)
     {
-        System.out.println("Invalid target");
+        Vector row = new Vector();
+        row.add(msg.getFrom());
+        row.add(msg.getTo());
+        row.add(msg.getTime());
+        row.add("UserMessage");
+        
+        data.add(row);
+        dialog.revalidate();
     }
 }

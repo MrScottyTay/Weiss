@@ -17,6 +17,7 @@
 package Weiss.Manager;
 
 
+import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import weiss.MetaAgent.MetaAgent;
 
@@ -33,10 +34,14 @@ import weiss.MetaAgent.MetaAgent;
 public class TreeNode extends DefaultMutableTreeNode
 {
     private MetaAgent agentRef;
-    public TreeNode(String name, MetaAgent agent)
+    private ImageIcon image;
+    private String name;
+    public TreeNode(String name, MetaAgent agent, ImageIcon image)
     {
         super(name);
+        this.name = name;
         agentRef = agent;
+        this.image = image;
     }
     
     public TreeNode(String name)
@@ -47,5 +52,15 @@ public class TreeNode extends DefaultMutableTreeNode
     public MetaAgent getAgentRef()
     {
         return agentRef;
+    }
+    
+    public ImageIcon getImage()
+    {
+        return image;
+    }
+    
+    public String getName()
+    {
+        return name;
     }
 }

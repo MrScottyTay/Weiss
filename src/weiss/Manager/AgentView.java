@@ -72,8 +72,7 @@ public class AgentView extends NodeMonitor implements Runnable
                     agent.sendMessage(agentSelection.getSelectedItem().toString(),
                         messageField.getText());
                 */
-                if(agentSelection.getText().equals(null))
-                    System.out.println("sent message");
+                if(agentSelection.getText() != null)
                     agent.sendMessage(agentSelection.getText(),
                         messageField.getText());
             }  
@@ -90,6 +89,8 @@ public class AgentView extends NodeMonitor implements Runnable
         mainPanel.add(agentSelection, BorderLayout.NORTH);
         
         dialog.getContentPane().add(mainPanel);
+        dialog.getRootPane().setDefaultButton(sendButton);
+        
         dialog.pack();
     }
     @Override
@@ -101,7 +102,6 @@ public class AgentView extends NodeMonitor implements Runnable
     @Override
     protected void userMsgHandler(UserMessage usrMsg)
     {
-        mainPanel.setBackground(Color.red);
         textArea.append("Sent: +" + usrMsg.getTime() +"From: " + usrMsg.getFrom() +
                         "    Message: " + usrMsg.getMsg() + "\n");
     }

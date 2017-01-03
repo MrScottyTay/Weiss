@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import weiss.message.Message;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import weiss.message.SysMessage;
 import weiss.message.UserMessage;
 
@@ -41,11 +42,13 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     private ArrayList<NodeMonitor> nodeMonitors;
     protected NodeMonitor client;
     protected MetaAgent superAgent;
+    protected ImageIcon image;
     
     /**
      * Constructor to initialise a MetaAgetn object.
      * @param name {@link weiss.MetaAgent.Portal Portal} belonging to MetaAgent.
      * @param superAgent Scope of the MetaAgent.
+     * @param image
      */
     public MetaAgent(String name, MetaAgent superAgent)
     {
@@ -55,7 +58,6 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
         this.name = name;
         this.superAgent = superAgent;
         this.scope = 0;
-        
     }
     /**
      * Constructor to initialise a MetaAgent object, and setting the scope.
@@ -88,7 +90,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
      * Getter for {@link weiss.MetaAgent.Portal Portal} object.
      * @return {@link weiss.MetaAgent.Portal Portal} pointer.
      */
-    public MetaAgent getPortal()
+    public MetaAgent getSuperAgent()
     {
         return superAgent;
     }
@@ -204,6 +206,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     @Override
     protected void msgHandler(Message msg)
     {
+        System.out.println(this.getName() + "recieved message");
         this.updateNodeMonitor(msg);
         String to = msg.getTo();   //puts the address of the message into a local variable
         String from = msg.getFrom();
@@ -219,6 +222,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
         try
         {
             superAgent.put(new UserMessage(this.getName(), to, message));
+            System.out.println(this.getName() + "sent message.");
         } 
         catch (InterruptedException ex)
         {

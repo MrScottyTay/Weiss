@@ -24,11 +24,13 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -65,7 +67,6 @@ public class WeissManager extends JFrame
     {
         metaAgentInputField = new JTextField(10);
         
-
         JPanel panel = new JPanel(new BorderLayout());
         JPanel leftPane = new JPanel(new BorderLayout());
         JPanel leftTopPane = new JPanel();
@@ -87,13 +88,16 @@ public class WeissManager extends JFrame
                     switch (treeNode.getLevel())
                     {
                         case 0:
-                            treePane.addNode(new Router(metaAgentInputField.getText(), null));
+                            treePane.addNode(new Router(metaAgentInputField.getText(), null),
+                                    new ImageIcon("Images/router20px.png"));
                             break;
                         case 1:
-                            treePane.addNode(new Portal(metaAgentInputField.getText(), null));
+                            treePane.addNode(new Portal(metaAgentInputField.getText(), null),
+                                    new ImageIcon("Images/portal20px.png"));
                             break;
                         case 2:
-                            treePane.addNode(new Agent(metaAgentInputField.getText(), null));
+                            treePane.addNode(new Agent(metaAgentInputField.getText(), null),
+                                    new ImageIcon("Images/agent20px.png"));
                             break;
                         case 3:
                             NodeMonitor agentView = new AgentView();
@@ -135,6 +139,8 @@ public class WeissManager extends JFrame
         panel.add(leftPane, BorderLayout.WEST);
         panel.add(centerPanel, BorderLayout.CENTER);
 
+        this.getRootPane().setDefaultButton(metaAgentSelectBtn);
+        
         return panel;
     }
     public static JButton getAgentSelectBtn()

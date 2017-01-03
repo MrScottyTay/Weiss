@@ -16,13 +16,18 @@
  */
 package Weiss.Manager;
 
+import java.awt.Component;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import weiss.MetaAgent.MetaAgent;
@@ -37,9 +42,11 @@ public class TreePane
     private TreeNode rootNode;
     private DefaultTreeModel treeModel;
     private static JTree tree;
+    private DefaultTreeCellRenderer render;
 
     public TreePane()
     {
+        render = new DefaultTreeCellRenderer();
         rootNode = new TreeNode("Weiss");
         treeModel = new DefaultTreeModel(rootNode);
         treeModel.addTreeModelListener(new TreeModelListener()
@@ -98,6 +105,7 @@ public class TreePane
         tree.setEditable(false);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setShowsRootHandles(true);
+        tree.setCellRenderer(new WeissTreeCellRenderer());
     }
 
     public JTree getTree()
@@ -105,7 +113,7 @@ public class TreePane
         return tree;
     }
 
-    public TreeNode addNode(MetaAgent child)
+    public TreeNode addNode(MetaAgent child, ImageIcon image)
     {
         TreeNode parentNode = null;
         TreePath parentPath = tree.getSelectionPath();
@@ -119,16 +127,17 @@ public class TreePane
         }
         child.setSuperAgent(parentNode.getAgentRef());
 
-        return addNode(parentNode, child, true);
+        return addNode(parentNode, child, true, image);
     }
 
     public TreeNode addNode(DefaultMutableTreeNode parent,
             MetaAgent child,
-            boolean shouldBeVisible)
+            boolean shouldBeVisible,
+            ImageIcon image)
     {
 
         TreeNode childNode
-                = new TreeNode(child.getName(), child);
+                = new TreeNode(child.getName(), child, image);
 
         treeModel.insertNodeInto(childNode, parent,
                 parent.getChildCount());
@@ -137,9 +146,39 @@ public class TreePane
         {
             tree.scrollPathToVisible(new TreePath(childNode.getPath()));
         }
-
         child.start();
 
         return childNode;
     }
+
+    private class WeissTreeCellRenderer implements TreeCellRenderer
+    {
+
+        private JLabel label;
+
+        WeissTreeCellRenderer()
+        {
+            label = new JLabel();
+        }
+
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree, Object value,
+                boolean selected, boolean expanded, boolean leaf, int row,
+                boolean hasFocus)
+        {
+            TreeNode o = ((TreeNode) value);
+            ImageIcon image;
+
+            if (o.getImage() != null)
+                image = o.getImage();
+            else
+                image = new ImageIcon("Images/weiss20px.png");
+            
+            label.setIcon(image);
+            label.setText(o.getName());
+            return label;
+        }
+    }
+
 }
+
