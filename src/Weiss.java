@@ -41,6 +41,7 @@ public class Weiss {
      */
     public static void main(String[] args) {
         
+        
         WeissManager manager = new WeissManager();
         
         /*
