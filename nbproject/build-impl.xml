@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-*** GENERATED FROM project.xml - DO NOT EDIT  ***
-***         EDIT ../build.xml INSTEAD         ***
+Copyright (C) 2017 Adam Young
 
-For the purpose of easier reading the script
-is divided into following sections:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-  - initialization
-  - compilation
-  - jar
-  - execution
-  - debugging
-  - javadoc
-  - test compilation
-  - test execution
-  - test debugging
-  - applet
-  - cleanup
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-        -->
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" basedir=".." default="default" name="Weiss-impl">
     <fail message="Please build using Ant 1.8.0 or higher.">
         <condition>
