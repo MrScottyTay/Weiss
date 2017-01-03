@@ -24,10 +24,12 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import weiss.Message.Message;
 import weiss.MetaAgent.MetaAgent;
 import weiss.MetaAgent.WeissBase;
-import weiss.message.SysMessage;
-import weiss.message.UserMessage;
+import weiss.Message.SysMessage;
+import weiss.Message.UserMessage;
 
 /**
  *
@@ -38,8 +40,9 @@ public class NodeMonitor extends WeissBase implements Runnable
     Thread t;
     Boolean shouldStop;
     JDialog dialog;
-    JPanel panel;
     Vector data;
+    JTable table; 
+    DefaultTableModel tableModel;
     
     public NodeMonitor()
     {
@@ -58,7 +61,7 @@ public class NodeMonitor extends WeissBase implements Runnable
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setVisible(true);
         
-        panel = new JPanel();
+        JPanel panel = new JPanel();
         panel.setBackground(Color.WHITE);
         panel.setLayout(new BorderLayout());
         
@@ -68,7 +71,8 @@ public class NodeMonitor extends WeissBase implements Runnable
         columnNames.add("Sent");
         columnNames.add("MsgType");
 
-        JTable table = new JTable(data, columnNames); 
+        table = new JTable(data, columnNames);
+        tableModel = (DefaultTableModel) table.getModel();
         
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
         dialog.add(panel);
@@ -76,31 +80,37 @@ public class NodeMonitor extends WeissBase implements Runnable
         
         dialog.setVisible(true);
         
-    }  
+    } 
     
-    @Override
-    protected void sysMsgHandler(SysMessage msg)
+    private Vector insertTableData(Message msg)
     {
         Vector row = new Vector();
         row.add(msg.getFrom());
         row.add(msg.getTo());
         row.add(msg.getTime());
+        
+        return row;
+    }
+    
+    @Override
+    protected void sysMsgHandler(SysMessage msg)
+    {
+        Vector row = insertTableData(msg);
         row.add("SysMessage");
         
         data.add(row);
+        tableModel.fireTableDataChanged();
         dialog.revalidate();
     }
 
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
-        Vector row = new Vector();
-        row.add(msg.getFrom());
-        row.add(msg.getTo());
-        row.add(msg.getTime());
+        Vector row = insertTableData(msg);
         row.add("UserMessage");
         
         data.add(row);
+        tableModel.fireTableDataChanged();
         dialog.revalidate();
     }
 }

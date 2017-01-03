@@ -17,9 +17,9 @@
 package weiss.MetaAgent;
 
 
-import weiss.message.Message;
-import weiss.message.SysMessage;
-import weiss.message.UserMessage;
+import weiss.Message.Message;
+import weiss.Message.SysMessage;
+import weiss.Message.UserMessage;
 
 /**
  *
@@ -63,4 +63,5 @@ public class Agent extends MetaAgent implements Runnable
         System.out.println("--Error--\n" + "No agent found, please check your target name and "
                 + "try again");
     }
+
 }

@@ -28,8 +28,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import weiss.MetaAgent.MetaAgent;
-import weiss.message.SysMessage;
-import weiss.message.UserMessage;
+import weiss.Message.SysMessage;
+import weiss.Message.UserMessage;
 
 /**
  *
