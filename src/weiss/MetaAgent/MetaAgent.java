@@ -132,16 +132,9 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     public final void setSuperAgent(MetaAgent superAgent)
     {   
         this.superAgent = superAgent;
-        try
-        {
-            if(this.superAgent != null)
-                this.superAgent.put(new SysMessage(this.getName(), this.superAgent.getName(),
+        if(this.superAgent != null)
+            pushToSuperAgent(new SysMessage(this.getName(), this.superAgent.getName(),
                     "reg", this));
-        } 
-        catch (InterruptedException ex)
-        {
-            Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     /**
      * Method to set scope of MetaAgent
@@ -168,17 +161,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     }
     public void updateNodeMonitor(Message msg)
     {
-        for(NodeMonitor node : nodeMonitors)
-        {
-            try
-            {
-                node.put(msg);
-            } 
-            catch (InterruptedException ex)
-            {
-                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        pushToNodeMonitor(msg);
     }
     @Override
     public void addClient(NodeMonitor client)
@@ -192,14 +175,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     }
     public void updateClient(Message msg)
     {
-        try
-        {
-            client.put(msg);
-        } 
-        catch (InterruptedException ex)
-        {
-            Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        pushToClient(msg);
     }
     @Override
     public boolean hasClient()
@@ -225,18 +201,45 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
         }
     }
     
+    private void pushToClient(Message msg)
+    {
+        try
+        {
+            client.put(msg);
+        } 
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void pushToNodeMonitor(Message msg)
+    {
+        for(NodeMonitor node : nodeMonitors)
+        {
+            try
+            {
+                node.put(msg);
+            } 
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    @Override
     protected void msgHandler(Message msg)
     {
-        System.out.println(this.getName() + "recieved message");
         this.updateNodeMonitor(msg);
         String to = msg.getTo();   //puts the address of the message into a local variable
         String from = msg.getFrom();
 
-        if (to.equals(this.getName()) && msg instanceof SysMessage)
+        if (msg instanceof SysMessage)
             this.sysMsgHandler((SysMessage) msg); //it gets sent to the handler specifically for SysMessages
-        else if(to.equals(this.getName()) && msg instanceof RouterMessage)
+        else if(msg instanceof RouterMessage)
             this.RouterMsgHandler((RouterMessage) msg);//gets sent to the handler specifically for RouterMessages
-        else if(to.equals(this.getName()) && msg instanceof ReplyMessage)
+        else if(msg instanceof ReplyMessage)
             this.ReplyMsgHandler((ReplyMessage) msg);//gets sent to the handler specifically for ReplyMEssages
         else
             this.userMsgHandler((UserMessage) msg);
@@ -260,19 +263,9 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     {
         //Do something
     }
-    
-    
     public void sendMessage(String to, String message)
     {
-        try
-        {
-            superAgent.put(new UserMessage(this.getName(), to, message));
-            System.out.println(this.getName() + "sent message.");
-        } 
-        catch (InterruptedException ex)
-        {
-            Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        pushToSuperAgent(new UserMessage(this.getName(), to, message));
     }
 
 }
