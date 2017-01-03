@@ -234,10 +234,34 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
 
         if (to.equals(this.getName()) && msg instanceof SysMessage)
             this.sysMsgHandler((SysMessage) msg); //it gets sent to the handler specifically for SysMessages
+        else if(to.equals(this.getName()) && msg instanceof RouterMessage)
+            this.RouterMsgHandler((RouterMessage) msg);//gets sent to the handler specifically for RouterMessages
+        else if(to.equals(this.getName()) && msg instanceof ReplyMessage)
+            this.ReplyMsgHandler((ReplyMessage) msg);//gets sent to the handler specifically for ReplyMEssages
         else
             this.userMsgHandler((UserMessage) msg);
     }
 
+    protected void ReplyMsgHandler(ReplyMessage msg)
+    {
+        String[] reply = msg.getMsg().split(" ");
+        switch(reply[1])
+        {
+            case "ReturnToSender":
+                //handling for an undelivered message
+                break;
+            case "Name":
+                this.setName(reply);
+                break;
+        }
+    }
+    
+    protected void RouterMsgHandler(RouterMessage msg)
+    {
+        //Do something
+    }
+    
+    
     public void sendMessage(String to, String message)
     {
         try
