@@ -139,13 +139,32 @@ public class Portal extends MetaAgent implements Runnable
     private void registration(SysMessage msg)
     {
         this.localRegistration(msg);
+        this.superAgentRegistration(msg); 
+    }
+    
+    private void localRegistration(SysMessage msg)
+    {
+        MetaAgent agent = msg.getAgent();   //gets the agent from the message        
+        if (routingTable.containsKey(agent.getName()))
+        {
+            System.out.println("Cannot use this name");
+            agent.msgHandler(new UserMessage(this.getName(), agent.getName(),
+                    "You cannot use this name, please try another."));
+        } else
+        {
+            routingTable.put(agent.getName(), agent); //puts the agent with its name as the key into the routingTable
+        }
+    }
+    
+    private void superAgentRegistration(SysMessage msg)
+    {
         //if the scope is for router-wide or global AND this registration message did not come from the router
         //it will tell the router to also register this agent
-        /*
-        if(agent.getScope() <= 1 && !msg.getFrom().equals(superAgent.getName()))
+        
+        if(msg.getAgent().getScope() <= 1 && !msg.getFrom().equals(superAgent.getName()))
         {
             SysMessage regMsg = new SysMessage(this.getName(), superAgent.getName(),
-                    "registration", agent); //creates a new registration SysMessage for the router
+                    "registration", msg.getAgent()); //creates a new registration SysMessage for the router
             try
             {
                 superAgent.put(regMsg); //puts the registration message onto the router's blocking queue
@@ -154,19 +173,6 @@ public class Portal extends MetaAgent implements Runnable
             {
                 Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-         */
-    }
-    private void localRegistration(SysMessage msg)
-    {
-        MetaAgent agent = msg.getAgent();   //gets the agent from the message        
-        if (routingTable.containsKey(agent.getName()))
-        {
-            agent.msgHandler(new UserMessage(this.getName(), agent.getName(),
-                    "You cannot use this name, please try another."));
-        } else
-        {
-            routingTable.put(agent.getName(), agent); //puts the agent with its name as the key into the routingTable
         }
     }
     

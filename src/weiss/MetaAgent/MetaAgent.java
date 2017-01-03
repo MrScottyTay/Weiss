@@ -274,10 +274,5 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
             Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    
-    
-    
 
 }
