@@ -22,6 +22,7 @@ import weiss.MetaAgent.Portal;
 import weiss.MetaAgent.MetaAgent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -54,26 +55,28 @@ public class WeissManager extends JFrame
     {
         treePane = new TreePane();
         tree = treePane.getTree();
-
+        
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setMinimumSize(new Dimension(1000, 600));
         this.add(buildPanel());
-        this.setTitle("Weiss Manager");
-
+        this.setTitle("Weiss");
+        this.setSize(new Dimension(255,500));
+        this.setResizable(false);
+        
         this.setVisible(true);
     }
 
     public JPanel buildPanel()
     {
         metaAgentInputField = new JTextField(10);
-
+        
         JPanel panel = new JPanel(new BorderLayout());
         JPanel leftPane = new JPanel(new BorderLayout());
-        JPanel leftTopPane = new JPanel();
+        JPanel leftTopPane = new JPanel(new FlowLayout());
         JPanel leftBottomPane = new JPanel();
         JPanel centerPanel = new JPanel();
 
         metaAgentSelectBtn = new JButton("Select an Item");
+        metaAgentSelectBtn.setPreferredSize(new Dimension(120, 20));
         metaAgentSelectBtn.addActionListener(new ActionListener()
         {
             @Override
@@ -114,6 +117,7 @@ public class WeissManager extends JFrame
         });
 
         JButton metaAgentNodeMonitorBtn = new JButton("Add Node Monitor");
+        
         metaAgentNodeMonitorBtn.addActionListener(new ActionListener()
         {
             @Override
@@ -134,7 +138,6 @@ public class WeissManager extends JFrame
 
         leftTopPane.add(metaAgentSelectBtn);
         leftTopPane.add(metaAgentInputField);
-        
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(tree);
@@ -147,7 +150,8 @@ public class WeissManager extends JFrame
         panel.add(centerPanel, BorderLayout.CENTER);
 
         this.getRootPane().setDefaultButton(metaAgentSelectBtn);
-
+        this.pack();
+        
         return panel;
     }
 

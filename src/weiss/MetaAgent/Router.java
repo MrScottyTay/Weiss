@@ -58,7 +58,7 @@ public class Router extends Portal implements Runnable
     {
         if (routingTable.containsKey(msg.getTo()))   //if this router knows where the addressed agent is...
         {
-            pushToSuperAgent(msg);  //push it into the right direction
+            pushToSubAgent(msg);  //push it into the right direction
         } else    //if the router doesn't know about this agent
         {
             //create a router message to ask the other routers to see if they know of the addressed agent

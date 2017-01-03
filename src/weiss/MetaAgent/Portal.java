@@ -41,7 +41,7 @@ import weiss.Message.*;
  */
 public class Portal extends MetaAgent implements Runnable
 {
-
+    
     protected final Map<String, MetaAgent> routingTable;
 
     /**
@@ -85,15 +85,9 @@ public class Portal extends MetaAgent implements Runnable
                     this.pushToSuperAgent(msg);
                 else
                 {
-                    try
-                    {
-                        SysMessage error = new SysMessage(this.getName(), msg.getFrom(), "noAgent");
-                        routingTable.get(msg.getFrom()).put(error);
-                    } 
-                    catch (InterruptedException ex)
-                    {
-                        Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    MetaAgent errorTarget = routingTable.get(msg.getFrom());
+                    SysMessage error = new SysMessage(this.getName(), errorTarget.getName(), "noAgent");
+                    pushToSubAgent(error);
                 }
             }    
     }
@@ -144,6 +138,7 @@ public class Portal extends MetaAgent implements Runnable
     
     private void localRegistration(SysMessage msg)
     {
+        System.out.println(this.getName() + " has just registered " + msg.getAgent().getName());
         MetaAgent agent = msg.getAgent();   //gets the agent from the message        
         if (routingTable.containsKey(agent.getName()))
         {
@@ -160,20 +155,9 @@ public class Portal extends MetaAgent implements Runnable
     {
         //if the scope is for router-wide or global AND this registration message did not come from the router
         //it will tell the router to also register this agent
-        
-        if(msg.getAgent().getScope() <= 1 && !msg.getFrom().equals(superAgent.getName()))
-        {
-            SysMessage regMsg = new SysMessage(this.getName(), superAgent.getName(),
-                    "registration", msg.getAgent()); //creates a new registration SysMessage for the router
-            try
-            {
-                superAgent.put(regMsg); //puts the registration message onto the router's blocking queue
-            }
-            catch (InterruptedException ex)
-            {
-                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        SysMessage regMsg = new SysMessage(this.getName(), superAgent.getName(),
+                "registration", msg.getAgent());     //creates a new registration SysMessage for the router
+        pushToSuperAgent(regMsg);                           //puts the registration message onto the router's blocking queue
     }
     
     //--------------------------------------------------------------------------
