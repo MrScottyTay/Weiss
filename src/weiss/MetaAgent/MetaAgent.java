@@ -1,3 +1,19 @@
+/* 
+ * Copyright (C) 2017 Adam Young
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package weiss.MetaAgent;
 
 import Weiss.Manager.NodeMonitor;
@@ -5,6 +21,7 @@ import java.util.ArrayList;
 import weiss.message.Message;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import weiss.message.SysMessage;
 import weiss.message.UserMessage;
 
@@ -25,11 +42,13 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     private ArrayList<NodeMonitor> nodeMonitors;
     protected NodeMonitor client;
     protected MetaAgent superAgent;
+    protected ImageIcon image;
     
     /**
      * Constructor to initialise a MetaAgetn object.
      * @param name {@link weiss.MetaAgent.Portal Portal} belonging to MetaAgent.
      * @param superAgent Scope of the MetaAgent.
+     * @param image
      */
     public MetaAgent(String name, MetaAgent superAgent)
     {
@@ -39,7 +58,6 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
         this.name = name;
         this.superAgent = superAgent;
         this.scope = 0;
-        
     }
     /**
      * Constructor to initialise a MetaAgent object, and setting the scope.
@@ -72,7 +90,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
      * Getter for {@link weiss.MetaAgent.Portal Portal} object.
      * @return {@link weiss.MetaAgent.Portal Portal} pointer.
      */
-    public MetaAgent getPortal()
+    public MetaAgent getSuperAgent()
     {
         return superAgent;
     }
@@ -188,6 +206,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     @Override
     protected void msgHandler(Message msg)
     {
+        System.out.println(this.getName() + "recieved message");
         this.updateNodeMonitor(msg);
         String to = msg.getTo();   //puts the address of the message into a local variable
         String from = msg.getFrom();
@@ -203,6 +222,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
         try
         {
             superAgent.put(new UserMessage(this.getName(), to, message));
+            System.out.println(this.getName() + "sent message.");
         } 
         catch (InterruptedException ex)
         {

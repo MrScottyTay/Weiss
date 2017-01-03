@@ -1,7 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright (C) 2017 Adam Young
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package Weiss.Manager;
 
@@ -10,19 +21,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Vector;
 import javax.swing.JDialog;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import weiss.MetaAgent.MetaAgent;
 import weiss.MetaAgent.WeissBase;
-import weiss.message.Message;
 import weiss.message.SysMessage;
 import weiss.message.UserMessage;
 
 /**
  *
- * @author Adam Young
+ * @author Adam Young, Teesside University Sch. of Computing
  */
 public class NodeMonitor extends WeissBase implements Runnable
 {
@@ -57,6 +66,7 @@ public class NodeMonitor extends WeissBase implements Runnable
         columnNames.add("From");
         columnNames.add("To");
         columnNames.add("Sent");
+        columnNames.add("MsgType");
 
         JTable table = new JTable(data, columnNames); 
         
@@ -75,14 +85,22 @@ public class NodeMonitor extends WeissBase implements Runnable
         row.add(msg.getFrom());
         row.add(msg.getTo());
         row.add(msg.getTime());
+        row.add("SysMessage");
         
         data.add(row);
-        panel.repaint();
+        dialog.revalidate();
     }
 
     @Override
-    protected void userMsgHandler(UserMessage usrMsg)
+    protected void userMsgHandler(UserMessage msg)
     {
-        System.out.println("Invalid target");
+        Vector row = new Vector();
+        row.add(msg.getFrom());
+        row.add(msg.getTo());
+        row.add(msg.getTime());
+        row.add("UserMessage");
+        
+        data.add(row);
+        dialog.revalidate();
     }
 }

@@ -1,6 +1,23 @@
+/* 
+ * Copyright (C) 2017 Adam Young
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package Weiss.Manager;
 
 
+import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import weiss.MetaAgent.MetaAgent;
 
@@ -12,15 +29,19 @@ import weiss.MetaAgent.MetaAgent;
 
 /**
  *
- * @author Adam Young
+ * @author Adam Young, Teesside University Sch. of Computing
  */
 public class TreeNode extends DefaultMutableTreeNode
 {
     private MetaAgent agentRef;
-    public TreeNode(String name, MetaAgent agent)
+    private ImageIcon image;
+    private String name;
+    public TreeNode(String name, MetaAgent agent, ImageIcon image)
     {
         super(name);
+        this.name = name;
         agentRef = agent;
+        this.image = image;
     }
     
     public TreeNode(String name)
@@ -31,5 +52,15 @@ public class TreeNode extends DefaultMutableTreeNode
     public MetaAgent getAgentRef()
     {
         return agentRef;
+    }
+    
+    public ImageIcon getImage()
+    {
+        return image;
+    }
+    
+    public String getName()
+    {
+        return name;
     }
 }

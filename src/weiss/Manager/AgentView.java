@@ -1,32 +1,39 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright (C) 2017 Adam Young
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package Weiss.Manager;
 
-import weiss.MetaAgent.WeissBase;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import weiss.MetaAgent.MetaAgent;
-import weiss.message.Message;
 import weiss.message.SysMessage;
 import weiss.message.UserMessage;
 
 /**
  *
- * @author Adam Young
+ * @author Adam Young, Teesside University Sch. of Computing
  */
 public class AgentView extends NodeMonitor implements Runnable
 {
@@ -65,8 +72,7 @@ public class AgentView extends NodeMonitor implements Runnable
                     agent.sendMessage(agentSelection.getSelectedItem().toString(),
                         messageField.getText());
                 */
-                if(agentSelection.getText().equals(null))
-                    System.out.println("sent message");
+                if(agentSelection.getText() != null)
                     agent.sendMessage(agentSelection.getText(),
                         messageField.getText());
             }  
@@ -83,6 +89,8 @@ public class AgentView extends NodeMonitor implements Runnable
         mainPanel.add(agentSelection, BorderLayout.NORTH);
         
         dialog.getContentPane().add(mainPanel);
+        dialog.getRootPane().setDefaultButton(sendButton);
+        
         dialog.pack();
     }
     @Override
@@ -94,7 +102,6 @@ public class AgentView extends NodeMonitor implements Runnable
     @Override
     protected void userMsgHandler(UserMessage usrMsg)
     {
-        mainPanel.setBackground(Color.red);
         textArea.append("Sent: +" + usrMsg.getTime() +"From: " + usrMsg.getFrom() +
                         "    Message: " + usrMsg.getMsg() + "\n");
     }
