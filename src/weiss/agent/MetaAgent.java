@@ -88,6 +88,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
     {
         return scope;
     }
+    
     //--------------------------------------------------------------------------
     //SETTERS
     //--------------------------------------------------------------------------
@@ -95,10 +96,29 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
      * Setter for name variable.
      * @param n name String.
      */
-    public final void setName(String n)
+    public final void setName(String n)//sends a message to check if its desired name is available
     {
-        name = n;
-        //Validity checks present in superAgent
+        String[] spaceCheck = n.split(" ");
+        if(spaceCheck.length > 1)
+        {
+            SysMessage msg = new SysMessage(getName(), n, "NameCheck");
+            pushToSuperAgent(msg);
+        }
+        else
+        {
+            //error invalid name
+        }
+    }
+    public void setName(String[] reply)//Reply about name change is handled here and determined whether name can be changed or not
+    {
+        switch (reply[2])
+        {
+            case "Approved":
+                this.name = reply[3];
+                break;
+            case "Declined":
+                break;
+        }
     }
     /**
      * Setter for {@link weiss.agent.Portal Portal} object.
@@ -106,7 +126,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
      */
     public final void setSuperAgent(MetaAgent superAgent)
     {   
-            this.superAgent = superAgent;
+        this.superAgent = superAgent;
 
         //need to change scope
     }
@@ -122,26 +142,9 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
         //need to change registration and scope
     }
     
-    @Override
-    public String toString()
-    {
-        return this.getName();
-    }
-    
-    protected void updateNodeMonitor(Message msg)
-    {
-        for(String key : this.nodeMonitorMap.keySet())
-        {
-            try
-            {
-                nodeMonitorMap.get(key).put(msg);
-            } 
-            catch (InterruptedException ex)
-            {
-                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
+    //--------------------------------------------------------------------------
+    //Message Handlers
+    //--------------------------------------------------------------------------
     
     protected void msgHandler(Message msg)
     {
@@ -149,15 +152,31 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
         String to = msg.getTo();   //puts the address of the message into a local variable
         String from = msg.getFrom();
 
-        if ((to.equals(this.getName()) && (msg instanceof SysMessage)))
+        if (to.equals(this.getName()) && msg instanceof SysMessage)
             this.sysMsgHandler((SysMessage) msg); //it gets sent to the handler specifically for SysMessages
-        else if((to.equals(this.getName()) && (msg instanceof RouterMessage)))
+        else if(to.equals(this.getName()) && msg instanceof RouterMessage)
             this.RouterMsgHandler((RouterMessage) msg);//gets sent to the handler specifically for RouterMessages
+        else if(to.equals(this.getName()) && msg instanceof ReplyMessage)
+            this.ReplyMsgHandler((ReplyMessage) msg);//gets sent to the handler specifically for ReplyMEssages
         else
             this.userMsgHandler((UserMessage) msg);
     }
 
     protected abstract void sysMsgHandler(SysMessage msg);
+    
+    protected void ReplyMsgHandler(ReplyMessage msg)
+    {
+        String[] reply = msg.getMsg().split(" ");
+        switch(reply[1])
+        {
+            case "ReturnToSender":
+                //handling for an undelivered message
+                break;
+            case "Name":
+                this.setName(reply);
+                break;
+        }
+    }
     
     protected abstract void userMsgHandler(UserMessage msg);
 
@@ -173,6 +192,20 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
         }
     }
     
+        protected void pushToSuperAgent(Message msg)
+    {
+        try //passes the message to the next MetaAgent in the chain
+        {
+            superAgent.put(msg);    //puts the message onto the router's blocking queue
+        } catch (InterruptedException ex)
+        {
+            Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    //--------------------------------------------------------------------------
+    //Threading Operations
+    //--------------------------------------------------------------------------
     public void start()
     {
         t.start();
@@ -199,5 +232,29 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable
             }
         
         }
+    }
+    
+    //--------------------------------------------------------------------------
+    //Other Operations
+    //--------------------------------------------------------------------------
+    protected void updateNodeMonitor(Message msg)
+    {
+        for(String key : this.nodeMonitorMap.keySet())
+        {
+            try
+            {
+                nodeMonitorMap.get(key).put(msg);
+            } 
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    @Override
+    public String toString()
+    {
+        return this.getName();
     }
 }

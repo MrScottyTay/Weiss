@@ -64,6 +64,9 @@ public class Portal extends MetaAgent implements Runnable
             case "dereg":
                 this.deregistration(msg);
                 break;
+            case "NameCheck":
+                pushToSuperAgent(msg);
+                break;
         }
     }
     
@@ -105,26 +108,10 @@ public class Portal extends MetaAgent implements Runnable
         }
     }
 
-    protected void pushToSuperAgent(String address, Message msg)
-    {
-        try //passes the message to the next MetaAgent in the chain
-        {
-            superAgent.put(msg);    //puts the message onto the router's blocking queue
-        } catch (InterruptedException ex)
-        {
-            Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Method used to handle system messages
-     *
-     * @param msg A SysMessage variable.
-     */
-
 
     //--------------------------------------------------------------------------
-    //Operations
+    //routingTable Management
+    //--------------------------------------------------------------------------
     /**
      * Method to register a subAgent to this MetaAgent
      *
