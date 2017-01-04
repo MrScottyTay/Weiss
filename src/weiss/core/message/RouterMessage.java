@@ -11,7 +11,7 @@ package weiss.core.message;
  */
 public class RouterMessage extends DecoratedMessage
 {
-    String origin;
+    private String origin;
     
     public RouterMessage(String t, String f, String m, Message c, String o)
     {

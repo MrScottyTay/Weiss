@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package Weiss.Manager;
+package weiss.manager;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,11 +25,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import weiss.Message.Message;
-import weiss.MetaAgent.MetaAgent;
-import weiss.MetaAgent.WeissBase;
-import weiss.Message.SysMessage;
-import weiss.Message.UserMessage;
+import weiss.core.message.Message;
+import weiss.core.agent.*;
+import weiss.core.message.*;
 
 /**
  *
@@ -37,25 +35,28 @@ import weiss.Message.UserMessage;
  */
 public class NodeMonitor extends WeissBase implements Runnable
 {
-    Thread t;
-    Boolean shouldStop;
-    JDialog dialog;
-    Vector data;
-    JTable table; 
-    DefaultTableModel tableModel;
+    private Thread t;
+    private Boolean shouldStop;
+    private JDialog dialog;
+    private Vector data;
+    private JTable table; 
+    private DefaultTableModel tableModel;
     
-    public NodeMonitor()
+    public NodeMonitor(String name)
     {
+        super(name);
         shouldStop = false;
+        
+        this.createGUI(name);
         t = new Thread(this);
     }
     
-    public void createGUI(MetaAgent agent)
+    protected void createGUI(String name)
     { 
         data = new Vector();
         
         dialog = new JDialog();
-        dialog.setTitle("Node Monitor - " + agent.getName());
+        dialog.setTitle("Node Monitor - " + name);
         dialog.setMinimumSize(new Dimension(200,200));
         dialog.setPreferredSize(new Dimension(400,400));
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -79,7 +80,6 @@ public class NodeMonitor extends WeissBase implements Runnable
         dialog.pack();
         
         dialog.setVisible(true);
-        
     } 
     
     private Vector insertTableData(Message msg)
