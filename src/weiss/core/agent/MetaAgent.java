@@ -14,14 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.MetaAgent;
+package weiss.core.agent;
 
-import Weiss.Manager.NodeMonitor;
+import weiss.core.message.Message;
+import weiss.core.message.RouterMessage;
+import weiss.core.message.UserMessage;
+import weiss.core.message.ReplyMessage;
+import weiss.core.message.SysMessage;
+import weiss.manager.NodeMonitor;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import weiss.Message.*;
 
 /**
  * An abstract class detailing the construction of a MetaAgent object, to be implemented
@@ -44,7 +48,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     
     /**
      * Constructor to initialise a MetaAgetn object.
-     * @param name {@link weiss.MetaAgent.Portal Portal} belonging to MetaAgent.
+     * @param name {@link weiss.core.agent.Portal Portal} belonging to MetaAgent.
      * @param superAgent Scope of the MetaAgent.
      * @param image
      */
@@ -60,7 +64,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     /**
      * Constructor to initialise a MetaAgent object, and setting the scope.
      * @param name Name of MetaAgent.
-     * @param superAgent {@link weiss.MetaAgent.Portal Portal} belonging to MetaAgent.
+     * @param superAgent {@link weiss.core.agent.Portal Portal} belonging to MetaAgent.
      * @param scope Scope of the MetaAgent.
      */
     public MetaAgent(String name, MetaAgent superAgent, int scope)
@@ -85,8 +89,8 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
         return name;
     }
     /**
-     * Getter for {@link weiss.MetaAgent.Portal Portal} object.
-     * @return {@link weiss.MetaAgent.Portal Portal} pointer.
+     * Getter for {@link weiss.core.agent.Portal Portal} object.
+     * @return {@link weiss.core.agent.Portal Portal} pointer.
      */
     public MetaAgent getSuperAgent()
     {
@@ -126,8 +130,8 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     }
     
     /**
-     * Setter for {@link weiss.MetaAgent.Portal Portal} object.
-     * @param superAgent {@link weiss.MetaAgent.Portal Portal} object.
+     * Setter for {@link weiss.core.agent.Portal Portal} object.
+     * @param superAgent {@link weiss.core.agent.Portal Portal} object.
      */
     public final void setSuperAgent(MetaAgent superAgent)
     {   

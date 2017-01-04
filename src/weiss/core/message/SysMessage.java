@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package weiss.Message;
+package weiss.core.message;
 
-import weiss.MetaAgent.MetaAgent;
+import weiss.core.agent.MetaAgent;
 
 /** Class extending the {@link Message Message} class, to be used for system message transmission.
  * This type of message can be read by all MetaAgents, and contains instructions rather than text.

@@ -1,4 +1,4 @@
-package weiss.Message;
+package weiss.core.message;
 
 /**
  * @author Scott Taylor, Teesside University Sch. of Computing

@@ -14,13 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.MetaAgent;
+package weiss.core.agent;
 
-import weiss.Message.RouterMessage;
-import weiss.Message.*;
+import weiss.core.message.Message;
+import weiss.core.message.UserMessage;
+import weiss.core.message.DecoratedMessage;
+import weiss.core.message.ReplyMessage;
+import weiss.core.message.SysMessage;
+import weiss.core.message.RouterMessage;
 
 /**
- * * Class used for handling messages from {@link weiss.MetaAgent.Portal Portal}
+ * * Class used for handling messages from {@link weiss.core.agent.Portal Portal}
  * classes, and routing them to the correct destination. Routers are linked
  * together in a pseudo linked list.
  * <p>
