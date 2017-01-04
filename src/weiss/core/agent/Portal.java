@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import weiss.core.message.ReplyMessage;
+import weiss.core.message.RouterMessage;
 
 /**
  * * Class used for handling messages from both
@@ -72,7 +74,8 @@ public class Portal extends MetaAgent implements Runnable
     }
 
     //--------------------------------------------------------------------------
-    //USER MESSAGE HANDLING
+    //MESSAGE HANDLING
+    //--------------------------------------------------------------------------
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
@@ -99,22 +102,46 @@ public class Portal extends MetaAgent implements Runnable
         MetaAgent agent = (MetaAgent) routingTable.get(msg.getTo()); //gets the addressed agent
         try
         {
-            agent.put((UserMessage) msg); //puts the message onto the agent's blocking queue
+            agent.put(msg); //puts the message onto the agent's blocking queue
         } catch (InterruptedException ex)
         {
             Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    //--------------------------------------------------------------------------
-    //SYSTEM MESSAGE HANDLING
+    protected void msgHandler(Message msg)
+    {
+        //this.updateNodeMonitor(msg);
+
+        if (msg instanceof SysMessage)
+        {
+            this.sysMsgHandler((SysMessage) msg); //it gets sent to the handler specifically for SysMessages
+        }
+        else if(msg instanceof RouterMessage)
+        {
+            this.routerMsgHandler((RouterMessage) msg); //gets sent to the handler specifically for RouterMessages
+        }
+        else if(msg instanceof ReplyMessage)
+        {
+            this.replyMsgHandler((ReplyMessage) msg);   //gets sent to the handler specifically for ReplyMessages
+        }
+        else
+        {
+            this.userMsgHandler((UserMessage) msg);
+        }
+    }
     
-    //--------------------------------------------------------------------------
-    //REGISTRATION
-    @Override
+    protected void routerMsgHandler(RouterMessage msg)
+    {
+        //a Router Message should never reach a portal, this is here so that msgHandler doesn't need to be rewritten in Router
+        //this may change though, just to simplify things
+    }
+    
     protected void sysMsgHandler(SysMessage msg)
     {
-        switch (msg.getMsg())
+        String[] s = msg.getMsg().split(" ");   //splits the msg up into words, future proofing in case commands become more complicated than just one word
+        
+        switch (s[1])   //looks at the first word which will ALWAYS show what kind of command it is
         {
             case "reg":
                 this.registration(msg);
@@ -123,10 +150,16 @@ public class Portal extends MetaAgent implements Runnable
                 this.deregistration(msg);
                 break;
             case "NameCheck":
-                this.pushToSuperAgent(msg);
+                SysMessage sMsg = new SysMessage(msg.getFrom(), getSuperAgentName(), msg.getMsg(), msg.getAgent());
+                this.pushToSuperAgent(sMsg);
                 break;
         }
     }
+    
+    //--------------------------------------------------------------------------
+    //REGISTRATION
+    //--------------------------------------------------------------------------
+    
     /**
      * Method to register a subAgent to this MetaAgent
      *
@@ -134,32 +167,9 @@ public class Portal extends MetaAgent implements Runnable
      */
     private void registration(SysMessage msg)
     {
-        this.localRegistration(msg);
-        this.superAgentRegistration(msg); 
-    }
-    
-    private void localRegistration(SysMessage msg)
-    {
-        System.out.println(this.getName() + " has just registered " + msg.getAgent().getName());
-        MetaAgent agent = msg.getAgent();   //gets the agent from the message        
-        if (routingTable.containsKey(agent.getName()))
-        {
-            System.out.println("Cannot use this name");
-            agent.msgHandler(new UserMessage(this.getName(), agent.getName(),
-                    "You cannot use this name, please try another."));
-        } else
-        {
-            routingTable.put(agent.getName(), agent); //puts the agent with its name as the key into the routingTable
-        }
-    }
-    
-    private void superAgentRegistration(SysMessage msg)
-    {
-        //if the scope is for router-wide or global AND this registration message did not come from the router
-        //it will tell the router to also register this agent
-        SysMessage regMsg = new SysMessage(this.getName(), getSuperAgent().getName(),
-                "registration", msg.getAgent());     //creates a new registration SysMessage for the router
-        pushToSuperAgent(regMsg);                           //puts the registration message onto the router's blocking queue
+        routingTable.put(msg.getAgent().getName(), msg.getAgent());
+        SysMessage sMsg = new SysMessage(getName(), getSuperAgentName(), "reg", msg.getAgent());
+        pushToSuperAgent(sMsg);
     }
     
     //--------------------------------------------------------------------------
@@ -172,5 +182,6 @@ public class Portal extends MetaAgent implements Runnable
     {
         
     }
+
 
 }

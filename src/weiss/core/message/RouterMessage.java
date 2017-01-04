@@ -13,15 +13,15 @@ public class RouterMessage extends DecoratedMessage
 {
     private String origin;
     
-    public RouterMessage(String t, String f, String m, Message c, String o)
+    public RouterMessage(String f, String t, String m, Message c, String o)
     {
-        super(t, f, m, c);
+        super(f, t, m, c);
         origin = o;
     }
     
-    public RouterMessage(String t, String f, String m, Message c)
+    public RouterMessage(String f, String t, String m, Message c)
     {
-        super(t, f, m, c);
+        super(f, t, m, c);
     }
     
     

@@ -57,6 +57,10 @@ public class Router extends Portal implements Runnable
         super(name, nextRouter);
     }
 
+    
+    //--------------------------------------------------------------------------
+    //MESSAGE HANDLING
+    //--------------------------------------------------------------------------
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
@@ -72,7 +76,6 @@ public class Router extends Portal implements Runnable
     }
 
     //For Handling Router Messages
-    @Override
     protected void RouterMsgHandler(RouterMessage msg)
     {
         Message contents = msg.getContents();   //getting a local variable of the contents of the RouterMessage
@@ -86,8 +89,14 @@ public class Router extends Portal implements Runnable
                 case "User":    //if a message could not find its recipient...
                     type = "ReturnToSender";
                     break;
-                case "Name":    //if a name check message has came all the way around without finding a an agent with the same name...
+                case "Name":    //if a name check message has came all the way around without finding an agent with the same name...
                     type = "Name Approved";
+                    break;
+                case "reg":
+                    type = "RegistrationComplete";
+                    break;
+                case "dereg":
+                    type = "DeRegistrationComplete";
                     break;
             }
 
@@ -95,12 +104,32 @@ public class Router extends Portal implements Runnable
             pushToSubAgent(reply); //push it into the right direction for the original sender
         } else    //if this is from another router...
         {
-            if (routingTable.containsKey(contents.getTo()))  //if this router knows where the contents needs to go...
+            if(contents instanceof UserMessage) //if the content is a UserMessage...
             {
-                pushToSubAgent(contents);    //push it into the right direction for the addressed agent
-            } else    //if this router doesn't know of the addressed agent...
+                if (routingTable.containsKey(contents.getTo()))  //if this router knows where the contents needs to go...
+                {
+                    pushToSubAgent(contents);    //push it into the right direction for the addressed agent
+                } else    //if this router doesn't know of the addressed agent...
+                {
+                    pushToSuperAgent(msg);  //push to the next router along for them to check
+                }
+            }
+            else if(contents instanceof SysMessage) //if the content is a SysMessage...
             {
-                pushToSuperAgent(msg);  //push to the next router along for them to check
+                SysMessage sMsg = (SysMessage)contents; //create a version of the msg that is specifically a SysMessage
+                
+                switch(sMsg.getMsg())   //what type of sysMessage is it
+                {
+                    case "reg": //the version of registration that's needed at this point requires a RouterMessage
+                        //so cannot be handled with just the sysMessageHandler or it'll constantly keep going round and round
+                        registration(msg);
+                        break;
+                    default:    //most SysMessages will go through here
+                        sysMsgHandler(sMsg);
+                        break;
+                }
+                
+                
             }
         }
     }
@@ -108,22 +137,33 @@ public class Router extends Portal implements Runnable
     @Override
     protected void sysMsgHandler(SysMessage msg)
     {
-        String command = msg.getMsg();
-        switch (command)
+        String[] command = msg.getMsg().split(" ");
+        switch (command[1])
         {
+            case "reg":
+                registration(msg);
+                break;
+            case "dereg":
+                deregistration(msg);
+                break;
             case "NameCheck":
                 nameCheck(msg);
                 break;
         }
     }
 
+    //--------------------------------------------------------------------------
+    //COMMANDS
+    //--------------------------------------------------------------------------
     private void nameCheck(Message msg)
     {
-        if (routingTable.containsKey(msg.getTo()))   //if this router knows of an agent with that name already...
+        String[] s = msg.getMsg().split(" ");
+        
+        if (routingTable.containsKey(s[2]))   //if this router knows of an agent with that name already...
         {
             if (msg instanceof RouterMessage)    //if this command came from another router...
             {
-                DecoratedMessage rMsg = (RouterMessage) msg;    //make it explicitly a RouterMessage so this method has access to its methods
+                RouterMessage rMsg = (RouterMessage) msg;    //make it explicitly a RouterMessage so this method has access to its methods
                 msg = rMsg.getContents();   //unpackage the contents within the RouterMessage and overwrite the msg variable with it
             }
             //create a reply message letting the sender know this
@@ -145,16 +185,27 @@ public class Router extends Portal implements Runnable
     }
 
     //--------------------------------------------------------------------------
-    //USER MESSAGE HANDLING
+    //REGISTRATION
+    //--------------------------------------------------------------------------
     /**
      * Method to register subAgents to this MetaAgent.
      *
      * @param msg
      */
-    private void registration(SysMessage msg)
+    private void registration(SysMessage msg)   //when the router gets a registration request from a Portal
     {
-        MetaAgent agent = msg.getAgent();
-        routingTable.put(agent.getName(), agent);
+        routingTable.put(msg.getAgent().getName(), msg.getAgent());   //registers the agent with its name as the key
+        
+        //creates a routermessage to tell the other routers to do the same
+        RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), "reg", msg, getName());
+        pushToSuperAgent(rMsg); //gives the routermessage to the next router in line
+    }
+    private void registration(RouterMessage msg)    //when the router gets a registration request from a Router
+    {
+        SysMessage contents = (SysMessage)msg.getContents();    //unpackages the RouterMessage
+        routingTable.put(contents.getAgent().getName(), contents.getAgent());  //registers the agent with its name as the key
+        
+        pushToSuperAgent(msg);  //passes on the RouterMessage to the next in line
     }
 
     /**
@@ -163,6 +214,12 @@ public class Router extends Portal implements Runnable
      * @param msg A SysMessage object.
      */
     private void deregistration(SysMessage msg)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void run()
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
