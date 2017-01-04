@@ -14,15 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package Weiss.Manager;
+package weiss.manager;
 
-import weiss.MetaAgent.Agent;
-import weiss.MetaAgent.Router;
-import weiss.MetaAgent.Portal;
-import weiss.MetaAgent.MetaAgent;
+import weiss.core.agent.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -44,12 +43,15 @@ import javax.swing.JTree;
  */
 public class WeissManager extends JFrame
 {
-
-    private TreeNode nodeSelected;
     private static JButton metaAgentSelectBtn;
+
     private JTextField metaAgentInputField;
-    private TreePane treePane;
-    private JTree tree;
+    private final TreePane treePane;
+    private final JTree tree;
+    
+
+    
+
 
     public WeissManager()
     {
@@ -61,12 +63,17 @@ public class WeissManager extends JFrame
         this.setTitle("Weiss");
         this.setSize(new Dimension(255,500));
         this.setResizable(false);
+        this.setLocationRelativeTo(null);
         
         this.setVisible(true);
+        ImageIcon icon = new ImageIcon("Images/weiss.png");
+        this.setIconImage(icon.getImage());   
     }
 
     public JPanel buildPanel()
     {
+
+        
         metaAgentInputField = new JTextField(10);
         
         JPanel panel = new JPanel(new BorderLayout());
@@ -83,10 +90,22 @@ public class WeissManager extends JFrame
             public void actionPerformed(ActionEvent e)
             {
 
-                TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
-                MetaAgent treeSelection = treeNode.getAgentRef();
+                MetaAgent treeSelection = null;
+                TreeNode treeNode = null;
+                 
+                if(tree.getSelectionPath() != null)
+                {
+                    treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
+                    treeSelection = treeNode.getAgentRef();
+                }
+                
+                if(tree.getSelectionPath().getLastPathComponent() != null)
+                    treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
+                treeSelection = treeNode.getAgentRef();
 
-                if (!metaAgentInputField.getText().isEmpty())
+
+                if (!metaAgentInputField.getText().isEmpty() && 
+                        !metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
                 {
                     switch (treeNode.getLevel())
                     {
@@ -102,17 +121,20 @@ public class WeissManager extends JFrame
                             treePane.addNode(new Agent(metaAgentInputField.getText(), null),
                                     new ImageIcon("Images/agent20px.png"));
                             break;
-                        case 3:
-                            NodeMonitor agentView = new AgentView();
-                            agentView.createGUI(treeSelection);
-                            treeSelection.addClient(agentView);
-                            agentView.start();
-
-                            break;
                         default:
                             break;
                     }
                 }
+                else if(metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
+                {
+                    NodeMonitor agentView = new Client(treeSelection.getName(), treeSelection);
+                    treeSelection.addClient(agentView);
+                    agentView.start();
+                   
+                }
+                metaAgentInputField.setText("");
+                
+
             }
         });
 
@@ -126,9 +148,7 @@ public class WeissManager extends JFrame
                 TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
                 MetaAgent treeSelection = treeNode.getAgentRef();
 
-                NodeMonitor node = new NodeMonitor();
-                
-                node.createGUI(treeSelection);
+                NodeMonitor node = new NodeMonitor(treeSelection.getName());
                 treeSelection.addNodeMonitor(node);
                 node.start();
                 

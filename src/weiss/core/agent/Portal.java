@@ -83,7 +83,7 @@ public class Portal extends MetaAgent implements Runnable
         }
             else   //if the portal does not have the addressed agent in its routing table... 
             {
-                if (superAgent != null)
+                if (getSuperAgent() != null)
                     this.pushToSuperAgent(msg);
                 else
                 {
@@ -157,7 +157,7 @@ public class Portal extends MetaAgent implements Runnable
     {
         //if the scope is for router-wide or global AND this registration message did not come from the router
         //it will tell the router to also register this agent
-        SysMessage regMsg = new SysMessage(this.getName(), superAgent.getName(),
+        SysMessage regMsg = new SysMessage(this.getName(), getSuperAgent().getName(),
                 "registration", msg.getAgent());     //creates a new registration SysMessage for the router
         pushToSuperAgent(regMsg);                           //puts the registration message onto the router's blocking queue
     }
