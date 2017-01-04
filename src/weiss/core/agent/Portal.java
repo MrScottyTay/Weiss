@@ -45,7 +45,6 @@ import weiss.core.message.RouterMessage;
  */
 public class Portal extends MetaAgent implements Runnable
 {
-    
     protected final Map<String, MetaAgent> routingTable;
 
     /**
@@ -58,7 +57,6 @@ public class Portal extends MetaAgent implements Runnable
     {
         super(name, superAgent);
         this.routingTable = new HashMap<>();
-
     }
     /**
      *  Constructor for the Portal class.
@@ -150,7 +148,7 @@ public class Portal extends MetaAgent implements Runnable
                 this.deregistration(msg);
                 break;
             case "NameCheck":
-                SysMessage sMsg = new SysMessage(msg.getFrom(), getSuperAgentName(), msg.getMsg(), msg.getAgent());
+                SysMessage sMsg = new SysMessage(msg.getFrom(), getSuperAgent().getName(), msg.getMsg(), msg.getAgent());
                 this.pushToSuperAgent(sMsg);
                 break;
         }
@@ -168,20 +166,12 @@ public class Portal extends MetaAgent implements Runnable
     private void registration(SysMessage msg)
     {
         routingTable.put(msg.getAgent().getName(), msg.getAgent());
-        SysMessage sMsg = new SysMessage(getName(), getSuperAgentName(), "reg", msg.getAgent());
+        SysMessage sMsg = new SysMessage(getName(), getSuperAgent().getName(), "reg", msg.getAgent());
         pushToSuperAgent(sMsg);
     }
-    
-    //--------------------------------------------------------------------------
-    //DEREGISTRATION
+
     private void deregistration(SysMessage msg)
     {
         //To do
     }
-    private void localDeregistration(SysMessage msg)
-    {
-        
-    }
-
-
 }
