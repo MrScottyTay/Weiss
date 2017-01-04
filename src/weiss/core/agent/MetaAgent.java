@@ -22,6 +22,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import weiss.manager.Client;
+import weiss.manager.Managable;
 
 /**
  * An abstract class detailing the construction of a MetaAgent object, to be implemented
@@ -37,9 +39,10 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     private String name;
     private int scope;  //0 = global, 1 = router-wide, 2 = portal-wide
     private NodeMonitor monitor;
-    private WeissBase client;
-    MetaAgent superAgent;
+
+    private MetaAgent superAgent;
     private ImageIcon image;
+    private Thread thread;
     
     /**
      * Constructor to initialise a MetaAgetn object.
@@ -51,26 +54,13 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     {
         super();
         this.name = name;
-        this.client = null;
         this.setSuperAgent(superAgent);
         this.scope = 0;
         
-        /*  this is what I was talking about earlier, and also what simon showed me one on one
-            although I'm now thinking, how can we implement a threadpool with this
-        Thread thread = new Thread()
-        {
-          public void run()
-          {
-              boolean forever = true;
-              while(forever == true)
-              {
-                  msgHandler(take());   //if theres a message in the queue, it will take it and put it into the msghandler
-              }
-          }
-        };
-        thread.run();
-        */
+        thread = new Thread();      
     }
+    
+
     /**
      * Constructor to initialise a MetaAgent object, and setting the scope.
      * @param name Name of MetaAgent.
@@ -81,11 +71,31 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     {
         super();
         this.name = name;
-        this.client = null;
         this.superAgent = superAgent;
         this.scope = scope;        
     }
     
+    @Override
+    public void run()
+      {
+          while(true)
+          {
+              try
+              {
+                  msgHandler((Message) take());   //if theres a message in the queue, it will take it and put it into the msghandler
+              } 
+              catch (InterruptedException ex)
+              {
+                  Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
+              }
+          }
+      }
+    
+    public void start()
+    {
+        thread.start();
+    }
+
     //--------------------------------------------------------------------------
     //GETTERS
     /**
@@ -96,13 +106,9 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     {
         return name;    //returns the name
     }
-    public String getSuperAgentName()
-    {
-        return superAgent.getName();
-    }
     /**
-     * Getter for {@link weiss.core.agent.Portal Portal} object.
-     * @return {@link weiss.core.agent.Portal Portal} pointer.
+     * Getter for {@link weiss.core.agent.MetaAgent MetaAgent} superAgent object.
+     * @return {@link weiss.core.agent.MetaAgent superAgent} pointer.
      */
     public MetaAgent getSuperAgent()
     {
@@ -122,7 +128,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     
     public void setName(String n)
     {
-        SysMessage request = new SysMessage(this.getName(), getSuperAgentName(), "NameCheck " + n);    //creates a SysMessage that will request its superAgent to begin a nameCheck across the system
+        SysMessage request = new SysMessage(this.getName(), getSuperAgent().getName(), "NameCheck " + n);    //creates a SysMessage that will request its superAgent to begin a nameCheck across the system
         pushToSuperAgent(request);  //pushes the request to the superAgent
     }
     /*?*?*?*?*?*?*?*?*?*
@@ -130,6 +136,9 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     */
     /*!*!*!*!*!*!*!*!*!*
     //We've got too much of a class explosion already.
+    */
+    /*"*"*"*"*"*"*"*"*"*
+    //I agree, I'm just trying to be edgy here
     */
     public void setName(String[] reply, Message msg)//Reply about name change is handled here and determined whether name can be changed or not
     {
@@ -145,19 +154,17 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         }
     }
     
-    /*!*!*!*!*!*!*!*!*!*!*
-    //This javadoc needs to be changed as it's no longer just about the portal
-    */
+    
     /**
-     * Setter for {@link weiss.core.agent.Portal Portal} object.
-     * @param superAgent {@link weiss.core.agent.Portal Portal} object.
+     * Setter for {@link weiss.core.agent.MetaAgent MetaAgent} superAgent.
+     * @param superAgent {@link weiss.core.agent.MetaAgent MetaAgent} object.
      */
     public final void setSuperAgent(MetaAgent superAgent)
     {   
         this.superAgent = superAgent;
         if(this.superAgent != null)
         {
-            pushToSuperAgent(new SysMessage(this.getName(), getSuperAgentName(), "reg", this));
+            pushToSuperAgent(new SysMessage(this.getName(), getSuperAgent().getName(), "reg", this));
         }
     }
     
@@ -177,6 +184,9 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     //--------------------------------------------------------------------------
     protected void msgHandler(Message msg)
     {
+        updateNodeMonitor(msg);
+        
+        //Where is this getting used?
         String to = msg.getTo();   //puts the address of the message into a local variable
         String from = msg.getFrom();
 
@@ -206,93 +216,15 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         }
     }
     
+    //--------------------------------------------------------------------------
+    //CLASS SPECIFIC METHODS
+    //--------------------------------------------------------------------------
+    
     public void sendMessage(String to, String message)
     {
         pushToSuperAgent(new UserMessage(this.getName(), to, message));
     }
     
-    //--------------------------------------------------------------------------
-    //INTERFACE METHODS
-    //--------------------------------------------------------------------------
-    @Override
-    public void addNodeMonitor(NodeMonitor nodeMonitor)
-    {
-        /*!*!*!*!*!*!*!*!*!*!*!*
-        //Error happening here
-        */
-        //this.monitors.add(nodeMonitor);   
-    }
-    @Override
-    public void removeNodeMonitor(NodeMonitor nodeMonitor)
-    {
-        /*!*!*!*!*!*!*!*!*!*!*!*
-        //Error happening here
-        */
-        //this.monitors.remove(nodeMonitor);
-    }
-    /*public void updateNodeMonitor(Message msg)
-    {
-        monitor.stream().forEach((node) ->
-        {
-            try
-            {
-                if(node != null)
-                    node.put(msg);
-                else
-                    System.out.println("No node monitor attached...");
-            } 
-            catch (InterruptedException ex)
-            {
-                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-    }*/
-    /**
-     * Method to add a client that interacts with the MetaAgent. Only one client
-     * can be active at any one time.
-     * @param client An object of type WeissBase. Current implementation uses
-     * {@link weiss.manager.Client Client}.
-     */
-    @Override
-    public void addClient(NodeMonitor client)
-    {
-        /*!*!*!*!*!*!*!*!*!*
-        //Error happening here
-        */
-        //this.client = client;
-    }
-    @Override
-    public void removeClient(NodeMonitor client)
-    {
-        this.client = null;
-    }
-    public void updateClient(Message msg)
-    {
-        try
-        {
-            if(client != null)
-                client.put(msg);
-            else
-                System.out.println(msg.toString());
-        } 
-        catch (InterruptedException ex)
-        {
-            Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    @Override
-    public boolean hasClient()
-    {
-        return this.client != null;
-    }
-    /*@Override
-    public boolean hasMonitor()
-    {
-        return !monitors.isEmpty();
-    }*/
-    
-    //--------------------------------------------------------------------------
-    //CLASS SPECIFIC METHODS
     protected void pushToSuperAgent(Message msg)
     {
         try //passes the message to the next MetaAgent in the chain
@@ -305,5 +237,24 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         }
     }
     
+    //--------------------------------------------------------------------------
+    //INTERFACE METHODS
+    //--------------------------------------------------------------------------
+    @Override
+    public void addNodeMonitor(NodeMonitor nodeMonitor)
+    {
+        this.monitor = nodeMonitor;   
+    }
+    @Override
+    public void removeNodeMonitor(NodeMonitor nodeMonitor)
+    {
+        
+        this.monitor = null;
+    }
     
+    private void updateNodeMonitor(Message msg)
+    {
+        if(this.monitor != null)
+            this.monitor.insertTableData(msg);
+    }
 }

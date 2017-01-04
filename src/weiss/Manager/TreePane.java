@@ -19,6 +19,7 @@ package weiss.manager;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
@@ -44,9 +45,11 @@ public class TreePane
     private DefaultTreeModel treeModel;
     private static JTree tree;
     private DefaultTreeCellRenderer render;
+    private WeissManager manager;
 
-    public TreePane()
+    public TreePane(WeissManager manager)
     {
+        this.manager = manager;
         render = new DefaultTreeCellRenderer();
         rootNode = new TreeNode("Weiss");
         treeModel = new DefaultTreeModel(rootNode);
@@ -77,6 +80,12 @@ public class TreePane
         tree = new JTree(treeModel);
         tree.addTreeSelectionListener(new TreeSelectionListener()
         {
+            
+            private JButton getAgentSelectBtn()
+            {
+                return manager.getAgentSelectBtn();
+            }
+            
             @Override
             public void valueChanged(TreeSelectionEvent e)
             {
@@ -85,19 +94,19 @@ public class TreePane
                 switch (treeNode.getLevel())
                 {
                     case 0:
-                        WeissManager.getAgentSelectBtn().setText("New Router");
+                        this.getAgentSelectBtn().setText("New Router");
                         break;
                     case 1:
-                        WeissManager.getAgentSelectBtn().setText("New Portal");
+                        this.getAgentSelectBtn().setText("New Portal");
                         break;
                     case 2:
-                        WeissManager.getAgentSelectBtn().setText("New Agent");
+                        this.getAgentSelectBtn().setText("New Agent");
                         break;
                     case 3:
-                        WeissManager.getAgentSelectBtn().setText("View Agent");
+                        this.getAgentSelectBtn().setText("View Agent");
                         break;
                     default:
-                        WeissManager.getAgentSelectBtn().setText("Select an Item");
+                        this.getAgentSelectBtn().setText("Select an Item");
                         break;
                 }
             }
@@ -109,6 +118,8 @@ public class TreePane
         tree.setCellRenderer(new WeissTreeCellRenderer());
     }
 
+    
+    
     public JTree getTree()
     {
         return tree;
@@ -131,7 +142,7 @@ public class TreePane
         return addNode(parentNode, child, true, image);
     }
 
-    public TreeNode addNode(DefaultMutableTreeNode parent,
+    private TreeNode addNode(DefaultMutableTreeNode parent,
             MetaAgent child,
             boolean shouldBeVisible,
             ImageIcon image)

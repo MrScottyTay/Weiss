@@ -20,34 +20,26 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Vector;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import weiss.core.message.Message;
 import weiss.core.*;
+import weiss.core.agent.MetaAgent;
 
 /**
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class NodeMonitor extends WeissBase implements Runnable
+public class NodeMonitor
 {
-    private Thread t;
-    private Boolean shouldStop;
     private JDialog dialog;
     private Vector data;
     private JTable table; 
     private DefaultTableModel tableModel;
     
-    public NodeMonitor(String name)
+    public NodeMonitor(MetaAgent agent)
     {
-        super(name);
-        shouldStop = false;
-        
-        this.createGUI(name);
-        t = new Thread(this);
+        this.createGUI(agent.getName());
     }
     
     protected void createGUI(String name)
@@ -81,35 +73,16 @@ public class NodeMonitor extends WeissBase implements Runnable
         dialog.setVisible(true);
     } 
     
-    private Vector insertTableData(Message msg)
+    public void insertTableData(Message msg)
     {
         Vector row = new Vector();
         row.add(msg.getFrom());
         row.add(msg.getTo());
         row.add(msg.getTime());
         
-        return row;
-    }
-    
-    @Override
-    protected void sysMsgHandler(SysMessage msg)
-    {
-        Vector row = insertTableData(msg);
-        row.add("SysMessage");
+        //Need to add logic for message type
         
         data.add(row);
         tableModel.fireTableDataChanged();
-        dialog.revalidate();
-    }
-
-    @Override
-    protected void userMsgHandler(UserMessage msg)
-    {
-        Vector row = insertTableData(msg);
-        row.add("UserMessage");
-        
-        data.add(row);
-        tableModel.fireTableDataChanged();
-        dialog.revalidate();
     }
 }
