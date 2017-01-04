@@ -26,8 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import weiss.core.message.Message;
-import weiss.core.agent.*;
-import weiss.core.message.*;
+import weiss.core.*;
 
 /**
  *

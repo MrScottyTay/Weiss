@@ -16,13 +16,9 @@
  */
 package weiss.core.agent;
 
-import weiss.core.message.Message;
-import weiss.core.message.RouterMessage;
-import weiss.core.message.UserMessage;
-import weiss.core.message.ReplyMessage;
-import weiss.core.message.SysMessage;
+import weiss.core.message.*;
 import weiss.manager.NodeMonitor;
-import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -36,12 +32,13 @@ import javax.swing.ImageIcon;
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public abstract class MetaAgent extends WeissBase implements Runnable, Monitorable
+public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable, Monitorable
 {
+    private String name;
     private int scope;  //0 = global, 1 = router-wide, 2 = portal-wide
-    private ArrayList<WeissBase> monitors;
+    private NodeMonitor monitor;
     private WeissBase client;
-    private MetaAgent superAgent;
+    MetaAgent superAgent;
     private ImageIcon image;
     
     /**
@@ -52,11 +49,27 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
      */
     public MetaAgent(String name, MetaAgent superAgent)
     {
-        super(name);
-        this.monitors = new ArrayList();
+        super();
+        this.name = name;
         this.client = null;
         this.setSuperAgent(superAgent);
         this.scope = 0;
+        
+        /*  this is what I was talking about earlier, and also what simon showed me one on one
+            although I'm now thinking, how can we implement a threadpool with this
+        Thread thread = new Thread()
+        {
+          public void run()
+          {
+              boolean forever = true;
+              while(forever == true)
+              {
+                  msgHandler(take());   //if theres a message in the queue, it will take it and put it into the msghandler
+              }
+          }
+        };
+        thread.run();
+        */
     }
     /**
      * Constructor to initialise a MetaAgent object, and setting the scope.
@@ -66,9 +79,8 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
      */
     public MetaAgent(String name,MetaAgent superAgent, int scope)
     {
-        super(name);
-        
-        this.monitors = new ArrayList();
+        super();
+        this.name = name;
         this.client = null;
         this.superAgent = superAgent;
         this.scope = scope;        
@@ -80,41 +92,62 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
      * Getter for name variable.
      * @return name String.
      */
-    
+    public String getName()
+    {
+        return name;    //returns the name
+    }
+    public String getSuperAgentName()
+    {
+        return superAgent.getName();
+    }
     /**
      * Getter for {@link weiss.core.agent.Portal Portal} object.
      * @return {@link weiss.core.agent.Portal Portal} pointer.
      */
     public MetaAgent getSuperAgent()
     {
-        return superAgent;
+        return superAgent;  //returns the superAgent
     }
     /**
      * Method to set scope of MetaAgent
      * @return Integer relating to the scope of the MetaAgent
      */
-    public int getScope()
+    private int getScope()
     {
-        return scope;
+        return scope;   //returns the scope
     }
     
     //--------------------------------------------------------------------------
     //SETTERS
     
+    public void setName(String n)
+    {
+        SysMessage request = new SysMessage(this.getName(), getSuperAgentName(), "NameCheck " + n);    //creates a SysMessage that will request its superAgent to begin a nameCheck across the system
+        pushToSuperAgent(request);  //pushes the request to the superAgent
+    }
     /*?*?*?*?*?*?*?*?*?*
     //Can this be a message type rather than a string concat?
     */
-    public void setName(String[] reply)//Reply about name change is handled here and determined whether name can be changed or not
+    /*!*!*!*!*!*!*!*!*!*
+    //We've got too much of a class explosion already.
+    */
+    public void setName(String[] reply, Message msg)//Reply about name change is handled here and determined whether name can be changed or not
     {
-        switch (reply[2])
+        String[] n = msg.getMsg().split(" ");
+        switch (reply[2])   //reply[2] holds whether the name change has been approved or not
         {
-            case "Approved":
-                this.setName(reply[3]);
+            case "Approved":    //if it is approved...
+                this.name = n[2];
                 break;
-            case "Declined":
+            case "Declined":    //if it has been declined...
+                //nothing happens currently, but an error, maybe even a hook to the monitor can be executed here.
                 break;
         }
     }
+    
+    /*!*!*!*!*!*!*!*!*!*!*
+    //This javadoc needs to be changed as it's no longer just about the portal
+    */
     /**
      * Setter for {@link weiss.core.agent.Portal Portal} object.
      * @param superAgent {@link weiss.core.agent.Portal Portal} object.
@@ -123,8 +156,9 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     {   
         this.superAgent = superAgent;
         if(this.superAgent != null)
-            pushToSuperAgent(new SysMessage(this.getName(), superAgent.getName(),
-                    "reg", this));
+        {
+            pushToSuperAgent(new SysMessage(this.getName(), getSuperAgentName(), "reg", this));
+        }
     }
     
     /**
@@ -139,20 +173,66 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     }
     
     //--------------------------------------------------------------------------
+    //MESSAGE HANDLERS
+    //--------------------------------------------------------------------------
+    protected void msgHandler(Message msg)
+    {
+        String to = msg.getTo();   //puts the address of the message into a local variable
+        String from = msg.getFrom();
+
+        if(msg instanceof ReplyMessage)
+        {
+            replyMsgHandler((ReplyMessage) msg);   //gets sent to the handler specifically for ReplyMEssages
+        }
+        else
+        {
+            userMsgHandler((UserMessage) msg);
+        }
+    }
+    
+    abstract protected void userMsgHandler(UserMessage msg);   //EndUser creates a body for this method to make the agent do what it wants to do
+    
+    protected void replyMsgHandler(ReplyMessage msg)
+    {
+        String[] reply = msg.getMsg().split(" ");
+        switch(reply[1])
+        {
+            case "ReturnToSender":
+                //handling for an undelivered message
+                break;
+            case "Name":
+                this.setName(reply, msg.getContents());
+                break;
+        }
+    }
+    
+    public void sendMessage(String to, String message)
+    {
+        pushToSuperAgent(new UserMessage(this.getName(), to, message));
+    }
+    
+    //--------------------------------------------------------------------------
     //INTERFACE METHODS
+    //--------------------------------------------------------------------------
     @Override
     public void addNodeMonitor(NodeMonitor nodeMonitor)
     {
-        this.monitors.add(nodeMonitor);
+        /*!*!*!*!*!*!*!*!*!*!*!*
+        //Error happening here
+        */
+        //this.monitors.add(nodeMonitor);   
     }
     @Override
     public void removeNodeMonitor(NodeMonitor nodeMonitor)
     {
-        this.monitors.remove(nodeMonitor);
+        /*!*!*!*!*!*!*!*!*!*!*!*
+        //Error happening here
+        */
+        //this.monitors.remove(nodeMonitor);
     }
-    public void updateNodeMonitor(Message msg)
+    /*public void updateNodeMonitor(Message msg)
     {
-        for(WeissBase node : monitors)
+        monitor.stream().forEach((node) ->
         {
             try
             {
@@ -165,8 +245,8 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
             {
                 Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-    }
+        });
+    }*/
     /**
      * Method to add a client that interacts with the MetaAgent. Only one client
      * can be active at any one time.
@@ -176,7 +256,10 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     @Override
     public void addClient(NodeMonitor client)
     {
-        this.client = client;
+        /*!*!*!*!*!*!*!*!*!*
+        //Error happening here
+        */
+        //this.client = client;
     }
     @Override
     public void removeClient(NodeMonitor client)
@@ -202,11 +285,11 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     {
         return this.client != null;
     }
-    @Override
+    /*@Override
     public boolean hasMonitor()
     {
         return !monitors.isEmpty();
-    }
+    }*/
     
     //--------------------------------------------------------------------------
     //CLASS SPECIFIC METHODS
@@ -215,51 +298,12 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
         try //passes the message to the next MetaAgent in the chain
         {
             if(superAgent != null)
-                superAgent.put(msg);    //puts the message onto the router's blocking queue              
+                superAgent.put(msg);    //puts the message onto this agent's parent's (Portal or Router) blocking queue (or the next router in line if this is a router)             
         } catch (InterruptedException ex)
         {
             Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    @Override
-    protected void msgHandler(Message msg)
-    {
-        this.updateNodeMonitor(msg);
-        String to = msg.getTo();   //puts the address of the message into a local variable
-        String from = msg.getFrom();
-
-        if (msg instanceof SysMessage)
-            this.sysMsgHandler((SysMessage) msg); //it gets sent to the handler specifically for SysMessages
-        else if(msg instanceof RouterMessage)
-            this.RouterMsgHandler((RouterMessage) msg);//gets sent to the handler specifically for RouterMessages
-        else if(msg instanceof ReplyMessage)
-            this.ReplyMsgHandler((ReplyMessage) msg);//gets sent to the handler specifically for ReplyMEssages
-        else
-            this.userMsgHandler((UserMessage) msg);
-    }
-
-    protected void ReplyMsgHandler(ReplyMessage msg)
-    {
-        String[] reply = msg.getMsg().split(" ");
-        switch(reply[1])
-        {
-            case "ReturnToSender":
-                //handling for an undelivered message
-                break;
-            case "Name":
-                this.setName(reply);
-                break;
-        }
-    }
     
-    protected void RouterMsgHandler(RouterMessage msg)
-    {
-        //Do something
-    } 
-    public void sendMessage(String to, String message)
-    {
-        pushToSuperAgent(new UserMessage(this.getName(), to, message));
-    }
-
 }
