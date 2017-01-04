@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import weiss.MetaAgent.Agent;
-import weiss.MetaAgent.Portal;
-import weiss.MetaAgent.MetaAgent;
-import Weiss.Manager.NodeMonitor;
-import Weiss.Manager.WeissManager;
+import weiss.core.agent.Agent;
+import weiss.core.agent.Portal;
+import weiss.core.agent.MetaAgent;
+import weiss.manager.NodeMonitor;
+import weiss.manager.WeissManager;
 import java.util.logging.*;
-import weiss.Message.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

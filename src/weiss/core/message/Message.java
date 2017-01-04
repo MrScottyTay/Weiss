@@ -1,4 +1,4 @@
-package weiss.Message;
+package weiss.core.message;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
