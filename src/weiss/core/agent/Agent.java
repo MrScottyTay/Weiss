@@ -50,12 +50,6 @@ public class Agent extends MetaAgent implements Runnable
     {
         Message message = msg;
         this.updateClient(message);
-        
-        System.out.println("--Agent " + this.getName() + "--" + "\n" +
-                            "From: " + message.getFrom() + "\n" +
-                            "To: " + message.getTo() + "\n" +
-                            "Sent: " + message.getTime() + "\n" +
-                            "Message: " + message.getMsg());
     }
 
     private void noAgentError(SysMessage msg)
