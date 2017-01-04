@@ -38,24 +38,27 @@ import javax.swing.ImageIcon;
  */
 public abstract class MetaAgent extends WeissBase implements Runnable, Monitorable
 {
+    
+    private String name;    
     private int scope;  //0 = global, 1 = router-wide, 2 = portal-wide
-    private ArrayList<WeissBase> monitors;
-    private WeissBase client;
-    private MetaAgent superAgent;
-    private ImageIcon image;
+    private ArrayList<NodeMonitor> nodeMonitors;
+    protected NodeMonitor client;
+    protected MetaAgent superAgent;
+    protected ImageIcon image;
     
     /**
      * Constructor to initialise a MetaAgetn object.
      * @param name {@link weiss.core.agent.Portal Portal} belonging to MetaAgent.
      * @param superAgent Scope of the MetaAgent.
-     * 
+     * @param image
      */
     public MetaAgent(String name, MetaAgent superAgent)
     {
-        super(name);
-        this.monitors = new ArrayList();
+        super();
+        this.nodeMonitors = new ArrayList();
         this.client = null;
-        this.setSuperAgent(superAgent);
+        this.name = name;
+        this.superAgent = superAgent;
         this.scope = 0;
     }
     /**
@@ -64,12 +67,13 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
      * @param superAgent {@link weiss.core.agent.Portal Portal} belonging to MetaAgent.
      * @param scope Scope of the MetaAgent.
      */
-    public MetaAgent(String name,MetaAgent superAgent, int scope)
+    public MetaAgent(String name, MetaAgent superAgent, int scope)
     {
-        super(name);
+        super();
         
-        this.monitors = new ArrayList();
+        this.nodeMonitors = new ArrayList();
         this.client = null;
+        this.name = name;
         this.superAgent = superAgent;
         this.scope = scope;        
     }
@@ -80,7 +84,10 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
      * Getter for name variable.
      * @return name String.
      */
-    
+    public String getName()
+    {
+        return name;
+    }
     /**
      * Getter for {@link weiss.core.agent.Portal Portal} object.
      * @return {@link weiss.core.agent.Portal Portal} pointer.
@@ -100,21 +107,28 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     
     //--------------------------------------------------------------------------
     //SETTERS
+    /**
+     * Setter for name variable.
+     * @param n name String.
+     */
+    public final void setName(String n)
+    {
+        name = n;
+        //Validity checks present in superAgent
+    }
     
-    /*?*?*?*?*?*?*?*?*?*
-    //Can this be a message type rather than a string concat?
-    */
     public void setName(String[] reply)//Reply about name change is handled here and determined whether name can be changed or not
     {
         switch (reply[2])
         {
             case "Approved":
-                this.setName(reply[3]);
+                this.name = reply[3];
                 break;
             case "Declined":
                 break;
         }
     }
+    
     /**
      * Setter for {@link weiss.core.agent.Portal Portal} object.
      * @param superAgent {@link weiss.core.agent.Portal Portal} object.
@@ -123,10 +137,9 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     {   
         this.superAgent = superAgent;
         if(this.superAgent != null)
-            pushToSuperAgent(new SysMessage(this.getName(), superAgent.getName(),
+            pushToSuperAgent(new SysMessage(this.getName(), this.superAgent.getName(),
                     "reg", this));
     }
-    
     /**
      * Method to set scope of MetaAgent
      * @param scope Integer relating to the scope of the MetaAgent
@@ -143,36 +156,17 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     @Override
     public void addNodeMonitor(NodeMonitor nodeMonitor)
     {
-        this.monitors.add(nodeMonitor);
+        this.nodeMonitors.add(nodeMonitor);
     }
     @Override
     public void removeNodeMonitor(NodeMonitor nodeMonitor)
     {
-        this.monitors.remove(nodeMonitor);
+        this.nodeMonitors.remove(nodeMonitor);
     }
     public void updateNodeMonitor(Message msg)
     {
-        for(WeissBase node : monitors)
-        {
-            try
-            {
-                if(node != null)
-                    node.put(msg);
-                else
-                    System.out.println("No node monitor attached...");
-            } 
-            catch (InterruptedException ex)
-            {
-                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        pushToNodeMonitor(msg);
     }
-    /**
-     * Method to add a client that interacts with the MetaAgent. Only one client
-     * can be active at any one time.
-     * @param client An object of type WeissBase. Current implementation uses
-     * {@link weiss.manager.Client Client}.
-     */
     @Override
     public void addClient(NodeMonitor client)
     {
@@ -185,17 +179,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     }
     public void updateClient(Message msg)
     {
-        try
-        {
-            if(client != null)
-                client.put(msg);
-            else
-                System.out.println(msg.toString());
-        } 
-        catch (InterruptedException ex)
-        {
-            Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        pushToClient(msg);
     }
     @Override
     public boolean hasClient()
@@ -205,7 +189,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     @Override
     public boolean hasMonitor()
     {
-        return !monitors.isEmpty();
+        return !nodeMonitors.isEmpty();
     }
     
     //--------------------------------------------------------------------------
@@ -214,11 +198,37 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     {
         try //passes the message to the next MetaAgent in the chain
         {
-            if(superAgent != null)
-                superAgent.put(msg);    //puts the message onto the router's blocking queue              
+            superAgent.put(msg);    //puts the message onto the router's blocking queue
         } catch (InterruptedException ex)
         {
             Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void pushToClient(Message msg)
+    {
+        try
+        {
+            client.put(msg);
+        } 
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void pushToNodeMonitor(Message msg)
+    {
+        for(NodeMonitor node : nodeMonitors)
+        {
+            try
+            {
+                node.put(msg);
+            } 
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -256,7 +266,7 @@ public abstract class MetaAgent extends WeissBase implements Runnable, Monitorab
     protected void RouterMsgHandler(RouterMessage msg)
     {
         //Do something
-    } 
+    }
     public void sendMessage(String to, String message)
     {
         pushToSuperAgent(new UserMessage(this.getName(), to, message));

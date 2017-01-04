@@ -5,7 +5,7 @@ package weiss.core.message;
  */
 public abstract class DecoratedMessage extends Message
 {
-    private Message contents;
+    Message contents;
 
     public DecoratedMessage(String f, String t, String m, Message c)
     {

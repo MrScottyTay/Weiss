@@ -17,7 +17,7 @@ import weiss.core.agent.MetaAgent;
  */
 public class SysMessage extends Message
 {
-    private MetaAgent agent;
+    MetaAgent agent;
     
     /**
      * Constructor for the SysMessage class.

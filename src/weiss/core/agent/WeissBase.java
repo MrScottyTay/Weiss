@@ -15,8 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package weiss.core.agent;
-;
+
+import weiss.manager.NodeMonitor;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import weiss.core.message.Message;
 import weiss.core.message.SysMessage;
 import weiss.core.message.UserMessage;
@@ -27,31 +30,13 @@ import weiss.core.message.UserMessage;
  */
 public abstract class WeissBase extends LinkedBlockingQueue implements Runnable
 {
-    private final Thread t;
-    private Boolean shouldStop;
-    private String name;
-    
-    public WeissBase(String name)
+    Thread t;
+    Boolean shouldStop;
+    public WeissBase()
     {
         shouldStop = false;
-        this.name = name;
         
         t = new Thread(this);
-    }
-    
-    /**
-     * Getter for name variable.
-     * 
-     * @return String of name.
-     */
-    public String getName()
-    {
-        return name;
-    }
-    
-    public void setName(String name)
-    {
-        this.name = name; 
     }
     
     protected void msgHandler(Message msg)
@@ -88,7 +73,7 @@ public abstract class WeissBase extends LinkedBlockingQueue implements Runnable
             } 
             catch (InterruptedException ex)
             {
-                System.out.println("Error taking message");
+                Logger.getLogger(NodeMonitor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

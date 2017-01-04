@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.manager;
+package Weiss.Manager;
 
 
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
-import weiss.core.agent.MetaAgent;
+import weiss.MetaAgent.MetaAgent;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

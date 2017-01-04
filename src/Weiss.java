@@ -20,8 +20,6 @@ import weiss.core.agent.MetaAgent;
 import weiss.manager.NodeMonitor;
 import weiss.manager.WeissManager;
 import java.util.logging.*;
-import weiss.core.agent.Router;
-import weiss.core.message.SysMessage;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -41,44 +39,46 @@ public class Weiss {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //A demonstration of the middleware in action. One version uses a custom
-        //GUI to present the information, the other utilises the CLI.
         
-        
-
-        //----------------------------------------------------------------------
-        //MANAGER OPERATION
-
         WeissManager manager = new WeissManager();
-                
-        /*
-        //----------------------------------------------------------------------
-        //CLI OPERATION
-        MetaAgent router = new Router("R1", null);
-        router.start();
         
-        MetaAgent portal = new Portal("P1", router);
+        /*
+        MetaAgent portal = new Portal("P1", null);
         portal.start();
         
-        NodeMonitor monitor3 = new NodeMonitor(portal.getName());
-        portal.addNodeMonitor(monitor3);
-        monitor3.start();
-
         MetaAgent agent1 = new Agent("Fred", portal);
         agent1.start();
-        
-        MetaAgent agent2 = new Agent("Bill", portal);
+        MetaAgent agent2 = new Agent("Phill", portal);
         agent2.start();
+        MetaAgent agent3 = new Agent("Phill", portal);
         
-        NodeMonitor monitor1 = new NodeMonitor(agent1.getName());
-        agent1.addNodeMonitor(monitor1);
-        monitor1.start();
-                
-        NodeMonitor monitor2 = new NodeMonitor(agent2.getName());
-        agent2.addNodeMonitor(monitor2);
-        monitor2.start();
-        //----------------------------------------------------------------------
-        agent1.sendMessage("Bill", "Hello World!");
+        try
+        {
+            portal.put(new SysMessage("Admin", "P1", "reg", agent1));
+            portal.put(new SysMessage("Admin", "P1", "reg", agent2));
+            portal.put(new SysMessage("Admin", "P1", "reg", agent3));
+        } 
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(Weiss.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        agent1.sendMessage("Phill", "Hello World!");
+        agent1.sendMessage("Greg", "Hello World!");
+        
+        
+        
+        
+        NodeMonitor n = new NodeMonitor();
+        n.start();
+        try
+        {
+            n.put(new UserMessage("Fred", "You", "Hello"));
+        }
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(Weiss.class.getName()).log(Level.SEVERE, null, ex);
+        }
         */
     }
 }
