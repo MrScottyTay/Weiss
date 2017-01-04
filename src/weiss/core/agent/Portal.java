@@ -14,26 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.MetaAgent;
+package weiss.core.agent;
 
+import weiss.core.message.Message;
+import weiss.core.message.UserMessage;
+import weiss.core.message.SysMessage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import weiss.Message.*;
 
 /**
  * * Class used for handling messages from both
- * {@link weiss.MetaAgent.MetaAgent MetaAgent} classes and
- * {@link weiss.MetaAgent.Router Router} classes, and routing them to the correct
- * destination. The class implements {@link weiss.MetaAgent.MetaAgent MetaAgent},
+ * {@link weiss.core.agent.MetaAgent MetaAgent} classes and
+ * {@link weiss.core.agent.Router Router} classes, and routing them to the correct
+ * destination. The class implements {@link weiss.core.agent.MetaAgent MetaAgent},
  * which is the basis for all of our MAS classes.
  * <p>
  * When the object receives a message, it checks it's own
  * {@link Portal#routingTable Routing Table} for the value found in the
  * {@link weiss.Message.Message#to To} field. If the object is found, it passes
  * the message on to the selected object. If not, the object is passed to its
- * assigned {@link weiss.MetaAgent.Router Router}.
+ * assigned {@link weiss.core.agent.Router Router}.
  *
  *
  * @author Adam Young, Teesside University Sch. of Computing
