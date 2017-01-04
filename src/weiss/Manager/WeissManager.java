@@ -14,12 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package Weiss.Manager;
+package weiss.manager;
 
-import weiss.MetaAgent.Agent;
-import weiss.MetaAgent.Router;
-import weiss.MetaAgent.Portal;
-import weiss.MetaAgent.MetaAgent;
+import weiss.core.agent.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -46,13 +43,15 @@ import javax.swing.JTree;
  */
 public class WeissManager extends JFrame
 {
-
-    private TreeNode nodeSelected;
     private static JButton metaAgentSelectBtn;
+
     private JTextField metaAgentInputField;
-    private TreePane treePane;
-    private JTree tree;
+    private final TreePane treePane;
+    private final JTree tree;
     
+
+    
+
 
     public WeissManager()
     {
@@ -73,7 +72,7 @@ public class WeissManager extends JFrame
 
     public JPanel buildPanel()
     {
-        
+
         
         metaAgentInputField = new JTextField(10);
         
@@ -90,6 +89,7 @@ public class WeissManager extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
+
                 MetaAgent treeSelection = null;
                 TreeNode treeNode = null;
                  
@@ -98,6 +98,11 @@ public class WeissManager extends JFrame
                     treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
                     treeSelection = treeNode.getAgentRef();
                 }
+                
+                if(tree.getSelectionPath().getLastPathComponent() != null)
+                    treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
+                treeSelection = treeNode.getAgentRef();
+
 
                 if (!metaAgentInputField.getText().isEmpty() && 
                         !metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
@@ -122,12 +127,14 @@ public class WeissManager extends JFrame
                 }
                 else if(metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
                 {
-                    NodeMonitor agentView = new AgentView();
-                            agentView.createGUI(treeSelection);
-                            treeSelection.addClient(agentView);
-                            agentView.start();
+                    NodeMonitor agentView = new Client(treeSelection.getName(), treeSelection);
+                    treeSelection.addClient(agentView);
+                    agentView.start();
+                   
                 }
                 metaAgentInputField.setText("");
+                
+
             }
         });
 
@@ -141,9 +148,7 @@ public class WeissManager extends JFrame
                 TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
                 MetaAgent treeSelection = treeNode.getAgentRef();
 
-                NodeMonitor node = new NodeMonitor();
-                
-                node.createGUI(treeSelection);
+                NodeMonitor node = new NodeMonitor(treeSelection.getName());
                 treeSelection.addNodeMonitor(node);
                 node.start();
                 
