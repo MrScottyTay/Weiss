@@ -37,7 +37,7 @@ import weiss.core.message.*;
 public class Client
 {
     private JTextArea textArea;
-    private MetaAgent agent;
+    private final MetaAgent agent;
     private Thread thread;
             
     public Client(MetaAgent agent)

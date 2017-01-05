@@ -16,8 +16,6 @@
  */
 package weiss.core.agent;
 
-import weiss.manager.NodeMonitor;
-
 /**
  *
  * @author Adam Young, Teesside University Sch. of Computing

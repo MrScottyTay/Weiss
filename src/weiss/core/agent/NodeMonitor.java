@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.manager;
+package weiss.core.agent;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,8 +23,6 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import weiss.core.message.Message;
-import weiss.core.*;
-import weiss.core.agent.MetaAgent;
 
 /**
  *
@@ -61,7 +59,7 @@ public class NodeMonitor
         columnNames.add("From");
         columnNames.add("To");
         columnNames.add("Sent");
-        columnNames.add("MsgType");
+        //columnNames.add("MsgType");
 
         table = new JTable(data, columnNames);
         tableModel = (DefaultTableModel) table.getModel();

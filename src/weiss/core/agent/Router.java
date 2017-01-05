@@ -67,7 +67,8 @@ public class Router extends Portal implements Runnable
         if (routingTable.containsKey(msg.getTo()))   //if this router knows where the addressed agent is...
         {
             pushToSubAgent(msg);  //push it into the right direction
-        } else    //if the router doesn't know about this agent
+        } 
+        else    //if the router doesn't know about this agent
         {
             //create a router message to ask the other routers to see if they know of the addressed agent
             RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), msg.getMsg(), msg, getName());
@@ -138,7 +139,7 @@ public class Router extends Portal implements Runnable
     protected void sysMsgHandler(SysMessage msg)
     {
         String[] command = msg.getMsg().split(" ");
-        switch (command[1])
+        switch (command[0])
         {
             case "reg":
                 registration(msg);
@@ -200,6 +201,7 @@ public class Router extends Portal implements Runnable
         RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), "reg", msg, getName());
         pushToSuperAgent(rMsg); //gives the routermessage to the next router in line
     }
+    
     private void registration(RouterMessage msg)    //when the router gets a registration request from a Router
     {
         SysMessage contents = (SysMessage)msg.getContents();    //unpackages the RouterMessage
@@ -218,9 +220,4 @@ public class Router extends Portal implements Runnable
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void run()
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
