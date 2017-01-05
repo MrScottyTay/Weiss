@@ -16,6 +16,8 @@
  */
 package weiss.core.agent;
 
+import weiss.core.message.Monitorable;
+import weiss.core.message.NodeMonitor;
 import weiss.core.message.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
@@ -71,8 +73,6 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         this.superAgent = superAgent;
         this.scope = scope;        
     }
-    
-    
     @Override
     public void run()
       {
@@ -88,7 +88,6 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
               }
           }
       }
-    
     public void start()
     {
         thread.start();

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.agent;
+package weiss.core.message;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import weiss.core.agent.MetaAgent;
 import weiss.core.message.Message;
 
 /**
@@ -59,7 +60,7 @@ public class NodeMonitor
         columnNames.add("From");
         columnNames.add("To");
         columnNames.add("Sent");
-        //columnNames.add("MsgType");
+        columnNames.add("MsgType");
 
         table = new JTable(data, columnNames);
         tableModel = (DefaultTableModel) table.getModel();
@@ -78,7 +79,16 @@ public class NodeMonitor
         row.add(msg.getTo());
         row.add(msg.getTime());
         
-        //Need to add logic for message type
+        if(msg instanceof UserMessage)
+            row.add("UserMessage");
+        else if(msg instanceof SysMessage)
+            row.add("SysMessage");
+        else if(msg instanceof ReplyMessage)
+            row.add("ReplyMessage");
+        else if(msg instanceof RouterMessage)
+            row.add("RouterMessage");
+        else
+            row.add("AltMessage");
         
         data.add(row);
         tableModel.fireTableDataChanged();

@@ -16,6 +16,7 @@
  */
 package weiss.core.agent;
 
+import weiss.core.message.Monitorable;
 import weiss.core.message.Message;
 import weiss.core.message.UserMessage;
 import weiss.core.message.SysMessage;
