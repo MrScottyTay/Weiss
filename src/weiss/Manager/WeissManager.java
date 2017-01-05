@@ -16,6 +16,7 @@
  */
 package weiss.manager;
 
+import weiss.core.agent.NodeMonitor;
 import weiss.core.agent.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;

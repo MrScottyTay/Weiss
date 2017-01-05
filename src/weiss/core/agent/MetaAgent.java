@@ -17,13 +17,10 @@
 package weiss.core.agent;
 
 import weiss.core.message.*;
-import weiss.manager.NodeMonitor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import weiss.manager.Client;
-import weiss.manager.Managable;
 
 /**
  * An abstract class detailing the construction of a MetaAgent object, to be implemented
@@ -57,7 +54,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         this.setSuperAgent(superAgent);
         this.scope = 0;
         
-        thread = new Thread();      
+        thread = new Thread(this);      
     }
     
 
@@ -74,6 +71,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         this.superAgent = superAgent;
         this.scope = scope;        
     }
+    
     
     @Override
     public void run()
@@ -131,15 +129,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         SysMessage request = new SysMessage(this.getName(), getSuperAgent().getName(), "NameCheck " + n);    //creates a SysMessage that will request its superAgent to begin a nameCheck across the system
         pushToSuperAgent(request);  //pushes the request to the superAgent
     }
-    /*?*?*?*?*?*?*?*?*?*
-    //Can this be a message type rather than a string concat?
-    */
-    /*!*!*!*!*!*!*!*!*!*
-    //We've got too much of a class explosion already.
-    */
-    /*"*"*"*"*"*"*"*"*"*
-    //I agree, I'm just trying to be edgy here
-    */
+
     public void setName(String[] reply, Message msg)//Reply about name change is handled here and determined whether name can be changed or not
     {
         String[] n = msg.getMsg().split(" ");
@@ -248,11 +238,10 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     @Override
     public void removeNodeMonitor(NodeMonitor nodeMonitor)
     {
-        
         this.monitor = null;
     }
     
-    private void updateNodeMonitor(Message msg)
+    protected void updateNodeMonitor(Message msg)
     {
         if(this.monitor != null)
             this.monitor.insertTableData(msg);

@@ -17,11 +17,9 @@
 import weiss.core.agent.Agent;
 import weiss.core.agent.Portal;
 import weiss.core.agent.MetaAgent;
-import weiss.manager.NodeMonitor;
+import weiss.core.agent.NodeMonitor;
 import weiss.manager.WeissManager;
-import java.util.logging.*;
 import weiss.core.agent.Router;
-import weiss.core.message.SysMessage;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -48,35 +46,28 @@ public class Weiss {
 
         //----------------------------------------------------------------------
         //MANAGER OPERATION
-
+        
         WeissManager manager = new WeissManager();
                 
         /*
         //----------------------------------------------------------------------
         //CLI OPERATION
         MetaAgent router = new Router("R1", null);
+        router.addNodeMonitor(new NodeMonitor(router));
         router.start();
         
         MetaAgent portal = new Portal("P1", router);
+        portal.addNodeMonitor(new NodeMonitor(portal));
         portal.start();
-        
-        NodeMonitor monitor3 = new NodeMonitor(portal.getName());
-        portal.addNodeMonitor(monitor3);
-        monitor3.start();
 
-        MetaAgent agent1 = new Agent("Fred", portal);
+        Agent agent1 = new Agent("Fred", portal);
+        agent1.addNodeMonitor(new NodeMonitor(agent1));
         agent1.start();
         
-        MetaAgent agent2 = new Agent("Bill", portal);
+        Agent agent2 = new Agent("Bill", portal);
+        agent2.addNodeMonitor(new NodeMonitor(agent2));
         agent2.start();
         
-        NodeMonitor monitor1 = new NodeMonitor(agent1.getName());
-        agent1.addNodeMonitor(monitor1);
-        monitor1.start();
-                
-        NodeMonitor monitor2 = new NodeMonitor(agent2.getName());
-        agent2.addNodeMonitor(monitor2);
-        monitor2.start();
         //----------------------------------------------------------------------
         agent1.sendMessage("Bill", "Hello World!");
         */

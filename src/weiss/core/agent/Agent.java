@@ -18,7 +18,6 @@ package weiss.core.agent;
 
 
 import weiss.core.message.Message;
-import weiss.core.message.SysMessage;
 import weiss.core.message.UserMessage;
 import weiss.manager.Client;
 import weiss.manager.Managable;
@@ -34,6 +33,7 @@ public class Agent extends MetaAgent implements Runnable, Managable
     public Agent(String name, MetaAgent superAgent, Client client)
     {
         super(name, superAgent);
+        
         this.client = client;
     }
     
@@ -41,16 +41,13 @@ public class Agent extends MetaAgent implements Runnable, Managable
     {
         super(name, superAgent);
     }
-    
 
-    //--------------------------------------------------------------------------
-    //MESSAGE HANDLING
-    //--------------------------------------------------------------------------
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
-        updateClient(msg);
+        this.updateClient(msg);
     }
+    
     
     /**
      * Method to add a client that interacts with the MetaAgent. Only one client
@@ -59,6 +56,7 @@ public class Agent extends MetaAgent implements Runnable, Managable
      * {@link weiss.manager.Client Client}.
      */
     
+
     //--------------------------------------------------------------------------
     //INTERFACE METHODS
     //--------------------------------------------------------------------------
@@ -77,4 +75,6 @@ public class Agent extends MetaAgent implements Runnable, Managable
         if(client != null)
             client.updateClient(msg);
     }
+
+    
 }
