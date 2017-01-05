@@ -22,17 +22,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTree;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
+import javax.swing.event.*;
+import javax.swing.tree.*;
 import weiss.core.agent.MetaAgent;
+import weiss.core.agent.Router;
 
 /**
  *
@@ -41,51 +34,32 @@ import weiss.core.agent.MetaAgent;
 public class TreePane
 {
 
-    private TreeNode rootNode;
     private DefaultTreeModel treeModel;
+    private TreeNode rootNode;
     private static JTree tree;
-    private DefaultTreeCellRenderer render;
-    private WeissManager manager;
 
     public TreePane(WeissManager manager)
     {
-        this.manager = manager;
-        render = new DefaultTreeCellRenderer();
+        this.buildTree(manager);
+    }
+
+    private JTree buildTree(WeissManager weissManager)
+    {
+        WeissManager manager = weissManager;
+        DefaultTreeCellRenderer render = new DefaultTreeCellRenderer();
+
         rootNode = new TreeNode("Weiss");
         treeModel = new DefaultTreeModel(rootNode);
-        treeModel.addTreeModelListener(new TreeModelListener()
-        {
-            @Override
-            public void treeNodesChanged(TreeModelEvent e)
-            {
-            }
-
-            @Override
-            public void treeNodesInserted(TreeModelEvent e)
-            {
-            }
-
-            @Override
-            public void treeNodesRemoved(TreeModelEvent e)
-            {
-            }
-
-            @Override
-            public void treeStructureChanged(TreeModelEvent e)
-            {
-            }
-
-        });
 
         tree = new JTree(treeModel);
         tree.addTreeSelectionListener(new TreeSelectionListener()
         {
-            
+
             private JButton getAgentSelectBtn()
             {
                 return manager.getAgentSelectBtn();
             }
-            
+
             @Override
             public void valueChanged(TreeSelectionEvent e)
             {
@@ -116,10 +90,10 @@ public class TreePane
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setShowsRootHandles(true);
         tree.setCellRenderer(new WeissTreeCellRenderer());
+
+        return tree;
     }
 
-    
-    
     public JTree getTree()
     {
         return tree;
@@ -133,11 +107,13 @@ public class TreePane
         if (parentPath == null)
         {
             parentNode = rootNode;
-        } else
+        } 
+        else
         {
             parentNode = (TreeNode) parentPath.getLastPathComponent();
         }
-        child.setSuperAgent(parentNode.getAgentRef());
+        if(!(child instanceof Router))
+            child.setSuperAgent(parentNode.getAgentRef());
 
         return addNode(parentNode, child, true, image);
     }
@@ -166,7 +142,7 @@ public class TreePane
     private class WeissTreeCellRenderer implements TreeCellRenderer
     {
 
-        private JLabel label;
+        private final JLabel label;
 
         WeissTreeCellRenderer()
         {
@@ -182,23 +158,32 @@ public class TreePane
             ImageIcon image;
 
             if (o.getImage() != null)
+            {
                 image = o.getImage();
-            else
+            } else
+            {
                 image = new ImageIcon("Images/weiss20px.png");
+            }
             label.setIcon(image);
-            
-            if(selected)
+
+            if (selected)
+            {
                 label.setForeground(Color.red);
-            else
+            } else
+            {
                 label.setForeground(Color.black);
-            
-            if(o.getName() != null)
+            }
+
+            if (o.getName() != null)
+            {
                 label.setText(o.getName());
-            else
+            } else
+            {
                 label.setText("Weiss");
+            }
+
             return label;
         }
     }
 
 }
-

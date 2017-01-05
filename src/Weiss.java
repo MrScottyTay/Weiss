@@ -17,18 +17,9 @@
 import weiss.core.agent.Agent;
 import weiss.core.agent.Portal;
 import weiss.core.agent.MetaAgent;
-import weiss.core.agent.NodeMonitor;
+import weiss.core.message.NodeMonitor;
 import weiss.manager.WeissManager;
 import weiss.core.agent.Router;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-
 /**
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
@@ -52,11 +43,15 @@ public class Weiss {
         /*
         //----------------------------------------------------------------------
         //CLI OPERATION
-        MetaAgent router = new Router("R1", null);
-        router.addNodeMonitor(new NodeMonitor(router));
-        router.start();
+        MetaAgent router1 = new Router("R1", null);
+        router1.addNodeMonitor(new NodeMonitor(router1));
+        router1.start();
         
-        MetaAgent portal = new Portal("P1", router);
+        MetaAgent router2 = new Router("R2", router1);
+        router2.addNodeMonitor(new NodeMonitor(router2));
+        router2.start();
+        
+        MetaAgent portal = new Portal("P1", router1);
         portal.addNodeMonitor(new NodeMonitor(portal));
         portal.start();
 
