@@ -126,14 +126,14 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
         }
         else
         {
-            this.userMsgHandler((UserMessage) msg);
+            this.userMsgHandler((UserMessage) msg); //gets sent to the handler specifically for UserMessages
         }
     }
     
     protected void routerMsgHandler(RouterMessage msg)
     {
         //a Router Message should never reach a portal, this is here so that msgHandler doesn't need to be rewritten in Router
-        //this may change though, just to simplify things
+        //this may change though
     }
     
     protected void sysMsgHandler(SysMessage msg)
@@ -167,12 +167,32 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     private void registration(SysMessage msg)
     {
         routingTable.put(msg.getAgent().getName(), msg.getAgent());
-        SysMessage sMsg = new SysMessage(getName(), getSuperAgent().getName(), "reg", msg.getAgent());
-        pushToSuperAgent(sMsg);
+        //hook for node monitor to say registration is completed
+        if(msg.getAgent().getScope() < 2)
+        {
+            SysMessage sMsg = new SysMessage(getName(), getSuperAgent().getName(), "reg", msg.getAgent());
+            pushToSuperAgent(sMsg);
+            //hook for node monitor to say registration has been forwarded to the router
+            
+        }
+        
     }
 
     private void deregistration(SysMessage msg)
     {
         //To do
     }
+    
+    //--------------------------------------------------------------------------
+    //MetaAgent Creation
+    //--------------------------------------------------------------------------
+    
+    private void insertMetaAgent(MetaAgent a)
+    {
+        a.setSuperAgent(this);
+        routingTable.put(a.getName(), a);
+    }
+    
+    //The End-User could create a creation method of their own Agents that extend MetaAgent here
+    //use the newPortal() and newRouter() methods in Router.java as an example of this
 }
