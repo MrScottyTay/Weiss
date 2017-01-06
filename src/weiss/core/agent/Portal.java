@@ -16,6 +16,7 @@
  */
 package weiss.core.agent;
 
+import weiss.core.message.Monitorable;
 import weiss.core.message.Message;
 import weiss.core.message.UserMessage;
 import weiss.core.message.SysMessage;
@@ -43,9 +44,8 @@ import weiss.core.message.RouterMessage;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch.of Computing
  */
-public class Portal extends MetaAgent implements Runnable
+public class Portal extends MetaAgent implements Runnable, Monitorable
 {
-    
     protected final Map<String, MetaAgent> routingTable;
 
     /**
@@ -58,7 +58,6 @@ public class Portal extends MetaAgent implements Runnable
     {
         super(name, superAgent);
         this.routingTable = new HashMap<>();
-
     }
     /**
      *  Constructor for the Portal class.
@@ -81,7 +80,6 @@ public class Portal extends MetaAgent implements Runnable
     {
         if (routingTable.containsKey(msg.getTo())) //checks if the routing table has address
         {
-            System.out.println("Sent to sub-agent");
             this.pushToSubAgent(msg);
         }
             else   //if the portal does not have the addressed agent in its routing table... 
@@ -109,9 +107,10 @@ public class Portal extends MetaAgent implements Runnable
         }
     }
 
+    @Override
     protected void msgHandler(Message msg)
     {
-        //this.updateNodeMonitor(msg);
+        super.updateNodeMonitor(msg);
 
         if (msg instanceof SysMessage)
         {
@@ -141,7 +140,7 @@ public class Portal extends MetaAgent implements Runnable
     {
         String[] s = msg.getMsg().split(" ");   //splits the msg up into words, future proofing in case commands become more complicated than just one word
         
-        switch (s[1])   //looks at the first word which will ALWAYS show what kind of command it is
+        switch (s[0])   //looks at the first word which will ALWAYS show what kind of command it is
         {
             case "reg":
                 this.registration(msg);
@@ -150,7 +149,7 @@ public class Portal extends MetaAgent implements Runnable
                 this.deregistration(msg);
                 break;
             case "NameCheck":
-                SysMessage sMsg = new SysMessage(msg.getFrom(), getSuperAgentName(), msg.getMsg(), msg.getAgent());
+                SysMessage sMsg = new SysMessage(msg.getFrom(), getSuperAgent().getName(), msg.getMsg(), msg.getAgent());
                 this.pushToSuperAgent(sMsg);
                 break;
         }
@@ -168,20 +167,12 @@ public class Portal extends MetaAgent implements Runnable
     private void registration(SysMessage msg)
     {
         routingTable.put(msg.getAgent().getName(), msg.getAgent());
-        SysMessage sMsg = new SysMessage(getName(), getSuperAgentName(), "reg", msg.getAgent());
+        SysMessage sMsg = new SysMessage(getName(), getSuperAgent().getName(), "reg", msg.getAgent());
         pushToSuperAgent(sMsg);
     }
-    
-    //--------------------------------------------------------------------------
-    //DEREGISTRATION
+
     private void deregistration(SysMessage msg)
     {
         //To do
     }
-    private void localDeregistration(SysMessage msg)
-    {
-        
-    }
-
-
 }

@@ -34,19 +34,17 @@ import weiss.core.message.*;
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class Client extends NodeMonitor implements Runnable
+public class Client
 {
     private JTextArea textArea;
-    private MetaAgent agent;
+    private final MetaAgent agent;
+    private Thread thread;
             
-    public Client(String name, MetaAgent agent)
+    public Client(MetaAgent agent)
     {
-        super(name);
-        
         this.agent = agent;
-        
+        this.createGUI(agent.getName());
     }
-    @Override
     protected void createGUI(String name)
     {
         JDialog dialog = new JDialog();
@@ -70,11 +68,6 @@ public class Client extends NodeMonitor implements Runnable
         sendButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                /*
-                if(agentSelection.getSelectedItem().toString().equals(null))
-                    agent.sendMessage(agentSelection.getSelectedItem().toString(),
-                        messageField.getText());
-                */
                 if(agentSelection.getText() != null)
                     agent.sendMessage(agentSelection.getText(),
                         messageField.getText());
@@ -96,14 +89,8 @@ public class Client extends NodeMonitor implements Runnable
         
         dialog.pack();
     }
-    @Override
-    protected void sysMsgHandler(SysMessage msg)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
-    @Override
-    protected void userMsgHandler(UserMessage usrMsg)
+    public void updateClient(Message usrMsg)
     {
         textArea.append(usrMsg.toString());
     }

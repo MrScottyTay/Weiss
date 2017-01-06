@@ -16,48 +16,26 @@
  */
 package weiss.manager;
 
+import weiss.core.message.NodeMonitor;
 import weiss.core.agent.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTree;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import javax.swing.*;
 /**
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class WeissManager extends JFrame
+public final class WeissManager extends JFrame
 {
-    private static JButton metaAgentSelectBtn;
-
+    private JButton metaAgentSelectBtn;
     private JTextField metaAgentInputField;
-    private final TreePane treePane;
-    private final JTree tree;
+    private final ImageIcon icon;
     
-
-    
-
-
     public WeissManager()
     {
-        treePane = new TreePane();
-        tree = treePane.getTree();
-        
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(buildPanel());
         this.setTitle("Weiss");
@@ -65,14 +43,16 @@ public class WeissManager extends JFrame
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         
-        this.setVisible(true);
-        ImageIcon icon = new ImageIcon("Images/weiss.png");
-        this.setIconImage(icon.getImage());   
+        icon = new ImageIcon("Images/weiss.png");
+        this.setIconImage(icon.getImage()); 
+        
+        this.setVisible(true); 
     }
 
     public JPanel buildPanel()
     {
-
+        TreePane treePane = new TreePane(this);
+        JTree tree = treePane.getTree();
         
         metaAgentInputField = new JTextField(10);
         
@@ -89,20 +69,7 @@ public class WeissManager extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-
-                MetaAgent treeSelection = null;
-                TreeNode treeNode = null;
-                 
-                if(tree.getSelectionPath() != null)
-                {
-                    treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
-                    treeSelection = treeNode.getAgentRef();
-                }
-                
-                if(tree.getSelectionPath().getLastPathComponent() != null)
-                    treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
-                treeSelection = treeNode.getAgentRef();
-
+                TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
 
                 if (!metaAgentInputField.getText().isEmpty() && 
                         !metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
@@ -110,7 +77,7 @@ public class WeissManager extends JFrame
                     switch (treeNode.getLevel())
                     {
                         case 0:
-                            treePane.addNode(new Router(metaAgentInputField.getText(), null),
+                            treePane.addNode(new Router(metaAgentInputField.getText()),
                                     new ImageIcon("Images/router20px.png"));
                             break;
                         case 1:
@@ -127,19 +94,14 @@ public class WeissManager extends JFrame
                 }
                 else if(metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
                 {
-                    NodeMonitor agentView = new Client(treeSelection.getName(), treeSelection);
-                    treeSelection.addClient(agentView);
-                    agentView.start();
-                   
+                        Agent treeSelection = (Agent) treeNode.getAgentRef();
+                        treeSelection.addClient(new Client(treeSelection));
                 }
                 metaAgentInputField.setText("");
-                
-
             }
         });
 
         JButton metaAgentNodeMonitorBtn = new JButton("Add Node Monitor");
-        
         metaAgentNodeMonitorBtn.addActionListener(new ActionListener()
         {
             @Override
@@ -148,10 +110,7 @@ public class WeissManager extends JFrame
                 TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
                 MetaAgent treeSelection = treeNode.getAgentRef();
 
-                NodeMonitor node = new NodeMonitor(treeSelection.getName());
-                treeSelection.addNodeMonitor(node);
-                node.start();
-                
+                treeSelection.addNodeMonitor(new NodeMonitor(treeSelection));
             }
         });
         leftBottomPane.add(metaAgentNodeMonitorBtn);
@@ -175,7 +134,7 @@ public class WeissManager extends JFrame
         return panel;
     }
 
-    public static JButton getAgentSelectBtn()
+    public JButton getAgentSelectBtn()
     {
         return metaAgentSelectBtn;
     }

@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.agent;
+package weiss.core.message;
 
-import weiss.manager.NodeMonitor;
+import weiss.core.message.NodeMonitor;
 
 /**
  *
@@ -27,12 +27,4 @@ public interface Monitorable
     public void addNodeMonitor(NodeMonitor nodeMonitor);
     
     public void removeNodeMonitor(NodeMonitor nodeMonitor);
-    
-    public boolean hasMonitor();
-    
-    public void addClient(NodeMonitor client);
-    
-    public void removeClient(NodeMonitor client);
-    
-    public boolean hasClient();
 }
