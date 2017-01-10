@@ -36,8 +36,9 @@ public final class WeissManager extends JFrame
     private JTextField metaAgentInputField;
     private final ImageIcon icon;
     
-    
-    
+    /**
+     *
+     */
     public WeissManager()
     {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,6 +54,10 @@ public final class WeissManager extends JFrame
         this.setVisible(true); 
     }
 
+    /**
+     *
+     * @return
+     */
     public JPanel buildPanel()
     {
         TreePane treePane = new TreePane(this);
@@ -139,6 +144,10 @@ public final class WeissManager extends JFrame
         return panel;
     }
 
+    /**
+     *
+     * @return
+     */
     public JButton getAgentSelectBtn()
     {
         return metaAgentSelectBtn;

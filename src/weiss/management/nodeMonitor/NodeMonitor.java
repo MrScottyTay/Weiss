@@ -40,11 +40,19 @@ public class NodeMonitor
     private JTable table; 
     private DefaultTableModel tableModel;
     
+    /**
+     *
+     * @param agent
+     */
     public NodeMonitor(MetaAgent agent)
     {
         this.createGUI(agent.getName());
     }
     
+    /**
+     *
+     * @param name
+     */
     protected void createGUI(String name)
     { 
         data = new Vector();
@@ -76,6 +84,10 @@ public class NodeMonitor
         dialog.setVisible(true);
     } 
     
+    /**
+     *
+     * @param msg
+     */
     public void insertTableData(Message msg)
     {
         Vector row = new Vector();

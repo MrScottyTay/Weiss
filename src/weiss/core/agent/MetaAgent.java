@@ -28,7 +28,8 @@ import javax.swing.ImageIcon;
  * An abstract class detailing the construction of a MetaAgent object, to be
  * implemented by the end user. This implementation of a meta agent extends a
  * <a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/LinkedBlockingQueue.html">LinkedBlockingQueue</a>.
- *
+ * 
+ * 
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
  */
@@ -83,7 +84,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         {
             try
             {
-                msgHandler((Message) take());   //if theres a message in the queue, it will take it and put it into the msghandler
+                msgHandler((Message) take());   
             } catch (InterruptedException ex)
             {
                 Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
@@ -91,6 +92,9 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         }
     }
 
+    /**
+     * Method to start the assigned thread, accessible from outside the scope of the class.
+     */
     public void start()
     {
         thread.start();
@@ -106,7 +110,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      */
     public String getName()
     {
-        return name;    //returns the name
+        return name;    
     }
 
     /**
@@ -117,7 +121,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      */
     public MetaAgent getSuperAgent()
     {
-        return superAgent;  //returns the superAgent
+        return superAgent;  
     }
 
     /**
@@ -127,7 +131,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      */
     public int getScope()
     {
-        return scope;   //returns the scope
+        return scope;   
     }
 
     /**
@@ -152,15 +156,15 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     public final void setScope(int scope)
     {
         this.scope = scope;
-
-        //need to change registration and scope
     }
 
     //--------------------------------------------------------------------------
     //MESSAGE HANDLERS
     //--------------------------------------------------------------------------
     /**
-     * Method to handle messages.
+     * Method to handle messages. In the generic MetaAgent implementation, messages
+     * are pushed as UserMessages. Other implementations sort the type of message,
+     * and direct it to the correct handler.
      *
      * @param msg The message to be handled.
      */
@@ -170,6 +174,11 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         userMsgHandler((UserMessage) msg);
     }
 
+    /**
+     * Abstract method to implement a handler of UserMessages. An implementation
+     * can be found at {@link weiss.core.agent.Agent#userMsgHandler(weiss.core.message.UserMessage) this agent}.
+     * @param msg A UserMessage
+     */
     abstract protected void userMsgHandler(UserMessage msg);   //EndUser creates a body for this method to make the agent do what it wants to do
 
     /**
@@ -198,11 +207,11 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      */
     protected void pushToSuperAgent(Message msg)
     {
-        try //passes the message to the next MetaAgent in the chain
+        try 
         {
             if (superAgent != null)
             {
-                superAgent.put(msg);    //puts the message onto this agent's parent's (Portal or Router) blocking queue (or the next router in line if this is a router)             
+                superAgent.put(msg);             
             }
         } catch (InterruptedException ex)
         {

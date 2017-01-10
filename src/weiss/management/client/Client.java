@@ -40,11 +40,20 @@ public class Client
     private final MetaAgent agent;
     private Thread thread;
             
+    /**
+     *
+     * @param agent
+     */
     public Client(MetaAgent agent)
     {
         this.agent = agent;
         this.createGUI(agent.getName());
     }
+
+    /**
+     *
+     * @param name
+     */
     protected void createGUI(String name)
     {
         JDialog dialog = new JDialog();
@@ -90,6 +99,10 @@ public class Client
         dialog.pack();
     }
 
+    /**
+     *
+     * @param usrMsg
+     */
     public void updateClient(Message usrMsg)
     {
         textArea.append(usrMsg.toString());

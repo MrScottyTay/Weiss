@@ -36,6 +36,13 @@ public class TreeNode extends DefaultMutableTreeNode
     private MetaAgent agentRef;
     private ImageIcon image;
     private String name;
+
+    /**
+     *
+     * @param name
+     * @param agent
+     * @param image
+     */
     public TreeNode(String name, MetaAgent agent, ImageIcon image)
     {
         super(name);
@@ -44,21 +51,37 @@ public class TreeNode extends DefaultMutableTreeNode
         this.image = image;
     }
     
+    /**
+     *
+     * @param name
+     */
     public TreeNode(String name)
     {
         super(name);
     }
     
+    /**
+     *
+     * @return
+     */
     public MetaAgent getAgentRef()
     {
         return agentRef;
     }
     
+    /**
+     *
+     * @return
+     */
     public ImageIcon getImage()
     {
         return image;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getName()
     {
         return name;

@@ -24,7 +24,16 @@ import weiss.management.nodeMonitor.NodeMonitor;
  */
 public interface Monitorable
 {
+
+    /**
+     *
+     * @param nodeMonitor
+     */
     public void addNodeMonitor(NodeMonitor nodeMonitor);
     
+    /**
+     *
+     * @param nodeMonitor
+     */
     public void removeNodeMonitor(NodeMonitor nodeMonitor);
 }

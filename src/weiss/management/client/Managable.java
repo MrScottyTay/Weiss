@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2017 Adam Young
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,16 @@ package weiss.management.client;
  */
 public interface Managable
 {
+
+    /**
+     *
+     * @param client
+     */
     public void addClient(Client client);
     
-    public void removeClient(Client client);
+    /**
+     *
+     * @param client
+     */
+    public void removeClient();
 }

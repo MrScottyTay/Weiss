@@ -43,6 +43,10 @@ public class TreePane {
     private static JTree tree;
     private TreeNode treeNode;
 
+    /**
+     *
+     * @param manager
+     */
     public TreePane(WeissManager manager) {
         this.buildTree(manager);
     }
@@ -141,10 +145,20 @@ public class TreePane {
         return tree;
     }
 
+    /**
+     *
+     * @return
+     */
     public JTree getTree() {
         return tree;
     }
 
+    /**
+     *
+     * @param child
+     * @param image
+     * @return
+     */
     public TreeNode addNode(MetaAgent child, ImageIcon image) {
         TreeNode parentNode = null;
         TreePath parentPath = tree.getSelectionPath();
