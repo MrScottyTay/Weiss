@@ -167,15 +167,8 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     private void registration(SysMessage msg)
     {
         routingTable.put(msg.getAgent().getName(), msg.getAgent());
-        //hook for node monitor to say registration is completed
-        if(msg.getAgent().getScope() < 2)
-        {
-            SysMessage sMsg = new SysMessage(getName(), getSuperAgent().getName(), "reg", msg.getAgent());
-            pushToSuperAgent(sMsg);
-            //hook for node monitor to say registration has been forwarded to the router
-            
-        }
-        
+        SysMessage sMsg = new SysMessage(msg.getAgent().getName(), getSuperAgent().getName(), "reg", this);
+        pushToSuperAgent(sMsg);
     }
 
     private void deregistration(SysMessage msg)

@@ -34,6 +34,8 @@ public final class WeissManager extends JFrame
     private JTextField metaAgentInputField;
     private final ImageIcon icon;
     
+    
+    
     public WeissManager()
     {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -46,34 +46,30 @@ import weiss.core.message.RouterMessage;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class Router extends Portal implements Runnable
-{
+public class Router extends Portal implements Runnable {
 
-    public static volatile ArrayList<MetaAgent> routerList = new ArrayList();;
+    public static volatile MetaAgent lastRouter;
 
     /**
      * Constructor for the Router class
      *
      * @param name String for the name variable.
-     * 
+     *
      */
-    public Router(String name)
-    {
+    public Router(String name) {
         super(name, null);
-        this.updatePreviousRouterConfig();
+        this.updateLastRouter();
     }
-    
 
     //--------------------------------------------------------------------------
     //MESSAGE HANDLING
     //--------------------------------------------------------------------------
     @Override
-    protected void userMsgHandler(UserMessage msg)
-    {
-        if (routingTable.containsKey(msg.getTo()))   //if this router knows where the addressed agent is...
+    protected void userMsgHandler(UserMessage msg) {
+        if (routingTable.containsKey(msg.getTo())) //if this router knows where the addressed agent is...
         {
             pushToSubAgent(msg);  //push it into the right direction
-        } else    //if the router doesn't know about this agent
+        } else //if the router doesn't know about this agent
         {
             //create a router message to ask the other routers to see if they know of the addressed agent
             RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), msg.getMsg(), msg, getName());
@@ -83,19 +79,17 @@ public class Router extends Portal implements Runnable
 
     //For Handling Router Messages
     @Override
-    protected void routerMsgHandler(RouterMessage msg)
-    {
+    @Override
+    protected void routerMsgHandler(RouterMessage msg) {
         System.out.println("Got router message!");
         Message contents = msg.getContents();   //getting a local variable of the contents of the RouterMessage
-        if (msg.getOrigin().equals(getName()))   //if this message was created by this router...
+        if (msg.getOrigin().equals(getName())) //if this message was created by this router...
         {
             String type = null; //for what will be put in the 'String msg' variable in the ReplyMessage
 
             String[] m = msg.getMsg().split(" ");
-            switch (m[0])
-            {
+            switch (m[0]) {
                 case "User":    //if a message could not find its recipient...
-                case "Sys":
                     type = "ReturnToSender";
                     break;
                 case "Name":    //if a name check message has came all the way around without finding an agent with the same name...
@@ -111,19 +105,38 @@ public class Router extends Portal implements Runnable
 
             ReplyMessage reply = new ReplyMessage(getName(), contents.getFrom(), type, contents);
             pushToSubAgent(reply); //push it into the right direction for the original sender
-        }
-        else    //if this is from another router...
+        } else //if this is from another router...
         {
-            if(routingTable.containsKey(contents.getFrom()))    //if this router knows of the intended recipient...
+            if (contents instanceof UserMessage) //if the content is a UserMessage...
             {
-                pushToSubAgent(contents);   //it pushes the original msg in the right direction
-            }
-            else    //if this router doesn't know of the intended recipient...
+                System.out.println("got user message");
+                System.out.println(contents.getTo());
+                if (routingTable.containsKey(contents.getTo())) //if this router knows where the contents needs to go...
+                {
+                    System.out.println("Found target!");
+                    pushToSubAgent(contents);    //push it into the right direction for the addressed agent
+                } else //if this router doesn't know of the addressed agent...
+                {
+                    pushToSuperAgent(msg);  //push to the next router along for them to check
+                }
+            } else if (contents instanceof SysMessage) //if the content is a SysMessage...
             {
-                pushToSuperAgent(msg);  //it passes the RouterMessage to the next router in line
+                SysMessage sMsg = (SysMessage) contents; //create a version of the msg that is specifically a SysMessage
+
+                switch (sMsg.getMsg()) //what type of sysMessage is it
+                {
+                    case "reg": //the version of registration that's needed at this point requires a RouterMessage
+                        //so cannot be handled with just the sysMessageHandler or it'll constantly keep going round and round
+                        registration(msg);
+                        break;
+                    default:    //most SysMessages will go through here
+                        sysMsgHandler(sMsg);
+                        break;
+                }
             }
         }
     }
+
 
     @Override
     protected void sysMsgHandler(SysMessage msg)
@@ -143,38 +156,36 @@ public class Router extends Portal implements Runnable
             case "setSuperAgent":
                 setSuperAgent(msg.getAgent());
                 break;
-        } 
+        }
     }
 
     //--------------------------------------------------------------------------
     //COMMANDS
     //--------------------------------------------------------------------------
-    private void nameCheck(Message msg)
-    {
+    private void nameCheck(Message msg) {
         String[] s = msg.getMsg().split(" ");
 
-        if (routingTable.containsKey(s[0]))   //if this router knows of an agent with that name already...
+        if (routingTable.containsKey(s[0])) //if this router knows of an agent with that name already...
         {
-            if (msg instanceof RouterMessage)    //if this command came from another router...
+            if (msg instanceof RouterMessage) //if this command came from another router...
             {
                 RouterMessage rMsg = (RouterMessage) msg;    //make it explicitly a RouterMessage so this method has access to its methods
                 msg = rMsg.getContents();   //unpackage the contents within the RouterMessage and overwrite the msg variable with it
             }
             //create a reply message letting the sender know this
             ReplyMessage reply = new ReplyMessage(getName(), msg.getFrom(), "Name Declined", msg);
-            
+
             //This reply system was causing null pointer errors, so it's commented out for now
             //pushToSubAgent(reply);  //send it back
-            
-        } else    //if it doesn't know of an agent with that name already...
+        } else //if it doesn't know of an agent with that name already...
         {
-            if (msg instanceof SysMessage)   //if this command came from an agent
+            if (msg instanceof SysMessage) //if this command came from an agent
             {
                 //create a RouterMessage to ask the other routers to check for the name as well
                 DecoratedMessage rMsg = new RouterMessage(msg.getTo(), msg.getFrom(), "Name", msg);
                 pushToSuperAgent(rMsg); //send it to the next router
             }
-            if (msg instanceof RouterMessage)    //if this command cam from another router
+            if (msg instanceof RouterMessage) //if this command cam from another router
             {
                 pushToSuperAgent(msg);  //push it along to the next Router in line
             }
@@ -189,33 +200,36 @@ public class Router extends Portal implements Runnable
      *
      * @param msg
      */
-    
-    //!*!*!*!*!*!Scotts registration method to introduce coding to
-    
-    private void registration(Message msg)   //when the router gets a registration request from a Portal
-    {
-        if(msg instanceof SysMessage)
-        {
+
+    private void registration(Message msg) //when the router gets a registration request from a Portal
+    {   
             SysMessage message = (SysMessage) msg;
-            if(((SysMessage) msg).getAgent() instanceof Agent)
-            {
-                routingTable.put(message.getAgent().getName(), message.getAgent());   //registers the agent with its name as the key
-                //hook for node monitor to say that registration is complete
-            }
-        }
+            routingTable.put(message.getFrom(), message.getAgent());   //registers the agent with its name as the key
     }
-    
 
     /**
      * Method to de-register subAgents from this MetaAgent.
      *
      * @param msg A SysMessage object.
      */
-    private void deregistration(SysMessage msg)
-    {
+    private void deregistration(SysMessage msg) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+
+    private void updateLastRouter() {
+        if (lastRouter != null) {
+            this.setSuperAgent(lastRouter.getSuperAgent());
+
+            try {
+                lastRouter.put(new SysMessage(this.getName(), lastRouter.getName(),
+                        "setSuperAgent", this));
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        lastRouter = this;
+    }
     //--------------------------------------------------------------------------
     //MetaAgent Creation
     //--------------------------------------------------------------------------
@@ -250,32 +264,6 @@ public class Router extends Portal implements Runnable
     
     //--------------------------------------------------------------------------
     //Other Operations
-    //--------------------------------------------------------------------------
-    private void updatePreviousRouterConfig()
-    {
-        routerList.add(this);
-        this.setSuperAgent(routerList.get(0));
-        
-        int listCounter = 0;
-        for (MetaAgent agent : routerList)
-        {
-            if (!agent.equals(this))
-            {
-                System.out.println(listCounter);
-                listCounter++;
-            } else if (listCounter != 0)
-            {
-                try
-                {
-                    agent = routerList.get(listCounter - 1);
-                    agent.put(new SysMessage(this.getName(),
-                            agent.getName(), "setSuperAgent", this));
-                } catch (InterruptedException ex)
-                {
-                    Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
+    //--------------------------------------------------------------------------       
     }
-
 }
