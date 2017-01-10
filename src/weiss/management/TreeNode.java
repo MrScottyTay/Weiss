@@ -28,7 +28,8 @@ import weiss.core.agent.MetaAgent;
  */
 
 /**
- *
+ * Extended class to allow treeNodes to store a reference to a {@link weiss.core.agent.MetaAgent MetaAgent}, for 
+ * GUI management in {@link weiss.management.TreePane TreePane}. Also allows custom images and names to be changed at will.
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public class TreeNode extends DefaultMutableTreeNode
@@ -38,10 +39,10 @@ public class TreeNode extends DefaultMutableTreeNode
     private String name;
 
     /**
-     *
-     * @param name
-     * @param agent
-     * @param image
+     * Constructor to create a TreeNode, to be used in the {@link weiss.management.TreePane TreePane}.
+     * @param name String variable to set the treeNode name.
+     * @param agent MetaAgent reference to attach to the treeNode.
+     * @param image ImageIcon to assign to the treeNode.
      */
     public TreeNode(String name, MetaAgent agent, ImageIcon image)
     {
@@ -52,8 +53,8 @@ public class TreeNode extends DefaultMutableTreeNode
     }
     
     /**
-     *
-     * @param name
+     * Generic constructor to create a basic treeNode.
+     * @param name String variable to set the treeNode name.
      */
     public TreeNode(String name)
     {
@@ -61,8 +62,8 @@ public class TreeNode extends DefaultMutableTreeNode
     }
     
     /**
-     *
-     * @return
+     * Method to pull the attached {@link weiss.core.agent.MetaAgent MetaAgent} from the treeNode
+     * @return A MetaAgent to be assigned to the treeNode
      */
     public MetaAgent getAgentRef()
     {
@@ -70,8 +71,8 @@ public class TreeNode extends DefaultMutableTreeNode
     }
     
     /**
-     *
-     * @return
+     * Method to return the assigned image from the treeNode.
+     * @return An ImageIcon of the assigned image.
      */
     public ImageIcon getImage()
     {
@@ -79,8 +80,8 @@ public class TreeNode extends DefaultMutableTreeNode
     }
     
     /**
-     *
-     * @return
+     * Method to return the name of the treeNode.
+     * @return A String variable of the assigned name.
      */
     public String getName()
     {

@@ -16,8 +16,6 @@
  */
 package weiss.management.nodeMonitor;
 
-import weiss.management.nodeMonitor.NodeMonitor;
-
 /**
  *
  * @author Adam Young, Teesside University Sch. of Computing
@@ -26,14 +24,13 @@ public interface Monitorable
 {
 
     /**
-     *
-     * @param nodeMonitor
+     * Method to add a node monitor to the implementing class.
+     * @param nodeMonitor A nodeMonitor object.
      */
     public void addNodeMonitor(NodeMonitor nodeMonitor);
     
     /**
-     *
-     * @param nodeMonitor
+     * Method to remove a node monitor from a implementing class.
      */
-    public void removeNodeMonitor(NodeMonitor nodeMonitor);
+    public void removeNodeMonitor();
 }

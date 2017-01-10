@@ -31,7 +31,7 @@ import weiss.core.agent.MetaAgent;
 import weiss.core.message.*;
 
 /**
- *
+ * A simple, standalone GUI client to hook into the client of the MetaAgents.
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public class Client
@@ -41,8 +41,8 @@ public class Client
     private Thread thread;
             
     /**
-     *
-     * @param agent
+     * Constructor to create a Client GUI
+     * @param agent The agent the client is being assigned to.
      */
     public Client(MetaAgent agent)
     {
@@ -51,8 +51,8 @@ public class Client
     }
 
     /**
-     *
-     * @param name
+     * Method to create the GUI window, using a JDialog.
+     * @param name String containing the MetaAgent name.
      */
     protected void createGUI(String name)
     {
@@ -100,8 +100,8 @@ public class Client
     }
 
     /**
-     *
-     * @param usrMsg
+     * Method to update the client window text area.
+     * @param usrMsg The inputted message.
      */
     public void updateClient(Message usrMsg)
     {

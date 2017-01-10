@@ -239,7 +239,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      * @param nodeMonitor The node monitor to be removed.
      */
     @Override
-    public void removeNodeMonitor(NodeMonitor nodeMonitor)
+    public void removeNodeMonitor()
     {
         this.monitor = null;
     }

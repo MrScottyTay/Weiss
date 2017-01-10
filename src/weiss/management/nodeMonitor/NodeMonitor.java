@@ -24,7 +24,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import weiss.core.agent.MetaAgent;
 import weiss.core.message.Message;
-import weiss.core.message.Message;
 import weiss.core.message.RouterMessage;
 import weiss.core.message.SysMessage;
 import weiss.core.message.UserMessage;
@@ -33,7 +32,7 @@ import weiss.core.message.UserMessage;
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class NodeMonitor
+public final class NodeMonitor
 {
     private JDialog dialog;
     private Vector data;
@@ -41,8 +40,8 @@ public class NodeMonitor
     private DefaultTableModel tableModel;
     
     /**
-     *
-     * @param agent
+     * Constructor to create a NodeMonitor GUI window.
+     * @param agent MetaAgent the nodeMonitor is being assigned to.
      */
     public NodeMonitor(MetaAgent agent)
     {
@@ -50,8 +49,8 @@ public class NodeMonitor
     }
     
     /**
-     *
-     * @param name
+     * Method to create the GUI window, using a JDialog.
+     * @param name The name to assign to the UI panel.
      */
     protected void createGUI(String name)
     { 
@@ -85,8 +84,8 @@ public class NodeMonitor
     } 
     
     /**
-     *
-     * @param msg
+     * Method to append table data to the GUI window.
+     * @param msg The received message.
      */
     public void insertTableData(Message msg)
     {

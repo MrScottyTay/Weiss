@@ -16,24 +16,21 @@
  */
 package weiss.management;
 
-import weiss.management.client.Client;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.event.*;
 import javax.swing.tree.*;
-import weiss.core.agent.Agent;
 import weiss.core.agent.MetaAgent;
 import weiss.core.agent.Router;
-import weiss.management.nodeMonitor.NodeMonitor;
 
 /**
- *
+ *  Class which forms the main UI control of the program. Implements custom renderers,
+ * tree models and tree nodes. Implemented by {@link WeissManager WeissManager}.
+ * 
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public class TreePane {
@@ -50,7 +47,13 @@ public class TreePane {
     public TreePane(WeissManager manager) {
         this.buildTree(manager);
     }
-
+    
+    /**
+     * All-round method to create the JTree required by the program. Implements 
+     * TreeSelectionListeners to change button text in WeissManager.
+     * @param weissManager The main window to tie the TreePane to.
+     * @return A JTree object to implement into a JFrame/JPanel.
+     */
     private JTree buildTree(WeissManager weissManager) {
         WeissManager manager = weissManager;
         DefaultTreeCellRenderer render = new DefaultTreeCellRenderer();
@@ -88,54 +91,6 @@ public class TreePane {
                 }
             }
         });
-        tree.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                TreeNode selPath = treeNode;
-                if (e.getClickCount() == 2) {
-                    Agent treeNodeSelectionAgent = null;
-                    MetaAgent treeNodeSelectionMeta = null;
-                    
-                    
-                    if(treeNode.getAgentRef() instanceof Agent)
-                        treeNodeSelectionAgent = (Agent) treeNode.getAgentRef();
-                    else if(treeNode.getAgentRef() != null)
-                        treeNodeSelectionMeta = (MetaAgent) treeNode.getAgentRef();
-
-                    if (treeNode.getAgentRef() instanceof Agent) {
-                        treeNodeSelectionAgent.addClient(new Client(treeNodeSelectionAgent));
-                    } else if (treeNode.getAgentRef() != null) {
-                        treeNodeSelectionMeta.addNodeMonitor(new NodeMonitor(treeNodeSelectionMeta));
-                    } else {
-                        return;
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        }
-        );
 
         tree.setEditable(false);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -146,18 +101,18 @@ public class TreePane {
     }
 
     /**
-     *
-     * @return
+     * Method to get the JTree object.
+     * @return A constructed JTree object.
      */
     public JTree getTree() {
         return tree;
     }
 
     /**
-     *
-     * @param child
-     * @param image
-     * @return
+     * Method to create a TreeNode for the JTree to use.
+     * @param child The MetaAgent to be added to the tree.
+     * @param image The image to use for the image.
+     * @return A TreeNode object with a MetaAgent assigned.
      */
     public TreeNode addNode(MetaAgent child, ImageIcon image) {
         TreeNode parentNode = null;
@@ -175,6 +130,15 @@ public class TreePane {
         return addNode(parentNode, child, true, image);
     }
 
+    /**
+     * A method to assign the parent of the node, and the visibility.
+     *
+     * @param parent The parent TreeNode of the initial child node.
+     * @param child The child node passed from the first method.
+     * @param shouldBeVisible A boolean value stating the visibility of the node
+     * @param image The image icon passed from the first method.
+     * @return A constructed TreeNode to use with JTree.
+     */
     private TreeNode addNode(DefaultMutableTreeNode parent,
             MetaAgent child,
             boolean shouldBeVisible,
@@ -194,14 +158,34 @@ public class TreePane {
         return childNode;
     }
 
+    /**
+     * A custom TreeCellRenderer to assign custom names, labels and images in
+     * an easy to use way.
+     */
     private class WeissTreeCellRenderer implements TreeCellRenderer {
 
         private final JLabel label;
 
+        /**
+         * Constructor to instantiate a new JLabel.
+         */
         WeissTreeCellRenderer() {
             label = new JLabel();
         }
 
+        /**
+         * Method to create the custom tree cell, to assign the image, background/foreground
+         * colour and name. The renderer is always running for label changes such as 
+         * selection highlighting.
+         * @param tree The assigned tree.
+         * @param value the passed object (A treeNode).
+         * @param selected Boolean for if the node is selected.
+         * @param expanded Boolean for if the node is expanded.
+         * @param leaf Boolean for if the node is a leaf.
+         * @param row Integer for the row of the object.
+         * @param hasFocus Boolean for if the node has focus.
+         * @return A JLabel used in the JTree node.
+         */
         @Override
         public Component getTreeCellRendererComponent(JTree tree, Object value,
                 boolean selected, boolean expanded, boolean leaf, int row,

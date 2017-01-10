@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2017 Adam Young
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,23 +14,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.management.client;
+package weiss.core;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
  *
- * @author Adam Young, Teesside University Sch. of Computing
+ * @author Adam Young
  */
-public interface Managable
+@RunWith(Suite.class)
+@Suite.SuiteClasses(
+{
+    weiss.core.agent.AgentSuite.class, weiss.core.message.MessageSuite.class
+})
+public class CoreSuite
 {
 
-    /**
-     * Method to add a client to the implementing class.
-     * @param client A client object.
-     */
-    public void addClient(Client client);
+    @BeforeClass
+    public static void setUpClass() throws Exception
+    {
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception
+    {
+    }
+
+    @Before
+    public void setUp() throws Exception
+    {
+    }
+
+    @After
+    public void tearDown() throws Exception
+    {
+    }
     
-    /**
-     * Method to remove a client from the implementing class.
-     */
-    public void removeClient();
 }

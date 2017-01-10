@@ -23,7 +23,7 @@ import java.util.UUID;
  * <p>
  * The alternative of this message type is {@link SysMessage SysMessage}.
  *
- * @author Adam Young
+ * @author Adam Young, Teesside University Sch. of Computing
  */
 public class UserMessage extends Message
 {
