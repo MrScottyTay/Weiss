@@ -167,7 +167,7 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     private void registration(SysMessage msg)
     {
         routingTable.put(msg.getAgent().getName(), msg.getAgent());
-        SysMessage sMsg = new SysMessage(getName(), getSuperAgent().getName(), "reg", msg.getAgent());
+        SysMessage sMsg = new SysMessage(msg.getAgent().getName(), getSuperAgent().getName(), "reg", this);
         pushToSuperAgent(sMsg);
     }
 
