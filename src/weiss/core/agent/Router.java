@@ -79,7 +79,6 @@ public class Router extends Portal implements Runnable {
 
     //For Handling Router Messages
     @Override
-    @Override
     protected void routerMsgHandler(RouterMessage msg) {
         System.out.println("Got router message!");
         Message contents = msg.getContents();   //getting a local variable of the contents of the RouterMessage
@@ -265,5 +264,5 @@ public class Router extends Portal implements Runnable {
     //--------------------------------------------------------------------------
     //Other Operations
     //--------------------------------------------------------------------------       
-    }
+    
 }
