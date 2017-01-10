@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.manager;
+package weiss.management;
 
+import weiss.management.client.Client;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
@@ -29,7 +30,7 @@ import javax.swing.tree.*;
 import weiss.core.agent.Agent;
 import weiss.core.agent.MetaAgent;
 import weiss.core.agent.Router;
-import weiss.core.message.NodeMonitor;
+import weiss.management.nodeMonitor.NodeMonitor;
 
 /**
  *

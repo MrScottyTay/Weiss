@@ -16,8 +16,8 @@
  */
 package weiss.core.agent;
 
-import weiss.core.message.Monitorable;
-import weiss.core.message.NodeMonitor;
+import weiss.management.nodeMonitor.Monitorable;
+import weiss.management.nodeMonitor.NodeMonitor;
 import weiss.core.message.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
@@ -25,16 +25,16 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 /**
- * An abstract class detailing the construction of a MetaAgent object, to be implemented
- * by the end user.
- * This implementation of a meta agent extends 
- * a <a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/LinkedBlockingQueue.html">LinkedBlockingQueue</a>.
- * 
+ * An abstract class detailing the construction of a MetaAgent object, to be
+ * implemented by the end user. This implementation of a meta agent extends a
+ * <a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/LinkedBlockingQueue.html">LinkedBlockingQueue</a>.
+ *
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable, Monitorable
 {
+
     private String name;
     private int scope;  //0 = global, 1 = router-wide, 2 = portal-wide
     private NodeMonitor monitor;
@@ -42,11 +42,12 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     private MetaAgent superAgent;
     private ImageIcon image;
     private Thread thread;
-    
+
     /**
      * Constructor to initialise a MetaAgetn object.
-     * 
-     * @param name {@link weiss.core.agent.Portal Portal} belonging to MetaAgent.
+     *
+     * @param name {@link weiss.core.agent.Portal Portal} belonging to
+     * MetaAgent.
      * @param superAgent Scope of the MetaAgent.
      */
     public MetaAgent(String name, MetaAgent superAgent)
@@ -55,40 +56,41 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         this.name = name;
         this.setSuperAgent(superAgent);
         this.scope = 0;
-        
-        thread = new Thread(this);      
+
+        thread = new Thread(this);
     }
-    
 
     /**
      * Constructor to initialise a MetaAgent object with scope.
-     * 
+     *
      * @param name Name of MetaAgent.
-     * @param superAgent {@link weiss.core.agent.Portal Portal} belonging to MetaAgent.
+     * @param superAgent {@link weiss.core.agent.Portal Portal} belonging to
+     * MetaAgent.
      * @param scope Scope of the MetaAgent.
      */
-    public MetaAgent(String name,MetaAgent superAgent, int scope)
+    public MetaAgent(String name, MetaAgent superAgent, int scope)
     {
         super();
         this.name = name;
         this.superAgent = superAgent;
-        this.scope = scope;        
+        this.scope = scope;
     }
+
     @Override
     public void run()
-      {
-          while(true)
-          {
-              try
-              {
-                  msgHandler((Message) take());   //if theres a message in the queue, it will take it and put it into the msghandler
-              } 
-              catch (InterruptedException ex)
-              {
-                  Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
-              }
-          }
-      }
+    {
+        while (true)
+        {
+            try
+            {
+                msgHandler((Message) take());   //if theres a message in the queue, it will take it and put it into the msghandler
+            } catch (InterruptedException ex)
+            {
+                Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
     public void start()
     {
         thread.start();
@@ -99,88 +101,88 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     //--------------------------------------------------------------------------
     /**
      * Getter for name variable.
-     * 
+     *
      * @return name String.
      */
     public String getName()
     {
         return name;    //returns the name
     }
+
     /**
-     * Getter for {@link weiss.core.agent.MetaAgent MetaAgent} superAgent object.
-     * 
+     * Getter for {@link weiss.core.agent.MetaAgent MetaAgent} superAgent
+     * object.
+     *
      * @return {@link weiss.core.agent.MetaAgent superAgent} pointer.
      */
     public MetaAgent getSuperAgent()
     {
         return superAgent;  //returns the superAgent
     }
+
     /**
      * Getter for the scope.
-     * 
+     *
      * @return Integer relating to the scope of the MetaAgent
      */
     public int getScope()
     {
         return scope;   //returns the scope
-    } 
-    
+    }
+
     /**
      * Setter for {@link weiss.core.agent.MetaAgent MetaAgent} superAgent.
-     * 
+     *
      * @param superAgent {@link weiss.core.agent.MetaAgent MetaAgent} object.
      */
     public final void setSuperAgent(MetaAgent superAgent)
-    {   
+    {
         this.superAgent = superAgent;
-        if(this.superAgent != null)
+        if (this.superAgent != null)
         {
             pushToSuperAgent(new SysMessage(this.getName(), getSuperAgent().getName(), "reg", this));
         }
     }
-    
+
     /**
      * Method to set scope of MetaAgent.
-     * 
+     *
      * @param scope Integer relating to the scope of the MetaAgent.
      */
     public final void setScope(int scope)
     {
         this.scope = scope;
-        
+
         //need to change registration and scope
     }
-    
+
     //--------------------------------------------------------------------------
     //MESSAGE HANDLERS
     //--------------------------------------------------------------------------
     /**
      * Method to handle messages.
-     * 
+     *
      * @param msg The message to be handled.
      */
     protected void msgHandler(Message msg)
     {
-        updateNodeMonitor(msg);      
+        updateNodeMonitor(msg);
         userMsgHandler((UserMessage) msg);
-        
     }
-    
+
     abstract protected void userMsgHandler(UserMessage msg);   //EndUser creates a body for this method to make the agent do what it wants to do
-    
+
     /**
      * Method to handle replies.
-     * 
+     *
      * @param msg The reply to be handled.
      */
-
-    
     //--------------------------------------------------------------------------
     //CLASS SPECIFIC METHODS
     //-------------------------------------------------------------------------- 
     /**
      * Method to send messages.
-     * 
+     *
      * @param to the recipient of the message.
      * @param message the message to be sent.
      */
@@ -188,41 +190,43 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     {
         pushToSuperAgent(new UserMessage(this.getName(), to, message));
     }
-    
+
     /**
      * Method to push a message onto a parents blocking queue.
-     * 
+     *
      * @param msg The message to be pushed.
      */
     protected void pushToSuperAgent(Message msg)
     {
         try //passes the message to the next MetaAgent in the chain
         {
-            if(superAgent != null)
+            if (superAgent != null)
+            {
                 superAgent.put(msg);    //puts the message onto this agent's parent's (Portal or Router) blocking queue (or the next router in line if this is a router)             
+            }
         } catch (InterruptedException ex)
         {
             Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     //--------------------------------------------------------------------------
     //INTERFACE METHODS
     //--------------------------------------------------------------------------
     /**
      * Method to add a node monitor.
-     * 
+     *
      * @param nodeMonitor The node monitor to be added.
      */
     @Override
     public void addNodeMonitor(NodeMonitor nodeMonitor)
     {
-        this.monitor = nodeMonitor;   
+        this.monitor = nodeMonitor;
     }
-    
+
     /**
      * Method to remove a node monitor.
-     * 
+     *
      * @param nodeMonitor The node monitor to be removed.
      */
     @Override
@@ -230,15 +234,17 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     {
         this.monitor = null;
     }
-    
+
     /**
      * Method to update the node monitor.
-     * 
+     *
      * @param msg Message containing the table data.
      */
     protected void updateNodeMonitor(Message msg)
     {
-        if(this.monitor != null)
+        if (this.monitor != null)
+        {
             this.monitor.insertTableData(msg);
+        }
     }
 }

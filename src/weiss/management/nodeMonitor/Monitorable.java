@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2017 Adam Young
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,15 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.manager;
+package weiss.management.nodeMonitor;
+
+import weiss.management.nodeMonitor.NodeMonitor;
 
 /**
  *
- * @author Adam Young
+ * @author Adam Young, Teesside University Sch. of Computing
  */
-public interface Managable
+public interface Monitorable
 {
-    public void addClient(Client client);
+    public void addNodeMonitor(NodeMonitor nodeMonitor);
     
-    public void removeClient(Client client);
+    public void removeNodeMonitor(NodeMonitor nodeMonitor);
 }

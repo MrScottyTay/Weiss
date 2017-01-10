@@ -43,7 +43,8 @@ import weiss.core.message.RouterMessage;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class Router extends Portal implements Runnable {
+public class Router extends Portal implements Runnable
+{
 
     public static volatile MetaAgent lastRouter;
 
@@ -52,7 +53,8 @@ public class Router extends Portal implements Runnable {
      *
      * @param name String for the name variable.
      */
-    public Router(String name) {
+    public Router(String name)
+    {
         super(name, null);
         this.updateLastRouter();
     }
@@ -61,58 +63,54 @@ public class Router extends Portal implements Runnable {
     //MESSAGE HANDLING
     //--------------------------------------------------------------------------
     @Override
-    protected void userMsgHandler(UserMessage msg) {
+    protected void userMsgHandler(UserMessage msg)
+    {
         if (routingTable.containsKey(msg.getTo())) //if this router knows where the addressed agent is...
         {
             pushToSubAgent(msg);  //push it into the right direction
         } else //if the router doesn't know about this agent
         {
             //create a router message to ask the other routers to see if they know of the addressed agent
-            RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), msg.getMsg(), msg, getName());
+            RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), msg, getName());
             pushToSuperAgent(rMsg); //push it to the next router along the line
         }
     }
 
     //For Handling Router Messages
     @Override
-    protected void routerMsgHandler(RouterMessage msg) {
-        System.out.println("Got router message!");
+    protected void routerMsgHandler(RouterMessage msg)
+    {
         Message contents = msg.getContents();   //getting a local variable of the contents of the RouterMessage
-        
-            if (contents instanceof UserMessage) //if the content is a UserMessage...
-            {
-                System.out.println("got user message");
-                System.out.println(contents.getTo());
-                if (routingTable.containsKey(contents.getTo())) //if this router knows where the contents needs to go...
-                {
-                    System.out.println("Found target!");
-                    pushToSubAgent(contents);    //push it into the right direction for the addressed agent
-                } else //if this router doesn't know of the addressed agent...
-                {
-                    pushToSuperAgent(msg);  //push to the next router along for them to check
-                }
-            } else if (contents instanceof SysMessage) //if the content is a SysMessage...
-            {
-                SysMessage sMsg = (SysMessage) contents; //create a version of the msg that is specifically a SysMessage
 
-                switch (sMsg.getMsg()) //what type of sysMessage is it
-                {
-                    case "reg": //the version of registration that's needed at this point requires a RouterMessage
-                        //so cannot be handled with just the sysMessageHandler or it'll constantly keep going round and round
-                        registration(msg);
-                        break;
-                    default:    //most SysMessages will go through here
-                        sysMsgHandler(sMsg);
-                        break;
-                }        
+        if (contents instanceof UserMessage) //if the content is a UserMessage...
+        {
+            if (routingTable.containsKey(contents.getTo())) //if this router knows where the contents needs to go...
+            {
+                pushToSubAgent(contents);    //push it into the right direction for the addressed agent
+            } else //if this router doesn't know of the addressed agent...
+            {
+                pushToSuperAgent(msg);  //push to the next router along for them to check
+            }
+        } else if (contents instanceof SysMessage) //if the content is a SysMessage...
+        {
+            SysMessage sMsg = (SysMessage) contents; //create a version of the msg that is specifically a SysMessage
+
+            switch (sMsg.getMsg()) //what type of sysMessage is it
+            {
+                case "reg": //the version of registration that's needed at this point requires a RouterMessage
+                    //so cannot be handled with just the sysMessageHandler or it'll constantly keep going round and round
+                    registration(msg);
+                    break;
+                default:    //most SysMessages will go through here
+                    sysMsgHandler(sMsg);
+                    break;
+            }
         }
     }
-
 
     @Override
     protected void sysMsgHandler(SysMessage msg)
     {
-        
         switch (msg.getMsg()) //looks at the first word to determine what kind of command it is
         {
             case "reg":
@@ -130,7 +128,6 @@ public class Router extends Portal implements Runnable {
     //--------------------------------------------------------------------------
     //COMMANDS
     //--------------------------------------------------------------------------
-
     //--------------------------------------------------------------------------
     //REGISTRATION
     //--------------------------------------------------------------------------
@@ -139,11 +136,10 @@ public class Router extends Portal implements Runnable {
      *
      * @param msg
      */
-
     private void registration(Message msg) //when the router gets a registration request from a Portal
-    {   
-            SysMessage message = (SysMessage) msg;
-            routingTable.put(message.getFrom(), message.getAgent());   //registers the agent with its name as the key
+    {
+        SysMessage message = (SysMessage) msg;
+        routingTable.put(message.getFrom(), message.getAgent());   //registers the agent with its name as the key
     }
 
     /**
@@ -151,19 +147,23 @@ public class Router extends Portal implements Runnable {
      *
      * @param msg A SysMessage object.
      */
-    private void deregistration(SysMessage msg) {
+    private void deregistration(SysMessage msg)
+    {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-
-    private void updateLastRouter() {
-        if (lastRouter != null) {
+    private void updateLastRouter()
+    {
+        if (lastRouter != null)
+        {
             this.setSuperAgent(lastRouter.getSuperAgent());
 
-            try {
+            try
+            {
                 lastRouter.put(new SysMessage(this.getName(), lastRouter.getName(),
                         "setSuperAgent", this));
-            } catch (InterruptedException ex) {
+            } catch (InterruptedException ex)
+            {
                 Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

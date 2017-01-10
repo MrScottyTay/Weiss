@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.message;
+package weiss.management.nodeMonitor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,6 +24,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import weiss.core.agent.MetaAgent;
 import weiss.core.message.Message;
+import weiss.core.message.Message;
+import weiss.core.message.RouterMessage;
+import weiss.core.message.SysMessage;
+import weiss.core.message.UserMessage;
 
 /**
  *

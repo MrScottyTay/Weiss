@@ -19,8 +19,8 @@ package weiss.core.agent;
 
 import weiss.core.message.Message;
 import weiss.core.message.UserMessage;
-import weiss.manager.Client;
-import weiss.manager.Managable;
+import weiss.management.client.Client;
+import weiss.management.client.Managable;
 
 /**
  *
@@ -54,7 +54,7 @@ public class Agent extends MetaAgent implements Runnable, Managable
      * Method to add a client that interacts with the MetaAgent. Only one client
      * can be active at any one time.
      * @param client An object of type WeissBase. Current implementation uses
-     * {@link weiss.manager.Client Client}.
+     * {@link weiss.management.client.Client Client}.
      */
     
 

@@ -4,24 +4,21 @@
  * and open the template in the editor.
  */
 package weiss.core.message;
-
 /**
  *
  * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class RouterMessage extends DecoratedMessage
+public class RouterMessage extends Message
 {
-    private String origin;
+    private final String origin;
+    private final Message wrappedMessage;
     
-    public RouterMessage(String f, String t, String m, Message c, String o)
+    public RouterMessage(String from, String to, 
+            Message wrappedMessage, String origin)
     {
-        super(f, t, m, c);
-        origin = o;
-    }
-    
-    public RouterMessage(String f, String t, String m, Message c)
-    {
-        super(f, t, m, c);
+        super(from, to , null);
+        this.wrappedMessage = wrappedMessage;
+        this.origin = origin;
     }
     
     
@@ -31,6 +28,11 @@ public class RouterMessage extends DecoratedMessage
     public String getOrigin()
     {
         return origin;
+    }
+    
+    public Message getContents()
+    {
+        return wrappedMessage;
     }
     
 }
