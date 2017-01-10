@@ -115,7 +115,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      * Method to set scope of MetaAgent
      * @return Integer relating to the scope of the MetaAgent
      */
-    private int getScope()
+    public int getScope()
     {
         return scope;   //returns the scope
     }

@@ -79,6 +79,7 @@ public class Router extends Portal implements Runnable {
 
     //For Handling Router Messages
     @Override
+    @Override
     protected void routerMsgHandler(RouterMessage msg) {
         System.out.println("Got router message!");
         Message contents = msg.getContents();   //getting a local variable of the contents of the RouterMessage
@@ -136,10 +137,13 @@ public class Router extends Portal implements Runnable {
         }
     }
 
+
     @Override
-    protected void sysMsgHandler(SysMessage msg) {
-        String[] command = msg.getMsg().split(" ");
-        switch (msg.getMsg()) {
+    protected void sysMsgHandler(SysMessage msg)
+    {
+        String[] command = msg.getMsg().split(" "); //splits the msg by each word
+        switch (command[0]) //looks at the first word to determine what kind of command it is
+        {
             case "reg":
                 registration(msg);
                 break;
@@ -196,10 +200,10 @@ public class Router extends Portal implements Runnable {
      *
      * @param msg
      */
+
     private void registration(Message msg) //when the router gets a registration request from a Portal
     {   
             SysMessage message = (SysMessage) msg;
-            System.out.println(message.getFrom());
             routingTable.put(message.getFrom(), message.getAgent());   //registers the agent with its name as the key
     }
 
@@ -212,6 +216,7 @@ public class Router extends Portal implements Runnable {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+
     private void updateLastRouter() {
         if (lastRouter != null) {
             this.setSuperAgent(lastRouter.getSuperAgent());
@@ -223,7 +228,42 @@ public class Router extends Portal implements Runnable {
                 Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
         lastRouter = this;
+    }
+    //--------------------------------------------------------------------------
+    //MetaAgent Creation
+    //--------------------------------------------------------------------------
+    private void insertMetaAgent(MetaAgent a)
+    {
+        if(a instanceof Portal)    //if the metaagent wanting to be inserted is a portal...
+        {
+            a.setSuperAgent(this);  //make the portal's superAgent this router
+            routingTable.put(a.getName(), a);   //register the portal in this router's routingTable
+            //have to include difference to Router-Wide and Global scope
+        }
+        else
+        {
+            //Routers cannot own anything but Portals (unless the End-User wants to change this)
+        }
+    }
+    private void newPortal(String n, int s)
+    {
+        //needs to initiate a nameCheck
+        Portal p = new Portal(n, this, s);
+        routingTable.put(n, p);
+    }
+    private void newRouter(String n)
+    {
+        //needs to initiate a nameCheck
+        Router r = new Router(n);   //creates a new Router with the intended name
+        r.setSuperAgent(getSuperAgent());   //sets the superAgent of the new router to be the one that this router currently has
+        setSuperAgent(r);   //sets this router's superAgent to be the new Router
+        //and thus the circlular LinkedList-like structure of the Routers continues
+    }
+    
+    
+    //--------------------------------------------------------------------------
+    //Other Operations
+    //--------------------------------------------------------------------------       
     }
 }
