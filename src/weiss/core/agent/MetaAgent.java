@@ -123,42 +123,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     public int getScope()
     {
         return scope;   //returns the scope
-    }
-    
-    //--------------------------------------------------------------------------
-    //SETTERS
-    //--------------------------------------------------------------------------
-    /**
-     * Setter for name.
-     * 
-     * @param n Name to be set.
-     */
-    public void setName(String n)
-    {
-        SysMessage request = new SysMessage(this.getName(), getSuperAgent().getName(), "NameCheck " + n);    //creates a SysMessage that will request its superAgent to begin a nameCheck across the system
-        pushToSuperAgent(request);  //pushes the request to the superAgent
-    }
-
-    /**
-     * Method to determine whether a name can be changed.
-     * 
-     * @param reply Contains the names approval.
-     * @param msg Contains the new name.
-     */
-    public void setName(String[] reply, Message msg)
-    {
-        String[] n = msg.getMsg().split(" ");
-        switch (reply[2])   //reply[2] holds whether the name change has been approved or not
-        {
-            case "Approved":    //if it is approved...
-                this.name = n[2];
-                break;
-            case "Declined":    //if it has been declined...
-                //nothing happens currently, but an error, maybe even a hook to the monitor can be executed here.
-                break;
-        }
-    }
-    
+    } 
     
     /**
      * Setter for {@link weiss.core.agent.MetaAgent MetaAgent} superAgent.
@@ -196,20 +161,9 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      */
     protected void msgHandler(Message msg)
     {
-        updateNodeMonitor(msg);
+        updateNodeMonitor(msg);      
+        userMsgHandler((UserMessage) msg);
         
-        //Where is this getting used?
-        String to = msg.getTo();   //puts the address of the message into a local variable
-        String from = msg.getFrom();
-
-        if(msg instanceof ReplyMessage)
-        {
-            replyMsgHandler((ReplyMessage) msg);   //gets sent to the handler specifically for ReplyMEssages
-        }
-        else
-        {
-            userMsgHandler((UserMessage) msg);
-        }
     }
     
     abstract protected void userMsgHandler(UserMessage msg);   //EndUser creates a body for this method to make the agent do what it wants to do
@@ -219,19 +173,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      * 
      * @param msg The reply to be handled.
      */
-    protected void replyMsgHandler(ReplyMessage msg)
-    {
-        String[] reply = msg.getMsg().split(" ");
-        switch(reply[1])
-        {
-            case "ReturnToSender":
-                //handling for an undelivered message
-                break;
-            case "Name":
-                this.setName(reply, msg.getContents());
-                break;
-        }
-    }
+
     
     //--------------------------------------------------------------------------
     //CLASS SPECIFIC METHODS

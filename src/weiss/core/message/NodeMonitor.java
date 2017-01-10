@@ -83,8 +83,6 @@ public class NodeMonitor
             row.add("UserMessage");
         else if(msg instanceof SysMessage)
             row.add("SysMessage");
-        else if(msg instanceof ReplyMessage)
-            row.add("ReplyMessage");
         else if(msg instanceof RouterMessage)
             row.add("RouterMessage");
         else

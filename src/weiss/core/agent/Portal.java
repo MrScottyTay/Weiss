@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import weiss.core.message.ReplyMessage;
 import weiss.core.message.RouterMessage;
 
 /**
@@ -120,10 +119,6 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
         {
             this.routerMsgHandler((RouterMessage) msg); //gets sent to the handler specifically for RouterMessages
         }
-        else if(msg instanceof ReplyMessage)
-        {
-            this.replyMsgHandler((ReplyMessage) msg);   //gets sent to the handler specifically for ReplyMessages
-        }
         else
         {
             this.userMsgHandler((UserMessage) msg); //gets sent to the handler specifically for UserMessages
@@ -132,25 +127,20 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     
     protected void routerMsgHandler(RouterMessage msg)
     {
+        
         //a Router Message should never reach a portal, this is here so that msgHandler doesn't need to be rewritten in Router
         //this may change though
     }
     
     protected void sysMsgHandler(SysMessage msg)
     {
-        String[] s = msg.getMsg().split(" ");   //splits the msg up into words, future proofing in case commands become more complicated than just one word
-        
-        switch (s[0])   //looks at the first word which will ALWAYS show what kind of command it is
+        switch (msg.getMsg())   //looks at the first word which will ALWAYS show what kind of command it is
         {
             case "reg":
                 this.registration(msg);
                 break;
             case "dereg":
                 this.deregistration(msg);
-                break;
-            case "NameCheck":
-                SysMessage sMsg = new SysMessage(msg.getFrom(), getSuperAgent().getName(), msg.getMsg(), msg.getAgent());
-                this.pushToSuperAgent(sMsg);
                 break;
         }
     }
@@ -175,17 +165,4 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     {
         //To do
     }
-    
-    //--------------------------------------------------------------------------
-    //MetaAgent Creation
-    //--------------------------------------------------------------------------
-    
-    private void insertMetaAgent(MetaAgent a)
-    {
-        a.setSuperAgent(this);
-        routingTable.put(a.getName(), a);
-    }
-    
-    //The End-User could create a creation method of their own Agents that extend MetaAgent here
-    //use the newPortal() and newRouter() methods in Router.java as an example of this
 }
