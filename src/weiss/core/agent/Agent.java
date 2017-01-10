@@ -45,6 +45,7 @@ public class Agent extends MetaAgent implements Runnable, Managable
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
+        this.updateNodeMonitor(msg);
         this.updateClient(msg);
     }
     
