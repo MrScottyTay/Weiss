@@ -54,7 +54,6 @@ public class Router extends Portal implements Runnable {
      * Constructor for the Router class
      *
      * @param name String for the name variable.
-     *
      */
     public Router(String name) {
         super(name, null);
