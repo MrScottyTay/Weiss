@@ -41,8 +41,8 @@ public class TreePane {
     private TreeNode treeNode;
 
     /**
-     *
-     * @param manager
+     * A Constructor to create the JTree navigation pane.
+     * @param manager The attached manager to pull information from.
      */
     public TreePane(WeissManager manager) {
         this.buildTree(manager);
