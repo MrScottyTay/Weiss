@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.manager;
+package weiss.management;
 
 
 import javax.swing.ImageIcon;
@@ -28,7 +28,8 @@ import weiss.core.agent.MetaAgent;
  */
 
 /**
- *
+ * Extended class to allow treeNodes to store a reference to a {@link weiss.core.agent.MetaAgent MetaAgent}, for 
+ * GUI management in {@link weiss.management.TreePane TreePane}. Also allows custom images and names to be changed at will.
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public class TreeNode extends DefaultMutableTreeNode
@@ -36,6 +37,13 @@ public class TreeNode extends DefaultMutableTreeNode
     private MetaAgent agentRef;
     private ImageIcon image;
     private String name;
+    
+    /**
+     * Constructor to create a TreeNode, to be used in the {@link weiss.management.TreePane TreePane}.
+     * @param name String variable to set the treeNode name.
+     * @param agent MetaAgent reference to attach to the treeNode.
+     * @param image ImageIcon to assign to the treeNode.
+     */
     public TreeNode(String name, MetaAgent agent, ImageIcon image)
     {
         super(name);
@@ -44,21 +52,37 @@ public class TreeNode extends DefaultMutableTreeNode
         this.image = image;
     }
     
+    /**
+     * Generic constructor to create a basic treeNode.
+     * @param name String variable to set the treeNode name.
+     */
     public TreeNode(String name)
     {
         super(name);
     }
     
+    /**
+     * Method to pull the attached {@link weiss.core.agent.MetaAgent MetaAgent} from the treeNode
+     * @return A MetaAgent to be assigned to the treeNode
+     */
     public MetaAgent getAgentRef()
     {
         return agentRef;
     }
     
+    /**
+     * Method to return the assigned image from the treeNode.
+     * @return An ImageIcon of the assigned image.
+     */
     public ImageIcon getImage()
     {
         return image;
     }
     
+    /**
+     * Method to return the name of the treeNode.
+     * @return A String variable of the assigned name.
+     */
     public String getName()
     {
         return name;

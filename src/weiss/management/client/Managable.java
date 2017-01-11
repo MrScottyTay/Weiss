@@ -14,15 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.manager;
+package weiss.management.client;
 
 /**
- *
- * @author Adam Young
+ * Interface to implement the hooks for the nodeMonitor class
+ * @author Adam Young, Teesside University Sch. of Computing
  */
 public interface Managable
 {
+    /**
+     * Method to add a client to the implementing class.
+     * @param client A client object.
+     */
     public void addClient(Client client);
     
-    public void removeClient(Client client);
+    /**
+     * Method to remove a client from the implementing class.
+     */
+    public void removeClient();
 }

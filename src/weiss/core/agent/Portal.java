@@ -16,7 +16,7 @@
  */
 package weiss.core.agent;
 
-import weiss.core.message.Monitorable;
+import weiss.management.nodeMonitor.Monitorable;
 import weiss.core.message.Message;
 import weiss.core.message.UserMessage;
 import weiss.core.message.SysMessage;
@@ -75,6 +75,13 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     //--------------------------------------------------------------------------
     //MESSAGE HANDLING
     //--------------------------------------------------------------------------
+    /**
+     * Handler for the UserMessage type. The method checks the routing table for the
+     * specified Agent, and if present it pushes it to the assigned subAgent. Otherwise,
+     * the message is passed to the superAgent. If no superAgent is assigned, an error message
+     * is sent back to the original sender.
+     * @param msg A UserMessge object passed from the message handler
+     */
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
@@ -95,6 +102,11 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
             }    
     }
     
+    /**
+     * Method to get the relevant MetaAgent, and then attempt to push the message 
+     * onto it's linked blocking queue.
+     * @param msg A Message object to push to the subAgent.
+     */
     protected void pushToSubAgent(Message msg)
     {
         MetaAgent agent = (MetaAgent) routingTable.get(msg.getTo()); //gets the addressed agent
@@ -130,12 +142,22 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
         }
     }
     
+    /**
+     * Method to handle RouterMessages. If the message reaches a portal, an error
+     * is thrown, as the message should stop at the router level.
+     * @param msg A RouterMessage to be handled.
+     */
     protected void routerMsgHandler(RouterMessage msg)
     {
         //a Router Message should never reach a portal, this is here so that msgHandler doesn't need to be rewritten in Router
         //this may change though
     }
     
+    /**
+     * Method to handle SysMessages. The main implementation of this is to handle
+     * MetaAgent registration/de-registration.
+     * @param msg A SysMessage object passed from the message handler.
+     */
     protected void sysMsgHandler(SysMessage msg)
     {
         String[] s = msg.getMsg().split(" ");   //splits the msg up into words, future proofing in case commands become more complicated than just one word
@@ -159,8 +181,9 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     //REGISTRATION
     //--------------------------------------------------------------------------
     
-    /**
-     * Method to register a subAgent to this MetaAgent
+/**
+     * Method to register a subAgent to this MetaAgent. The method adds the passed
+     * MetaAgent to the routingTable, and then pushes it to the superAgent.
      *
      * @param msg A SysMessage object
      */

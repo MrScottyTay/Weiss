@@ -48,22 +48,34 @@ import weiss.core.message.RouterMessage;
  */
 public class Router extends Portal implements Runnable {
 
+    /**
+     * Pointer to the last router created, to add Routers to the linked-list.
+     */
     public static volatile MetaAgent lastRouter;
 
     /**
-     * Constructor for the Router class
+     * Constructor for the Router class, which calls
+     * {@link weiss.core.agent.Router#updateLastRouter() updateLastRouter}.
      *
      * @param name String for the name variable.
-     *
      */
     public Router(String name) {
         super(name, null);
+        this.setSuperAgent(this);
         this.updateLastRouter();
     }
 
     //--------------------------------------------------------------------------
     //MESSAGE HANDLING
     //--------------------------------------------------------------------------
+    /**
+     * Method to handle UserMessages. If the target is present in the
+     * routingTable, the message is passed to the specific subAgent. Otherwise,
+     * the message is packaged into a RouterMessage, and passed to the next
+     * Router in the chain.
+     *
+     * @param msg A UserMessage passed from the message handler.
+     */
     @Override
     protected void userMsgHandler(UserMessage msg) {
         if (routingTable.containsKey(msg.getTo())) //if this router knows where the addressed agent is...
@@ -77,7 +89,14 @@ public class Router extends Portal implements Runnable {
         }
     }
 
-    //For Handling Router Messages
+    /**
+     * Method to handle RouterMessages. If the source was this router, a reply message is sent back
+     * to the original sender. Otherwise, If the message is a UserMessage, and the target is
+     * in the Router's routingTable, the message is pushed to the correct subAgent. if the target
+     * isn't found, it's passed onto the next Router in the chain.
+     * 
+     * @param msg A RouterMessage, passed from the message handler.
+     */
     @Override
     protected void routerMsgHandler(RouterMessage msg) {
         System.out.println("Got router message!");
@@ -136,7 +155,11 @@ public class Router extends Portal implements Runnable {
         }
     }
 
-
+    /**
+     * A method to handle registration/de-registration, as well as superAgent assignment
+     * after instantiation.
+     * @param msg A SysMessage passed from the message handler.
+     */
     @Override
     protected void sysMsgHandler(SysMessage msg)
     {
@@ -194,12 +217,12 @@ public class Router extends Portal implements Runnable {
     //--------------------------------------------------------------------------
     //REGISTRATION
     //--------------------------------------------------------------------------
+    
     /**
      * Method to register subAgents to this MetaAgent.
      *
      * @param msg
      */
-
     private void registration(Message msg) //when the router gets a registration request from a Portal
     {   
             SysMessage message = (SysMessage) msg;
@@ -215,7 +238,11 @@ public class Router extends Portal implements Runnable {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-
+    /**
+     * Method to add new routers to the linked list, by altering the superAgents of the
+     * newest and 2nd newest routers, and adjusting the static variable 
+     * {@link weiss.core.agent.Router#lastRouter lastRouter}.
+     */
     private void updateLastRouter() {
         if (lastRouter != null) {
             this.setSuperAgent(lastRouter.getSuperAgent());

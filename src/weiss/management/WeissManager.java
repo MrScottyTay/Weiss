@@ -14,18 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.manager;
+package weiss.management;
 
-import weiss.core.message.NodeMonitor;
+import weiss.management.client.Client;
+import weiss.management.nodeMonitor.NodeMonitor;
 import weiss.core.agent.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import javax.swing.*;
-/**
+
+/**Class that builds the main JFrame GUI. Implements {@link TreePane TreePane} as
+ * the main UI controls, as well as JButtons and JTextFields for naming and client/nodeMonitor
+ * assignment.
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
@@ -35,8 +38,9 @@ public final class WeissManager extends JFrame
     private JTextField metaAgentInputField;
     private final ImageIcon icon;
     
-    
-    
+    /**
+     * Constructor to initialise the JFrame, setting the title, size and icons.
+     */
     public WeissManager()
     {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,6 +56,13 @@ public final class WeissManager extends JFrame
         this.setVisible(true); 
     }
 
+    /**
+     * Method to assign the JPanel positions, tree positions and button positions,
+     * as well as assign ActionListeners to the buttons. The ActionListeners control the
+     * instantiation of all MetaAgents.
+     * @return A JPanel containing all other JPanels in their correct layout, as well as 
+     * the JTree.
+     */
     public JPanel buildPanel()
     {
         TreePane treePane = new TreePane(this);
@@ -138,6 +149,10 @@ public final class WeissManager extends JFrame
         return panel;
     }
 
+    /**
+     * Method to get the metaAgentSelectButton, for other GUI uses.
+     * @return A JButton object.
+     */
     public JButton getAgentSelectBtn()
     {
         return metaAgentSelectBtn;

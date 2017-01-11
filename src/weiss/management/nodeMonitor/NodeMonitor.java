@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.message;
+package weiss.management.nodeMonitor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,18 +24,28 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import weiss.core.agent.MetaAgent;
 import weiss.core.message.Message;
+import weiss.core.message.ReplyMessage;
+import weiss.core.message.RouterMessage;
+import weiss.core.message.SysMessage;
+import weiss.core.message.UserMessage;
 
 /**
- *
+ * Class that implements a GUI based visualiser of the routes that messages take
+ * throughout the attached class. The NodeMonitor implements a JTable, with columns
+ * for "From", "To", "Sent" and "MsgType", for the user to see the flow of information.
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class NodeMonitor
+public final class NodeMonitor
 {
     private JDialog dialog;
     private Vector data;
     private JTable table; 
     private DefaultTableModel tableModel;
     
+    /**
+     * Constructor to create a NodeMonitor GUI window.
+     * @param agent MetaAgent the nodeMonitor is being assigned to.
+     */
     public NodeMonitor(MetaAgent agent)
     {
         this.createGUI(agent.getName());
@@ -72,6 +82,10 @@ public class NodeMonitor
         dialog.setVisible(true);
     } 
     
+    /**
+     * Method to append table data to the GUI window.
+     * @param msg The received message.
+     */
     public void insertTableData(Message msg)
     {
         Vector row = new Vector();
