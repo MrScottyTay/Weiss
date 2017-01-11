@@ -38,6 +38,7 @@ import weiss.core.agent.MetaAgent;
 import weiss.management.nodeMonitor.NodeMonitor;
 import weiss.management.WeissManager;
 import weiss.core.agent.Router;
+import weiss.management.client.Client;
 /**
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
@@ -56,33 +57,51 @@ public class Weiss {
         //----------------------------------------------------------------------
         //MANAGER OPERATION
         
-        WeissManager manager = new WeissManager();
-                
-        /*
+        //WeissManager manager = new WeissManager();
         //----------------------------------------------------------------------
         //CLI OPERATION
-        MetaAgent router1 = new Router("R1", null);
-        router1.addNodeMonitor(new NodeMonitor(router1));
+        
+        //Router 1 ---
+        MetaAgent router1 = new Router("R1");
+        //router1.addNodeMonitor(new NodeMonitor(router1));
         router1.start();
         
-        MetaAgent router2 = new Router("R2", router1);
-        router2.addNodeMonitor(new NodeMonitor(router2));
-        router2.start();
-        
-        MetaAgent portal = new Portal("P1", router1);
-        portal.addNodeMonitor(new NodeMonitor(portal));
-        portal.start();
+        //Portal 1 ---
+        MetaAgent portal1 = new Portal("P1", router1);
+        //portal1.addNodeMonitor(new NodeMonitor(portal1));
+        portal1.start();
 
-        Agent agent1 = new Agent("Fred", portal);
-        agent1.addNodeMonitor(new NodeMonitor(agent1));
+        Agent agent1 = new Agent("A1", portal1);
+        //agent1.addNodeMonitor(new NodeMonitor(agent1));
         agent1.start();
         
-        Agent agent2 = new Agent("Bill", portal);
-        agent2.addNodeMonitor(new NodeMonitor(agent2));
+        Agent agent2 = new Agent("A2", portal1);
+        //agent2.addNodeMonitor(new NodeMonitor(agent2));
         agent2.start();
         
+        
+        
+        //Router 2 ---
+        MetaAgent router2 = new Router("R2");
+        //router2.addNodeMonitor(new NodeMonitor(router2));
+        router2.start();
+        
+        //Portal 2 ---
+        MetaAgent portal2 = new Portal("P2", router2);
+        //portal2.addNodeMonitor(new NodeMonitor(portal2));
+        portal2.start();
+        
+        Agent agent3 = new Agent("A3", portal2);
+        //agent3.addNodeMonitor(new NodeMonitor(agent3));
+        agent3.start();
+        
+        Agent agent4 = new Agent("A4", portal2);
+        //agent4.addNodeMonitor(new NodeMonitor(agent4));
+        agent4.start();
+        
         //----------------------------------------------------------------------
-        agent1.sendMessage("Bill", "Hello World!");
-        */
+        //Create a client window for easier usage.
+        agent1.addClient(new Client(agent1));
+        agent4.addClient(new Client(agent4));
     }
 }

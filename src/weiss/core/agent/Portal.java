@@ -84,7 +84,7 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
      * specified Agent, and if present it pushes it to the assigned subAgent. Otherwise,
      * the message is passed to the superAgent. If no superAgent is assigned, an error message
      * is sent back to the original sender.
-     * @param msg
+     * @param msg A UserMessge object passed from the message handler
      */
     @Override
     protected void userMsgHandler(UserMessage msg)
@@ -109,7 +109,7 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     /**
      * Method to get the relevant MetaAgent, and then attempt to push the message 
      * onto it's linked blocking queue.
-     * @param msg
+     * @param msg A Message object to push to the subAgent.
      */
     protected void pushToSubAgent(Message msg)
     {
@@ -155,7 +155,7 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     /**
      * Method to handle SysMessages. The main implementation of this is to handle
      * MetaAgent registration/de-registration.
-     * @param msg
+     * @param msg A SysMessage object passed from the message handler.
      */
     protected void sysMsgHandler(SysMessage msg)
     {

@@ -99,7 +99,7 @@ public class Agent extends MetaAgent implements Runnable, Managable
 
     /**Method to update the attached client, if present.
      *
-     * @param msg
+     * @param msg A Message object to push to the client hook.
      */
     public void updateClient(Message msg)
     {

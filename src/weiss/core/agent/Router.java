@@ -56,6 +56,7 @@ public class Router extends Portal implements Runnable
     public Router(String name)
     {
         super(name, null);
+        this.setSuperAgent(this);
         this.updateLastRouter();
     }
 
