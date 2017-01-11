@@ -34,7 +34,7 @@ import weiss.core.message.*;
  * A simple, standalone GUI client to hook into the client of the MetaAgents.
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class Client
+public final class Client
 {
     private JTextArea textArea;
     private final MetaAgent agent;
