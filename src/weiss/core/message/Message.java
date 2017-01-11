@@ -92,6 +92,6 @@ public abstract class Message
     @Override
     public String toString()
     {
-        return "From: " + from + "\nTo: " + to + "\nMessage: " + msg + "\nTime Sent: " + timestamp;
+        return "\nFrom: " + from + "\nTo: " + to + "\nMessage: " + msg + "\nTime Sent: " + timestamp;
     } 
 }

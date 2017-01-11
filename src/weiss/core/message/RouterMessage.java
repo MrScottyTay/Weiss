@@ -27,10 +27,10 @@ public class RouterMessage extends Message
     /** Constructor for a RouterMessage object. The object is used for Router to Router
      * communication, allowing for use in a linked list.
      *
-     * @param from
-     * @param to
-     * @param wrappedMessage
-     * @param origin
+     * @param from String variable detailing where the message is from.
+     * @param to String variable detailing where the message is going.
+     * @param wrappedMessage The Message object to be wrapped.
+     * @param origin The Router the message was created in originally.
      */
     public RouterMessage(String from, String to, 
             Message wrappedMessage, String origin)
