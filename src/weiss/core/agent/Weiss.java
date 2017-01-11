@@ -1,3 +1,5 @@
+package weiss.core.agent;
+
 /* 
  * Copyright (C) 2017 Adam Young
  *
@@ -17,8 +19,8 @@
 import weiss.core.agent.Agent;
 import weiss.core.agent.Portal;
 import weiss.core.agent.MetaAgent;
-import weiss.core.message.NodeMonitor;
-import weiss.manager.WeissManager;
+import weiss.management.nodeMonitor.NodeMonitor;
+import weiss.management.WeissManager;
 import weiss.core.agent.Router;
 /**
  * @author Scott Taylor, Teesside University Sch. of Computing

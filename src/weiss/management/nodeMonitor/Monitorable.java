@@ -14,17 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.message;
-
-import weiss.core.message.NodeMonitor;
+package weiss.management.nodeMonitor;
 
 /**
- *
+ * Interface to implement the required hooks for the Client class
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public interface Monitorable
 {
+    /**
+     * Method to add a node monitor to the implementing class.
+     * @param nodeMonitor A nodeMonitor object.
+     */
     public void addNodeMonitor(NodeMonitor nodeMonitor);
     
-    public void removeNodeMonitor(NodeMonitor nodeMonitor);
+    /**
+     * Method to remove a node monitor from a implementing class.
+     */
+    public void removeNodeMonitor();
 }

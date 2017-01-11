@@ -1,7 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright (C) 2017 Adam Young
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package weiss.core.message;
 
@@ -24,7 +35,7 @@ public class SysMessage extends Message
      * @param f String of message sender.
      * @param t String of message receiver.
      * @param m String of message contents.
-     * @param a
+     * @param a MetaAgent to be used in routing tables.
      */
     public SysMessage(String f, String t, String m, MetaAgent a)
     {
@@ -33,6 +44,12 @@ public class SysMessage extends Message
         //Needs additional fields adding.
     }
     
+    /**
+     * Constructor for the SysMessage class.
+     * @param f String of message sender.
+     * @param t String of message receiver.
+     * @param m String of message contents.
+     */
     public SysMessage(String f, String t, String m)
     {
         super(f, t, m);
@@ -40,6 +57,11 @@ public class SysMessage extends Message
     
     //--------------------------------------------------------------------------
     //GETTERS
+    
+    /**
+     * Method to return the agent stored.
+     * @return A MetaAgent variable.
+     */
     public MetaAgent getAgent()
     {
         return agent;

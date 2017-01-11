@@ -16,8 +16,8 @@
  */
 package weiss.core.agent;
 
-import weiss.core.message.Monitorable;
-import weiss.core.message.NodeMonitor;
+import weiss.management.nodeMonitor.Monitorable;
+import weiss.management.nodeMonitor.NodeMonitor;
 import weiss.core.message.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
@@ -25,10 +25,10 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 /**
- * An abstract class detailing the construction of a MetaAgent object, to be implemented
- * by the end user.
- * This implementation of a meta agent extends 
- * a <a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/LinkedBlockingQueue.html">LinkedBlockingQueue</a>.
+ * An abstract class detailing the construction of a MetaAgent object, to be
+ * implemented by the end user. This implementation of a meta agent extends a
+ * <a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/LinkedBlockingQueue.html">LinkedBlockingQueue</a>.
+ * 
  * 
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
@@ -96,7 +96,9 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
 
     //--------------------------------------------------------------------------
     //GETTERS
+
     //--------------------------------------------------------------------------
+
     /**
      * Getter for name variable.
      * 
@@ -106,6 +108,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     {
         return name;    //returns the name
     }
+    
     /**
      * Getter for {@link weiss.core.agent.MetaAgent MetaAgent} superAgent object.
      * 
@@ -115,6 +118,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     {
         return superAgent;  //returns the superAgent
     }
+    
     /**
      * Getter for the scope.
      * 
@@ -189,11 +193,14 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     //--------------------------------------------------------------------------
     //MESSAGE HANDLERS
     //--------------------------------------------------------------------------
+
+   
     /**
-     * Method to handle messages.
-     * 
-     * @param msg The message to be handled.
-     */
+     * Method to handle messages. In the generic MetaAgent implementation, messages
+     * are pushed as UserMessages. Other implementations sort the type of message,
+     * and direct it to the correct handler.
+     *
+    /**
     protected void msgHandler(Message msg)
     {
         updateNodeMonitor(msg);
@@ -212,6 +219,11 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         }
     }
     
+    /**
+     * Abstract method to implement a handler of UserMessages. An implementation
+     * can be found at {@link weiss.core.agent.Agent#userMsgHandler(weiss.core.message.UserMessage) this agent}.
+     * @param msg A UserMessage
+     */
     abstract protected void userMsgHandler(UserMessage msg);   //EndUser creates a body for this method to make the agent do what it wants to do
     
     /**
@@ -235,6 +247,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     
     //--------------------------------------------------------------------------
     //CLASS SPECIFIC METHODS
+
     //-------------------------------------------------------------------------- 
     /**
      * Method to send messages.
@@ -249,7 +262,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     
     /**
      * Method to push a message onto a parents blocking queue.
-     * 
+     *
      * @param msg The message to be pushed.
      */
     protected void pushToSuperAgent(Message msg)
@@ -267,9 +280,11 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     //--------------------------------------------------------------------------
     //INTERFACE METHODS
     //--------------------------------------------------------------------------
+
+    
     /**
      * Method to add a node monitor.
-     * 
+     *
      * @param nodeMonitor The node monitor to be added.
      */
     @Override
@@ -284,14 +299,14 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      * @param nodeMonitor The node monitor to be removed.
      */
     @Override
-    public void removeNodeMonitor(NodeMonitor nodeMonitor)
+    public void removeNodeMonitor()
     {
         this.monitor = null;
     }
     
     /**
      * Method to update the node monitor.
-     * 
+     *
      * @param msg Message containing the table data.
      */
     protected void updateNodeMonitor(Message msg)
