@@ -17,7 +17,7 @@
 package weiss.management.client;
 
 /**
- *
+ * Interface to implement the hooks for the nodeMonitor class
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public interface Managable

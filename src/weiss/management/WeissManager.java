@@ -25,6 +25,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+
 /**Class that builds the main JFrame GUI. Implements {@link TreePane TreePane} as
  * the main UI controls, as well as JButtons and JTextFields for naming and client/nodeMonitor
  * assignment.

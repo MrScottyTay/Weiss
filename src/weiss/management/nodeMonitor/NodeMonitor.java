@@ -29,7 +29,9 @@ import weiss.core.message.SysMessage;
 import weiss.core.message.UserMessage;
 
 /**
- *
+ * Class that implements a GUI based visualiser of the routes that messages take
+ * throughout the attached class. The NodeMonitor implements a JTable, with columns
+ * for "From", "To", "Sent" and "MsgType", for the user to see the flow of information.
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public final class NodeMonitor

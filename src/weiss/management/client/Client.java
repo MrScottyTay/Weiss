@@ -17,7 +17,6 @@
 package weiss.management.client;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,7 +65,6 @@ public final class Client
         JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel bottomPanel = new JPanel();
         
-        //JComboBox agentSelection = new JComboBox();
         JTextField agentSelection = new JTextField();
         textArea = new JTextArea(5, 30);
         

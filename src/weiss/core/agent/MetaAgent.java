@@ -35,7 +35,6 @@ import javax.swing.ImageIcon;
  */
 public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable, Monitorable
 {
-
     private String name;
     private int scope;  //0 = global, 1 = router-wide, 2 = portal-wide
     private NodeMonitor monitor;
@@ -181,11 +180,6 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      */
     abstract protected void userMsgHandler(UserMessage msg);   //EndUser creates a body for this method to make the agent do what it wants to do
 
-    /**
-     * Method to handle replies.
-     *
-     * @param msg The reply to be handled.
-     */
     //--------------------------------------------------------------------------
     //CLASS SPECIFIC METHODS
     //-------------------------------------------------------------------------- 

@@ -186,7 +186,7 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
         SysMessage sMsg = new SysMessage(msg.getAgent().getName(), getSuperAgent().getName(), "reg", this);
         pushToSuperAgent(sMsg);
     }
-
+    
     private void deregistration(SysMessage msg)
     {
         //To do
