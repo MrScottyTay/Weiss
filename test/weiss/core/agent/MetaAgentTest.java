@@ -23,6 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import weiss.core.message.Message;
+import weiss.core.message.SysMessage;
 import weiss.core.message.UserMessage;
 import weiss.management.nodeMonitor.NodeMonitor;
 
@@ -64,10 +65,11 @@ public class MetaAgentTest
     public void testRun()
     {
         System.out.println("run");
-        MetaAgent instance = null;
-        instance.run();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        MetaAgent instance = new Portal("Portal 1", null);
+        instance.start();
+        instance.addNodeMonitor(new NodeMonitor(instance));
+        
+        assertEquals(instance.hasNodeMonitor(), true);
     }
 
     /**
@@ -77,10 +79,11 @@ public class MetaAgentTest
     public void testStart()
     {
         System.out.println("start");
-        MetaAgent instance = null;
+        MetaAgent instance = new Portal("Portal 1", null);
         instance.start();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.addNodeMonitor(new NodeMonitor(instance));
+        
+        assertEquals(instance.hasNodeMonitor(), true);
     }
 
     /**
@@ -90,12 +93,10 @@ public class MetaAgentTest
     public void testGetName()
     {
         System.out.println("getName");
-        MetaAgent instance = null;
-        String expResult = "";
+        MetaAgent instance = new Agent("Agent 1", null);
+        String expResult = "Agent 1";
         String result = instance.getName();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -105,28 +106,13 @@ public class MetaAgentTest
     public void testGetSuperAgent()
     {
         System.out.println("getSuperAgent");
-        MetaAgent instance = null;
-        MetaAgent expResult = null;
+        MetaAgent expResult = new Portal("Portal 1", null);
+        MetaAgent instance = new Agent("Agent 1", expResult);
+        
         MetaAgent result = instance.getSuperAgent();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of getScope method, of class MetaAgent.
-     */
-    @Test
-    public void testGetScope()
-    {
-        System.out.println("getScope");
-        MetaAgent instance = null;
-        int expResult = 0;
-        int result = instance.getScope();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of setSuperAgent method, of class MetaAgent.
@@ -135,27 +121,14 @@ public class MetaAgentTest
     public void testSetSuperAgent()
     {
         System.out.println("setSuperAgent");
-        MetaAgent superAgent = null;
-        MetaAgent instance = null;
+        
+        MetaAgent superAgent = new Portal("P1", null);
+        MetaAgent instance = new Agent("Agent 1", superAgent);
         instance.setSuperAgent(superAgent);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertEquals(instance.getSuperAgent(), superAgent);
     }
-
-    /**
-     * Test of setScope method, of class MetaAgent.
-     */
-    @Test
-    public void testSetScope()
-    {
-        System.out.println("setScope");
-        int scope = 0;
-        MetaAgent instance = null;
-        instance.setScope(scope);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
+    
     /**
      * Test of msgHandler method, of class MetaAgent.
      */
@@ -163,25 +136,11 @@ public class MetaAgentTest
     public void testMsgHandler()
     {
         System.out.println("msgHandler");
-        Message msg = null;
-        MetaAgent instance = null;
+        Message msg = new UserMessage("Admin", "Agent 1", "Hello World!");
+        MetaAgent instance = new Agent("Agent 1", null);
         instance.msgHandler(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of userMsgHandler method, of class MetaAgent.
-     */
-    @Test
-    public void testUserMsgHandler()
-    {
-        System.out.println("userMsgHandler");
-        UserMessage msg = null;
-        MetaAgent instance = null;
-        instance.userMsgHandler(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertEquals(instance.peek(), null);
     }
 
     /**
@@ -191,12 +150,10 @@ public class MetaAgentTest
     public void testSendMessage()
     {
         System.out.println("sendMessage");
-        String to = "";
-        String message = "";
-        MetaAgent instance = null;
-        instance.sendMessage(to, message);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        String to = "Agent 1";
+        String message = "Hello";
+        MetaAgent instance = new Agent("Agent 1", null);
+    
     }
 
     /**
@@ -206,11 +163,12 @@ public class MetaAgentTest
     public void testPushToSuperAgent()
     {
         System.out.println("pushToSuperAgent");
-        Message msg = null;
-        MetaAgent instance = null;
+        
+        MetaAgent router = new Router("R1");
+        MetaAgent instance = new Portal("P1", router);
+        
+        Message msg = new SysMessage("P1", "R1", "setSuperAgent", instance);
         instance.pushToSuperAgent(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -220,11 +178,10 @@ public class MetaAgentTest
     public void testAddNodeMonitor()
     {
         System.out.println("addNodeMonitor");
-        NodeMonitor nodeMonitor = null;
-        MetaAgent instance = null;
-        instance.addNodeMonitor(nodeMonitor);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        MetaAgent instance = new Router("R1");
+        instance.addNodeMonitor(new NodeMonitor(instance));
+       
+        assertEquals(instance.hasNodeMonitor(), true);
     }
 
     /**
@@ -233,11 +190,12 @@ public class MetaAgentTest
     @Test
     public void testRemoveNodeMonitor()
     {
-        System.out.println("removeNodeMonitor");
-        MetaAgent instance = null;
+        System.out.println("addNodeMonitor");
+        MetaAgent instance = new Router("R1");
+        instance.addNodeMonitor(new NodeMonitor(instance));
         instance.removeNodeMonitor();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertEquals(instance.hasNodeMonitor(), false);
     }
 
     /**
@@ -247,11 +205,14 @@ public class MetaAgentTest
     public void testUpdateNodeMonitor()
     {
         System.out.println("updateNodeMonitor");
-        Message msg = null;
-        MetaAgent instance = null;
+        Message msg = new UserMessage("Admin", "A1", "Hello");
+        MetaAgent instance = new Agent("A1", null);
+        
+        NodeMonitor nm = new NodeMonitor(instance);
+        instance.addNodeMonitor(nm);
         instance.updateNodeMonitor(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertEquals(nm.getLastMessage(), msg.toString());
     }
 
     public class MetaAgentImpl extends MetaAgent
@@ -262,8 +223,10 @@ public class MetaAgentTest
             super("", null);
         }
 
+        @Override
         public void userMsgHandler(UserMessage msg)
         {
+            this.setSuperAgent(this);
         }
     }
     

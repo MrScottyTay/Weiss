@@ -36,12 +36,11 @@ import javax.swing.ImageIcon;
 public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable, Monitorable
 {
     private String name;
-    private int scope;  //0 = global, 1 = router-wide, 2 = portal-wide
     private NodeMonitor monitor;
 
     private MetaAgent superAgent;
     private ImageIcon image;
-    private Thread thread;
+    private final Thread thread;
 
     /**
      * Constructor to initialise a MetaAgetn object.
@@ -55,26 +54,10 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         super();
         this.name = name;
         this.setSuperAgent(superAgent);
-        this.scope = 0;
 
         thread = new Thread(this);
     }
 
-    /**
-     * Constructor to initialise a MetaAgent object with scope.
-     *
-     * @param name Name of MetaAgent.
-     * @param superAgent {@link weiss.core.agent.Portal Portal} belonging to
-     * MetaAgent.
-     * @param scope Scope of the MetaAgent.
-     */
-    public MetaAgent(String name, MetaAgent superAgent, int scope)
-    {
-        super();
-        this.name = name;
-        this.superAgent = superAgent;
-        this.scope = scope;
-    }
 
     @Override
     public void run()
@@ -124,16 +107,6 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     }
 
     /**
-     * Getter for the scope.
-     *
-     * @return Integer relating to the scope of the MetaAgent
-     */
-    public int getScope()
-    {
-        return scope;   
-    }
-
-    /**
      * Setter for {@link weiss.core.agent.MetaAgent MetaAgent} superAgent.
      *
      * @param superAgent {@link weiss.core.agent.MetaAgent MetaAgent} object.
@@ -147,15 +120,6 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         }
     }
 
-    /**
-     * Method to set scope of MetaAgent.
-     *
-     * @param scope Integer relating to the scope of the MetaAgent.
-     */
-    public final void setScope(int scope)
-    {
-        this.scope = scope;
-    }
 
     //--------------------------------------------------------------------------
     //MESSAGE HANDLERS
@@ -235,6 +199,12 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     public void removeNodeMonitor()
     {
         this.monitor = null;
+    }
+    
+    @Override
+    public boolean hasNodeMonitor()
+    {
+        return monitor != null;
     }
 
     /**

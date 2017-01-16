@@ -33,4 +33,10 @@ public interface Monitorable
      * Method to remove a node monitor from a implementing class.
      */
     public void removeNodeMonitor();
+    
+    /**
+     * Method to check if a node monitor has been registered to the implementing class.
+     * @return True if the node monitor is present, false if not.
+     */
+    public boolean hasNodeMonitor();
 }

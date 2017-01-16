@@ -103,5 +103,11 @@ public class Weiss {
         //Create a client window for easier usage.
         agent1.addClient(new Client(agent1));
         agent4.addClient(new Client(agent4));
+        
+        Object lock = new Object();
+        synchronized(lock)
+        {
+           agent1.sendMessage("Agent 4", "Hello World!");
+        }
     }
 }

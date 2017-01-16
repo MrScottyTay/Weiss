@@ -96,6 +96,12 @@ public class Agent extends MetaAgent implements Runnable, Managable
     {
         this.client = null;
     }
+    
+    @Override
+    public boolean hasClient()
+    {
+        return client != null;
+    }
 
     /**Method to update the attached client, if present.
      *

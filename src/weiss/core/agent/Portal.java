@@ -62,18 +62,7 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
         super(name, superAgent);
         this.routingTable = new HashMap<>();
     }
-    /**
-     *  Constructor for the Portal class.
-     * 
-     * @param name String of name variable.
-     * @param superAgent MetaAgent pointer of Router.
-     * @param scope Integer detailing scope of Router.
-     */
-    public Portal(String name, MetaAgent superAgent, int scope)
-    {
-        super(name, superAgent, scope);
-        this.routingTable = new HashMap<>();
-    }
+
 
     //--------------------------------------------------------------------------
     //MESSAGE HANDLING

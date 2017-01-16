@@ -65,11 +65,12 @@ public class PortalTest
     public void testUserMsgHandler()
     {
         System.out.println("userMsgHandler");
-        UserMessage msg = null;
-        Portal instance = null;
-        instance.userMsgHandler(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        UserMessage msg = new UserMessage("Admin", "A2", "Hello");
+        
+        Portal portal = new Portal("P1", null);
+        Agent agent2 = new Agent("A2", portal);
+        
+        portal.userMsgHandler(msg);
     }
 
     /**
@@ -79,11 +80,12 @@ public class PortalTest
     public void testPushToSubAgent()
     {
         System.out.println("pushToSubAgent");
-        Message msg = null;
-        Portal instance = null;
+
+        Message msg = new UserMessage("A2", "A1", "Hello");
+        Portal instance = new Portal("P1", null);
+        Agent agent = new Agent("A1", instance);
+        
         instance.pushToSubAgent(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -93,11 +95,12 @@ public class PortalTest
     public void testMsgHandler()
     {
         System.out.println("msgHandler");
-        Message msg = null;
-        Portal instance = null;
+        
+        Message msg = new UserMessage("A2", "A1", "Hello");
+        Portal instance = new Portal("P1", null);
+        Agent agent = new Agent("A1", instance);
+        
         instance.msgHandler(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**

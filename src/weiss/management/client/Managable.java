@@ -33,4 +33,10 @@ public interface Managable
      * Method to remove a client from the implementing class.
      */
     public void removeClient();
+    
+    /**
+     * Method to check if a client has been registered to the implementing class.
+     * @return True if the client is present, false if not.
+     */
+    public boolean hasClient();
 }

@@ -40,6 +40,7 @@ public final class NodeMonitor
     private Vector data;
     private JTable table; 
     private DefaultTableModel tableModel;
+    private String lastMessage;
     
     /**
      * Constructor to create a NodeMonitor GUI window.
@@ -91,6 +92,8 @@ public final class NodeMonitor
      */
     public void insertTableData(Message msg)
     {
+        lastMessage = msg.toString();
+        
         Vector row = new Vector();
         row.add(msg.getFrom());
         row.add(msg.getTo());
@@ -107,5 +110,10 @@ public final class NodeMonitor
         
         data.add(row);
         tableModel.fireTableDataChanged();
+    }
+    
+    public String getLastMessage()
+    {
+        return lastMessage;
     }
 }
