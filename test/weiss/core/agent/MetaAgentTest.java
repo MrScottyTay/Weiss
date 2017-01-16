@@ -218,9 +218,9 @@ public class MetaAgentTest
     public class MetaAgentImpl extends MetaAgent
     {
 
-        public MetaAgentImpl()
+        public MetaAgentImpl(String name)
         {
-            super("", null);
+            super(name, null);
         }
 
         @Override

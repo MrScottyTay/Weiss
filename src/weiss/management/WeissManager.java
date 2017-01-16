@@ -46,7 +46,7 @@ public final class WeissManager extends JFrame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(buildPanel());
         this.setTitle("Weiss");
-        this.setSize(new Dimension(255,500));
+        this.setSize(new Dimension(280,500));
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         
@@ -68,7 +68,7 @@ public final class WeissManager extends JFrame
         TreePane treePane = new TreePane(this);
         JTree tree = treePane.getTree();
         
-        metaAgentInputField = new JTextField(10);
+        metaAgentInputField = new JTextField(12);
         
         JPanel panel = new JPanel(new BorderLayout());
         JPanel leftPane = new JPanel(new BorderLayout());
@@ -85,7 +85,7 @@ public final class WeissManager extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
-
+                
                 if (!metaAgentInputField.getText().isEmpty() && 
                         !metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
                 {
@@ -157,5 +157,4 @@ public final class WeissManager extends JFrame
     {
         return metaAgentSelectBtn;
     }
-
 }

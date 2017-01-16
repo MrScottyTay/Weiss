@@ -16,12 +16,17 @@
  */
 package weiss.core.message;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import weiss.core.agent.Agent;
 import weiss.core.agent.MetaAgent;
 
 /**
@@ -62,12 +67,12 @@ public class SysMessageTest
     public void testGetAgent()
     {
         System.out.println("getAgent");
-        SysMessage instance = null;
-        MetaAgent expResult = null;
+        Agent agent = new Agent("A1", null);
+        
+        SysMessage instance = new SysMessage("Admin", "Test", "reg", agent);
+        MetaAgent expResult = agent;
         MetaAgent result = instance.getAgent();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -77,12 +82,19 @@ public class SysMessageTest
     public void testToString()
     {
         System.out.println("toString");
-        SysMessage instance = null;
-        String expResult = "";
+        
+        Agent agent = new Agent("A1", null);
+        
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date now = Calendar.getInstance().getTime();
+        String timestamp = df.format(now);
+
+        SysMessage instance = new SysMessage("Admin", "Test", "reg", agent);
+        String expResult = "\nFrom: Admin\nTo: Test\nMessage: reg\nTime Sent: " 
+                + timestamp + "\nAgent: " + agent.getName();
+        
         String result = instance.toString();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }

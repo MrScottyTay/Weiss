@@ -61,12 +61,12 @@ public class RouterMessageTest
     public void testGetOrigin()
     {
         System.out.println("getOrigin");
-        RouterMessage instance = null;
-        String expResult = "";
+        UserMessage msg = new UserMessage("Greg", "Fred", "Hi");
+        
+        RouterMessage instance = new RouterMessage("Admin", "Test", msg, "Router 1");
+        String expResult = "Router 1";
         String result = instance.getOrigin();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -76,12 +76,13 @@ public class RouterMessageTest
     public void testGetContents()
     {
         System.out.println("getContents");
-        RouterMessage instance = null;
-        Message expResult = null;
+        
+        UserMessage msg = new UserMessage("Greg", "Fred", "Hi");
+        
+        RouterMessage instance = new RouterMessage("Admin", "Test", msg, "Router 1");
+        Message expResult = msg;
         Message result = instance.getContents();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }

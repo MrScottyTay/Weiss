@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import weiss.core.agent.Agent;
 import weiss.core.agent.MetaAgent;
 import weiss.core.message.*;
 
@@ -36,14 +37,14 @@ import weiss.core.message.*;
 public final class Client
 {
     private JTextArea textArea;
-    private final MetaAgent agent;
+    private final Agent agent;
     private Thread thread;
             
     /**
      * Constructor to create a Client GUI
      * @param agent The agent the client is being assigned to.
      */
-    public Client(MetaAgent agent)
+    public Client(Agent agent)
     {
         this.agent = agent;
         this.createGUI(agent.getName());
@@ -58,7 +59,7 @@ public final class Client
         JDialog dialog = new JDialog();
         
         dialog.setTitle("Agent Window - " + name);
-        dialog.setMinimumSize(new Dimension(500,500));
+        dialog.setMinimumSize(new Dimension(500,200));
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setVisible(true);
         

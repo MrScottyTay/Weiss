@@ -30,7 +30,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses(
 {
-    weiss.core.message.RouterMessageTest.class, weiss.core.message.SysMessageTest.class, weiss.core.message.MessageTest.class, weiss.core.message.UserMessageTest.class
+    weiss.core.message.RouterMessageTest.class, weiss.core.message.SysMessageTest.class, weiss.core.message.MessageTest.class
 })
 public class MessageSuite
 {

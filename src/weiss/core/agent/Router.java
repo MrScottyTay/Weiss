@@ -41,7 +41,6 @@ import weiss.core.message.RouterMessage;
  */
 public class Router extends Portal implements Runnable
 {
-
     /**
      * Pointer to the last router created, to add Routers to the linked-list.
      */
@@ -77,11 +76,12 @@ public class Router extends Portal implements Runnable
         if (routingTable.containsKey(msg.getTo())) 
         {
             pushToSubAgent(msg);  
-        } else 
+        } 
+        else 
         {
+                RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), msg, getName());
+                pushToSuperAgent(rMsg); 
             
-            RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), msg, getName());
-            pushToSuperAgent(rMsg); 
         }
     }
 
@@ -128,9 +128,6 @@ public class Router extends Portal implements Runnable
             case "reg":
                 registration(msg);
                 break;
-            case "dereg":
-                deregistration(msg);
-                break;
             case "setSuperAgent":
                 setSuperAgent(msg.getAgent());
                 break;
@@ -153,17 +150,7 @@ public class Router extends Portal implements Runnable
         SysMessage message = (SysMessage) msg;
         routingTable.put(message.getFrom(), message.getAgent());   
     }
-
-    /**
-     * Method to de-register subAgents from this MetaAgent.
-     *
-     * @param msg A SysMessage object.
-     */
-    private void deregistration(SysMessage msg)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+   
     /**
      * Method to add new routers to the linked list, by altering the superAgents of the
      * newest and 2nd newest routers, and adjusting the static variable 

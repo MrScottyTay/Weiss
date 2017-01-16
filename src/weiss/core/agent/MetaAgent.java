@@ -35,11 +35,9 @@ import javax.swing.ImageIcon;
  */
 public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable, Monitorable
 {
-    private String name;
+    private final String name;
     private NodeMonitor monitor;
-
     private MetaAgent superAgent;
-    private ImageIcon image;
     private final Thread thread;
 
     /**
@@ -147,16 +145,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     //--------------------------------------------------------------------------
     //CLASS SPECIFIC METHODS
     //-------------------------------------------------------------------------- 
-    /**
-     * Method to send messages.
-     *
-     * @param to the recipient of the message.
-     * @param message the message to be sent.
-     */
-    public void sendMessage(String to, String message)
-    {
-        pushToSuperAgent(new UserMessage(this.getName(), to, message));
-    }
+    
 
     /**
      * Method to push a message onto a parents blocking queue.

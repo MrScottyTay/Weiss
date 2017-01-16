@@ -21,7 +21,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import weiss.core.message.Message;
 import weiss.core.message.RouterMessage;
 import weiss.core.message.SysMessage;
@@ -106,15 +105,15 @@ public class PortalTest
     /**
      * Test of routerMsgHandler method, of class Portal.
      */
-    @Test
+    @Test(expected=IllegalArgumentException.class)
     public void testRouterMsgHandler()
     {
         System.out.println("routerMsgHandler");
-        RouterMessage msg = null;
-        Portal instance = null;
+        RouterMessage msg = new RouterMessage("R1", "R2",
+                new UserMessage("Admin", "A1", "Hello"), "testCLass");
+        Portal instance = new Portal("P1", null);
         instance.routerMsgHandler(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -124,11 +123,8 @@ public class PortalTest
     public void testSysMsgHandler()
     {
         System.out.println("sysMsgHandler");
-        SysMessage msg = null;
-        Portal instance = null;
+        SysMessage msg = new SysMessage("Admin", "P1", "reg", new Portal("P2", null));
+        Portal instance = new Portal("P1", null);
         instance.sysMsgHandler(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-    
 }

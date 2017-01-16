@@ -16,6 +16,10 @@
  */
 package weiss.core.message;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -61,12 +65,11 @@ public class MessageTest
     public void testGetFrom()
     {
         System.out.println("getFrom");
-        Message instance = null;
-        String expResult = "";
+        Message instance = new MessageImpl("Admin","Test", "Hello World");
+        String expResult = "Admin";
         String result = instance.getFrom();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -76,12 +79,10 @@ public class MessageTest
     public void testGetTo()
     {
         System.out.println("getTo");
-        Message instance = null;
-        String expResult = "";
+        Message instance = new MessageImpl("Admin","Test", "Hello World");
+        String expResult = "Test";
         String result = instance.getTo();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -91,12 +92,10 @@ public class MessageTest
     public void testGetMsg()
     {
         System.out.println("getMsg");
-        Message instance = null;
-        String expResult = "";
+        Message instance = new MessageImpl("Admin","Test", "Hello World");
+        String expResult = "Hello World";
         String result = instance.getMsg();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -106,12 +105,14 @@ public class MessageTest
     public void testGetTime()
     {
         System.out.println("getTime");
-        Message instance = null;
-        String expResult = "";
+        Message instance = new MessageImpl("Admin","Test", "Hello World");
+        
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date now = Calendar.getInstance().getTime();
+        String expResult = df.format(now);
+        
         String result = instance.getTime();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -121,20 +122,23 @@ public class MessageTest
     public void testToString()
     {
         System.out.println("toString");
-        Message instance = null;
-        String expResult = "";
+        Message instance = new MessageImpl("Admin","Test", "Hello World");
+        
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date now = Calendar.getInstance().getTime();
+        String timestamp = df.format(now);
+        
+        String expResult = "\nFrom: Admin\nTo: Test\nMessage: Hello World\nTime Sent: " + timestamp;
         String result = instance.toString();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     public class MessageImpl extends Message
     {
 
-        public MessageImpl()
+        public MessageImpl(String from, String to, String message)
         {
-            super("", "", "");
+            super(from,to,message);
         }
     }
     

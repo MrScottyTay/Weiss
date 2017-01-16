@@ -67,8 +67,6 @@ public class AgentTest
         Agent instance = new Agent("Agent1", null);
         UserMessage msg = new UserMessage("admin", instance.getName(),"Test");
         instance.userMsgHandler(msg);
-        
-        //To do, add msgHandler checks.
     }
 
     /**

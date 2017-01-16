@@ -38,19 +38,6 @@ import weiss.management.client.Managable;
 public class Agent extends MetaAgent implements Runnable, Managable
 {  
     private Client client;
-
-    /**Constructor to generate an Agent class
-     *
-     * @param name String to set the name of the Agent.
-     * @param superAgent Set the Agent's superAgent, in this case a portal.
-     * @param client Set the Agent's client window on construction.
-     */
-    public Agent(String name, MetaAgent superAgent, Client client)
-    {
-        super(name, superAgent);
-        
-        this.client = client;
-    }
     
     /**Constructor to generate an Agent class.
      *
@@ -73,10 +60,22 @@ public class Agent extends MetaAgent implements Runnable, Managable
     {
         this.updateNodeMonitor(msg);
         this.updateClient(msg);
-    }   
+    }  
+    
+    /**
+     * Method to send messages.
+     *
+     * @param to the recipient of the message.
+     * @param message the message to be sent.
+     */
+    public void sendMessage(String to, String message)
+    {
+        pushToSuperAgent(new UserMessage(this.getName(), to, message));
+    }
     //--------------------------------------------------------------------------
     //INTERFACE METHODS
     //--------------------------------------------------------------------------
+
     
     /**Method to set the client hook to an active client.
      * 

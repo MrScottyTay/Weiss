@@ -64,11 +64,9 @@ public class RouterTest
     public void testUserMsgHandler()
     {
         System.out.println("userMsgHandler");
-        UserMessage msg = null;
-        Router instance = null;
+        UserMessage msg = new UserMessage("Admin", "Test", "Hello");
+        Router instance = new Router("R1");
         instance.userMsgHandler(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -78,11 +76,13 @@ public class RouterTest
     public void testRouterMsgHandler()
     {
         System.out.println("routerMsgHandler");
-        RouterMessage msg = null;
-        Router instance = null;
+        
+        UserMessage userMsg = new UserMessage("Admin", "Test", "Hello");
+        Router instance = new Router("R1");
+        Router r2 = new Router("R2");
+        RouterMessage msg = new RouterMessage("Admin", "Test", userMsg, instance.getName());
+        
         instance.routerMsgHandler(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -91,12 +91,11 @@ public class RouterTest
     @Test
     public void testSysMsgHandler()
     {
+        Portal portal = new Portal("P1", null);
         System.out.println("sysMsgHandler");
-        SysMessage msg = null;
-        Router instance = null;
+        SysMessage msg = new SysMessage("Admin", "Test", "reg", portal);
+        Router instance = new Router("R1");
         instance.sysMsgHandler(msg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }

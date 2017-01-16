@@ -25,6 +25,7 @@ import javax.swing.JTree;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 import weiss.core.agent.MetaAgent;
+import weiss.core.agent.Portal;
 import weiss.core.agent.Router;
 
 /**
@@ -39,13 +40,15 @@ public class TreePane {
     private TreeNode rootNode;
     private static JTree tree;
     private TreeNode treeNode;
+    private WeissManager manager;
 
     /**
      * A Constructor to create the JTree navigation pane.
      * @param manager The attached manager to pull information from.
      */
     public TreePane(WeissManager manager) {
-        this.buildTree(manager);
+        this.manager = manager;
+        this.buildTree();
     }
     
     /**
@@ -54,8 +57,7 @@ public class TreePane {
      * @param weissManager The main window to tie the TreePane to.
      * @return A JTree object to implement into a JFrame/JPanel.
      */
-    private JTree buildTree(WeissManager weissManager) {
-        WeissManager manager = weissManager;
+    private JTree buildTree( ) {
         DefaultTreeCellRenderer render = new DefaultTreeCellRenderer();
 
         rootNode = new TreeNode("Weiss");
@@ -63,30 +65,26 @@ public class TreePane {
 
         tree = new JTree(treeModel);
         tree.addTreeSelectionListener(new TreeSelectionListener() {
-
-            private JButton getAgentSelectBtn() {
-                return manager.getAgentSelectBtn();
-            }
-
+            
             @Override
             public void valueChanged(TreeSelectionEvent e) {
-                TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
-
+                TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();                   
+                
                 switch (treeNode.getLevel()) {
                     case 0:
-                        this.getAgentSelectBtn().setText("New Router");
+                        manager.getAgentSelectBtn().setText("New Router");
                         break;
                     case 1:
-                        this.getAgentSelectBtn().setText("New Portal");
+                        manager.getAgentSelectBtn().setText("New Portal");
                         break;
                     case 2:
-                        this.getAgentSelectBtn().setText("New Agent");
+                        manager.getAgentSelectBtn().setText("New Agent");
                         break;
                     case 3:
-                        this.getAgentSelectBtn().setText("View Agent");
+                        manager.getAgentSelectBtn().setText("View Agent");
                         break;
                     default:
-                        this.getAgentSelectBtn().setText("Select an Item");
+                        manager.getAgentSelectBtn().setText("Select an Item");
                         break;
                 }
             }
@@ -211,7 +209,6 @@ public class TreePane {
             } else {
                 label.setText("Weiss");
             }
-
             return label;
         }
     }
