@@ -200,7 +200,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      * are pushed as UserMessages. Other implementations sort the type of message,
      * and direct it to the correct handler.
      *
-    /**
+    **/
     protected void msgHandler(Message msg)
     {
         updateNodeMonitor(msg);
@@ -296,7 +296,6 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     /**
      * Method to remove a node monitor.
      * 
-     * @param nodeMonitor The node monitor to be removed.
      */
     @Override
     public void removeNodeMonitor()
@@ -313,5 +312,11 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     {
         if(this.monitor != null)
             this.monitor.insertTableData(msg);
+    }
+    
+    @Override
+    public boolean hasNodeMonitor()
+    {
+        return this.monitor != null;
     }
 }

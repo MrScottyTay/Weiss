@@ -24,7 +24,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import weiss.core.agent.MetaAgent;
 import weiss.core.message.Message;
-import weiss.core.message.ReplyMessage;
 import weiss.core.message.RouterMessage;
 import weiss.core.message.SysMessage;
 import weiss.core.message.UserMessage;
@@ -41,6 +40,7 @@ public final class NodeMonitor
     private Vector data;
     private JTable table; 
     private DefaultTableModel tableModel;
+    private String lastMessage;
     
     /**
      * Constructor to create a NodeMonitor GUI window.
@@ -51,6 +51,10 @@ public final class NodeMonitor
         this.createGUI(agent.getName());
     }
     
+    /**
+     * Method to create the GUI window, using a JDialog.
+     * @param name The name to assign to the UI panel.
+     */
     protected void createGUI(String name)
     { 
         data = new Vector();
@@ -88,6 +92,8 @@ public final class NodeMonitor
      */
     public void insertTableData(Message msg)
     {
+        lastMessage = msg.toString();
+        
         Vector row = new Vector();
         row.add(msg.getFrom());
         row.add(msg.getTo());
@@ -97,8 +103,6 @@ public final class NodeMonitor
             row.add("UserMessage");
         else if(msg instanceof SysMessage)
             row.add("SysMessage");
-        else if(msg instanceof ReplyMessage)
-            row.add("ReplyMessage");
         else if(msg instanceof RouterMessage)
             row.add("RouterMessage");
         else
@@ -106,5 +110,10 @@ public final class NodeMonitor
         
         data.add(row);
         tableModel.fireTableDataChanged();
+    }
+    
+    public String getLastMessage()
+    {
+        return lastMessage;
     }
 }

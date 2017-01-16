@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2017 Adam Young
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,28 +14,55 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.management.nodeMonitor;
+package weiss.core.agent;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
- * Interface to implement the required hooks for the Client class
- * @author Adam Young, Teesside University Sch. of Computing
+ *
+ * @author Adam Young
  */
-public interface Monitorable
+public class WeissTest
 {
-    /**
-     * Method to add a node monitor to the implementing class.
-     * @param nodeMonitor A nodeMonitor object.
-     */
-    public void addNodeMonitor(NodeMonitor nodeMonitor);
     
-    /**
-     * Method to remove a node monitor from a implementing class.
-     */
-    public void removeNodeMonitor();
+    public WeissTest()
+    {
+    }
     
+    @BeforeClass
+    public static void setUpClass()
+    {
+    }
+    
+    @AfterClass
+    public static void tearDownClass()
+    {
+    }
+    
+    @Before
+    public void setUp()
+    {
+    }
+    
+    @After
+    public void tearDown()
+    {
+    }
+
     /**
-     * Method to return if the implementing class has a node monitor attached.
-     * @return True if node monitor is attached. False if not.
+     * Test of main method, of class Weiss.
      */
-    public boolean hasNodeMonitor();
+    @Test
+    public void testMain()
+    {
+        System.out.println("main");
+        String[] args = null;
+        Weiss.main(args);
+    }
+    
 }
