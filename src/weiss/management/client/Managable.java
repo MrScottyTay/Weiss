@@ -32,4 +32,11 @@ public interface Managable
      * Method to remove a client from the implementing class.
      */
     public void removeClient();
+    
+    /**
+     * Method to return if the implementing class has a client attached.
+     * @return True if client is attached. False if not.
+     */
+    public boolean hasClient();
+    
 }

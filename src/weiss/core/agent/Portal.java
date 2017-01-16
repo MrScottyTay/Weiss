@@ -95,9 +95,8 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
                     this.pushToSuperAgent(msg);
                 else
                 {
-                    MetaAgent errorTarget = routingTable.get(msg.getFrom());
-                    SysMessage error = new SysMessage(this.getName(), errorTarget.getName(), "noAgent");
-                    pushToSubAgent(error);
+                    this.pushToSubAgent(new UserMessage(this.getName(),
+                        msg.getFrom(), "User not found"));
                 }
             }    
     }
@@ -112,7 +111,8 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
         MetaAgent agent = (MetaAgent) routingTable.get(msg.getTo()); //gets the addressed agent
         try
         {
-            agent.put(msg); //puts the message onto the agent's blocking queue
+            if(agent != null)
+                agent.put(msg); //puts the message onto the agent's blocking queue
         } catch (InterruptedException ex)
         {
             Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
@@ -143,14 +143,14 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     }
     
     /**
-     * Method to handle RouterMessages. If the message reaches a portal, an error
-     * is thrown, as the message should stop at the router level.
+     * Method to handle RouterMessages. If the message reaches a portal, an
+     * error is thrown, as the message should stop at the router level.
+     *
      * @param msg A RouterMessage to be handled.
      */
     protected void routerMsgHandler(RouterMessage msg)
     {
-        //a Router Message should never reach a portal, this is here so that msgHandler doesn't need to be rewritten in Router
-        //this may change though
+        throw new IllegalArgumentException("Router message passed to invalid target");
     }
     
     /**
@@ -190,8 +190,11 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     private void registration(SysMessage msg)
     {
         routingTable.put(msg.getAgent().getName(), msg.getAgent());
-        SysMessage sMsg = new SysMessage(msg.getAgent().getName(), getSuperAgent().getName(), "reg", this);
-        pushToSuperAgent(sMsg);
+        if(this.getSuperAgent() != null)
+        {
+            SysMessage sMsg = new SysMessage(msg.getAgent().getName(), getSuperAgent().getName(), "reg", this);
+            pushToSuperAgent(sMsg);
+        }
     }
 
     private void deregistration(SysMessage msg)

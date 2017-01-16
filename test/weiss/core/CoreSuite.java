@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2017 Adam Young
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,28 +14,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.management.nodeMonitor;
+package weiss.core;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
- * Interface to implement the required hooks for the Client class
- * @author Adam Young, Teesside University Sch. of Computing
+ *
+ * @author Adam Young
  */
-public interface Monitorable
+@RunWith(Suite.class)
+@Suite.SuiteClasses(
 {
-    /**
-     * Method to add a node monitor to the implementing class.
-     * @param nodeMonitor A nodeMonitor object.
-     */
-    public void addNodeMonitor(NodeMonitor nodeMonitor);
+    weiss.core.agent.AgentSuite.class, weiss.core.message.MessageSuite.class
+})
+public class CoreSuite
+{
+
+    @BeforeClass
+    public static void setUpClass() throws Exception
+    {
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception
+    {
+    }
+
+    @Before
+    public void setUp() throws Exception
+    {
+    }
+
+    @After
+    public void tearDown() throws Exception
+    {
+    }
     
-    /**
-     * Method to remove a node monitor from a implementing class.
-     */
-    public void removeNodeMonitor();
-    
-    /**
-     * Method to return if the implementing class has a node monitor attached.
-     * @return True if node monitor is attached. False if not.
-     */
-    public boolean hasNodeMonitor();
 }
