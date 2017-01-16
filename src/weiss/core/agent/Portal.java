@@ -108,8 +108,10 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
         MetaAgent agent = (MetaAgent) routingTable.get(msg.getTo());
         try
         {
-            if(agent != null)
+            if (agent != null)
+            {
                 agent.put(msg);
+            }
         } catch (InterruptedException ex)
         {
             Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,12 +126,15 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
         if (msg instanceof SysMessage)
         {
             this.sysMsgHandler((SysMessage) msg);
-        } else if (msg instanceof RouterMessage)
-        {
-            this.routerMsgHandler((RouterMessage) msg);
         } else
         {
-            this.userMsgHandler((UserMessage) msg);
+            if (msg instanceof RouterMessage)
+            {
+                this.routerMsgHandler((RouterMessage) msg);
+            } else
+            {
+                this.userMsgHandler((UserMessage) msg);
+            }
         }
     }
 
@@ -173,7 +178,7 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     private void registration(SysMessage msg)
     {
         routingTable.put(msg.getAgent().getName(), msg.getAgent());
-        if(getSuperAgent() != null)
+        if (getSuperAgent() != null)
         {
             SysMessage sMsg = new SysMessage(msg.getAgent().getName(), getSuperAgent().getName(), "reg", this);
             pushToSuperAgent(sMsg);

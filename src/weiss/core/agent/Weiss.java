@@ -39,29 +39,29 @@ import weiss.management.nodeMonitor.NodeMonitor;
 import weiss.management.WeissManager;
 import weiss.core.agent.Router;
 import weiss.management.client.Client;
+
 /**
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class Weiss {
+public class Weiss
+{
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         //A demonstration of the middleware in action. One version uses a custom
         //GUI to present the information, the other utilises the CLI.
-        
-        
 
         //----------------------------------------------------------------------
         //MANAGER OPERATION
-        
         WeissManager manager = new WeissManager();
-        
+
         //----------------------------------------------------------------------
         //CLI OPERATION
-         /*   
+        /*   
         //Router 1 ---
         MetaAgent router1 = new Router("R1");
         //router1.addNodeMonitor(new NodeMonitor(router1));
@@ -104,6 +104,6 @@ public class Weiss {
         //Create a client window for easier usage.
         agent1.addClient(new Client(agent1));
         agent4.addClient(new Client(agent4));
-        */
+         */
     }
 }

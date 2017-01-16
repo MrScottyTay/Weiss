@@ -18,6 +18,7 @@ package weiss.management.client;
 
 /**
  * Interface to implement the hooks for the nodeMonitor class
+ *
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public interface Managable
@@ -25,17 +26,20 @@ public interface Managable
 
     /**
      * Method to add a client to the implementing class.
+     *
      * @param client A client object.
      */
     public void addClient(Client client);
-    
+
     /**
      * Method to remove a client from the implementing class.
      */
     public void removeClient();
-    
+
     /**
-     * Method to check if a client has been registered to the implementing class.
+     * Method to check if a client has been registered to the implementing
+     * class.
+     *
      * @return True if the client is present, false if not.
      */
     public boolean hasClient();

@@ -16,10 +16,10 @@
  */
 package weiss.core.message;
 
-
-
-/** Class extending the {@link Message Message} class, to be used for user to user message transmission.
- * This type of message is to be read by user implemented classes, rather than the middleware infrastructure.
+/**
+ * Class extending the {@link Message Message} class, to be used for user to
+ * user message transmission. This type of message is to be read by user
+ * implemented classes, rather than the middleware infrastructure.
  * <p>
  * The alternative of this message type is {@link SysMessage SysMessage}.
  *
@@ -27,8 +27,10 @@ package weiss.core.message;
  */
 public class UserMessage extends Message
 {
+
     /**
      * Constructor for the UserMessage class.
+     *
      * @param from String of message sender.
      * @param to String of message receiver.
      * @param message String of message contents.

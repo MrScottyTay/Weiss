@@ -18,8 +18,10 @@ package weiss.core.message;
 
 import weiss.core.agent.MetaAgent;
 
-/** Class extending the {@link Message Message} class, to be used for system message transmission.
- * This type of message can be read by all MetaAgents, and contains instructions rather than text.
+/**
+ * Class extending the {@link Message Message} class, to be used for system
+ * message transmission. This type of message can be read by all MetaAgents, and
+ * contains instructions rather than text.
  * <p>
  * The alternative of this message type is {@link UserMessage UserMessage}.
  *
@@ -28,10 +30,12 @@ import weiss.core.agent.MetaAgent;
  */
 public class SysMessage extends Message
 {
+
     private MetaAgent agent;
-    
+
     /**
      * Constructor for the SysMessage class.
+     *
      * @param f String of message sender.
      * @param t String of message receiver.
      * @param m String of message contents.
@@ -42,9 +46,10 @@ public class SysMessage extends Message
         super(f, t, m);
         agent = a;
     }
-    
+
     /**
      * Constructor for the SysMessage class.
+     *
      * @param f String of message sender.
      * @param t String of message receiver.
      * @param m String of message contents.
@@ -53,19 +58,19 @@ public class SysMessage extends Message
     {
         super(f, t, m);
     }
-    
+
     //--------------------------------------------------------------------------
     //GETTERS
-
     /**
      * Method to return the agent stored.
+     *
      * @return A MetaAgent variable.
      */
     public MetaAgent getAgent()
     {
         return agent;
     }
-    
+
     @Override
     public String toString()
     {

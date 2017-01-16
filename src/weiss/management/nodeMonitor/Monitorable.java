@@ -18,6 +18,7 @@ package weiss.management.nodeMonitor;
 
 /**
  * Interface to implement the required hooks for the Client class
+ *
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public interface Monitorable
@@ -25,17 +26,20 @@ public interface Monitorable
 
     /**
      * Method to add a node monitor to the implementing class.
+     *
      * @param nodeMonitor A nodeMonitor object.
      */
     public void addNodeMonitor(NodeMonitor nodeMonitor);
-    
+
     /**
      * Method to remove a node monitor from a implementing class.
      */
     public void removeNodeMonitor();
-    
+
     /**
-     * Method to check if a node monitor has been registered to the implementing class.
+     * Method to check if a node monitor has been registered to the implementing
+     * class.
+     *
      * @return True if the node monitor is present, false if not.
      */
     public boolean hasNodeMonitor();

@@ -30,46 +30,51 @@ import weiss.core.message.UserMessage;
 
 /**
  * Class that implements a GUI based visualiser of the routes that messages take
- * throughout the attached class. The NodeMonitor implements a JTable, with columns
- * for "From", "To", "Sent" and "MsgType", for the user to see the flow of information.
+ * throughout the attached class. The NodeMonitor implements a JTable, with
+ * columns for "From", "To", "Sent" and "MsgType", for the user to see the flow
+ * of information.
+ *
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public final class NodeMonitor
 {
+
     private JDialog dialog;
     private Vector data;
-    private JTable table; 
+    private JTable table;
     private DefaultTableModel tableModel;
     private String lastMessage;
-    
+
     /**
      * Constructor to create a NodeMonitor GUI window.
+     *
      * @param agent MetaAgent the nodeMonitor is being assigned to.
      */
     public NodeMonitor(MetaAgent agent)
     {
         this.createGUI(agent.getName());
     }
-    
+
     /**
      * Method to create the GUI window, using a JDialog.
+     *
      * @param name The name to assign to the UI panel.
      */
     protected void createGUI(String name)
-    { 
+    {
         data = new Vector();
-        
+
         dialog = new JDialog();
         dialog.setTitle("Node Monitor - " + name);
-        dialog.setMinimumSize(new Dimension(200,200));
-        dialog.setPreferredSize(new Dimension(400,400));
+        dialog.setMinimumSize(new Dimension(200, 200));
+        dialog.setPreferredSize(new Dimension(400, 400));
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setVisible(true);
-        
+
         JPanel panel = new JPanel();
         panel.setBackground(Color.WHITE);
         panel.setLayout(new BorderLayout());
-        
+
         Vector columnNames = new Vector();
         columnNames.add("From");
         columnNames.add("To");
@@ -78,40 +83,52 @@ public final class NodeMonitor
 
         table = new JTable(data, columnNames);
         tableModel = (DefaultTableModel) table.getModel();
-        
+
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
         dialog.add(panel);
         dialog.pack();
-        
+
         dialog.setVisible(true);
-    } 
-    
+    }
+
     /**
      * Method to append table data to the GUI window.
+     *
      * @param msg The received message.
      */
     public void insertTableData(Message msg)
     {
         lastMessage = msg.toString();
-        
+
         Vector row = new Vector();
         row.add(msg.getFrom());
         row.add(msg.getTo());
         row.add(msg.getTime());
-        
-        if(msg instanceof UserMessage)
+
+        if (msg instanceof UserMessage)
+        {
             row.add("UserMessage");
-        else if(msg instanceof SysMessage)
-            row.add("SysMessage");
-        else if(msg instanceof RouterMessage)
-            row.add("RouterMessage");
-        else
-            row.add("AltMessage");
-        
+        } else
+        {
+            if (msg instanceof SysMessage)
+            {
+                row.add("SysMessage");
+            } else
+            {
+                if (msg instanceof RouterMessage)
+                {
+                    row.add("RouterMessage");
+                } else
+                {
+                    row.add("AltMessage");
+                }
+            }
+        }
+
         data.add(row);
         tableModel.fireTableDataChanged();
     }
-    
+
     public String getLastMessage()
     {
         return lastMessage;

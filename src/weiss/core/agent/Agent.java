@@ -21,25 +21,27 @@ import weiss.core.message.UserMessage;
 import weiss.management.client.Client;
 import weiss.management.client.Managable;
 
-/** Class used for sending messages to other Agents,
- * utilising {@link weiss.core.agent.Portal Portal} and {@link weiss.core.agent.Router Router}
- * networks.
- * The class is designed to be assigned to a portal, and then push
- * {@link weiss.core.message.UserMessage User Messages} to other Agents. The class
- * can also receive these messages. Along with support for
+/**
+ * Class used for sending messages to other Agents, utilising
+ * {@link weiss.core.agent.Portal Portal} and
+ * {@link weiss.core.agent.Router Router} networks. The class is designed to be
+ * assigned to a portal, and then push
+ * {@link weiss.core.message.UserMessage User Messages} to other Agents. The
+ * class can also receive these messages. Along with support for
  * {@link weiss.management.nodeMonitor.NodeMonitor NodeMonitor} hooks, the class
- * implements a {@link weiss.management.client.Client Client} hook, for sending/displaying
- * messages on a GUI.
- * 
+ * implements a {@link weiss.management.client.Client Client} hook, for
+ * sending/displaying messages on a GUI.
+ *
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
-
 public class Agent extends MetaAgent implements Runnable, Managable
-{  
+{
+
     private Client client;
-    
-    /**Constructor to generate an Agent class.
+
+    /**
+     * Constructor to generate an Agent class.
      *
      * @param name String to set the name of the Agent.
      * @param superAgent Set the Agent's superAgent, in this case a portal.
@@ -49,7 +51,8 @@ public class Agent extends MetaAgent implements Runnable, Managable
         super(name, superAgent);
     }
 
-    /** Method to handle a UserMessage, by updating the 
+    /**
+     * Method to handle a UserMessage, by updating the
      * {@link weiss.management.nodeMonitor.NodeMonitor NodeMonitor} and
      * {@link weiss.management.client.Client Client}, if present.
      *
@@ -60,8 +63,8 @@ public class Agent extends MetaAgent implements Runnable, Managable
     {
         this.updateNodeMonitor(msg);
         this.updateClient(msg);
-    }  
-    
+    }
+
     /**
      * Method to send messages.
      *
@@ -76,18 +79,19 @@ public class Agent extends MetaAgent implements Runnable, Managable
     //INTERFACE METHODS
     //--------------------------------------------------------------------------
 
-    
-    /**Method to set the client hook to an active client.
-     * 
+    /**
+     * Method to set the client hook to an active client.
+     *
      * @param client A client object, typically a GUI.
      */
     @Override
     public void addClient(Client client)
     {
-       this.client = client;
+        this.client = client;
     }
 
-    /**Method to remove the currently active client, if present.
+    /**
+     * Method to remove the currently active client, if present.
      *
      */
     @Override
@@ -95,22 +99,24 @@ public class Agent extends MetaAgent implements Runnable, Managable
     {
         this.client = null;
     }
-    
+
     @Override
     public boolean hasClient()
     {
         return client != null;
     }
 
-    /**Method to update the attached client, if present.
+    /**
+     * Method to update the attached client, if present.
      *
      * @param msg A Message object to push to the client hook.
      */
     public void updateClient(Message msg)
     {
-        if(client != null)
+        if (client != null)
+        {
             client.updateClient(msg);
+        }
     }
 
-    
 }

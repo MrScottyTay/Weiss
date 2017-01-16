@@ -26,18 +26,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-/**Class that builds the main JFrame GUI. Implements {@link TreePane TreePane} as
- * the main UI controls, as well as JButtons and JTextFields for naming and client/nodeMonitor
- * assignment.
+/**
+ * Class that builds the main JFrame GUI. Implements {@link TreePane TreePane}
+ * as the main UI controls, as well as JButtons and JTextFields for naming and
+ * client/nodeMonitor assignment.
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public final class WeissManager extends JFrame
 {
+
     private JButton metaAgentSelectBtn;
     private JTextField metaAgentInputField;
     private final ImageIcon icon;
-    
+
     /**
      * Constructor to initialise the JFrame, setting the title, size and icons.
      */
@@ -46,30 +48,31 @@ public final class WeissManager extends JFrame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(buildPanel());
         this.setTitle("Weiss");
-        this.setSize(new Dimension(280,500));
+        this.setSize(new Dimension(280, 500));
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        
+
         icon = new ImageIcon("Images/weiss.png");
-        this.setIconImage(icon.getImage()); 
-        
-        this.setVisible(true); 
+        this.setIconImage(icon.getImage());
+
+        this.setVisible(true);
     }
 
     /**
-     * Method to assign the JPanel positions, tree positions and button positions,
-     * as well as assign ActionListeners to the buttons. The ActionListeners control the
-     * instantiation of all MetaAgents.
-     * @return A JPanel containing all other JPanels in their correct layout, as well as 
-     * the JTree.
+     * Method to assign the JPanel positions, tree positions and button
+     * positions, as well as assign ActionListeners to the buttons. The
+     * ActionListeners control the instantiation of all MetaAgents.
+     *
+     * @return A JPanel containing all other JPanels in their correct layout, as
+     * well as the JTree.
      */
     public JPanel buildPanel()
     {
         TreePane treePane = new TreePane(this);
         JTree tree = treePane.getTree();
-        
+
         metaAgentInputField = new JTextField(12);
-        
+
         JPanel panel = new JPanel(new BorderLayout());
         JPanel leftPane = new JPanel(new BorderLayout());
         JPanel leftTopPane = new JPanel(new FlowLayout());
@@ -80,14 +83,14 @@ public final class WeissManager extends JFrame
         metaAgentSelectBtn.setPreferredSize(new Dimension(120, 20));
         metaAgentSelectBtn.addActionListener(new ActionListener()
         {
-            
+
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
-                
-                if (!metaAgentInputField.getText().isEmpty() && 
-                        !metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
+
+                if (!metaAgentInputField.getText().isEmpty()
+                        && !metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
                 {
                     switch (treeNode.getLevel())
                     {
@@ -106,11 +109,13 @@ public final class WeissManager extends JFrame
                         default:
                             break;
                     }
-                }
-                else if(metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
+                } else
                 {
+                    if (metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
+                    {
                         Agent treeSelection = (Agent) treeNode.getAgentRef();
                         treeSelection.addClient(new Client(treeSelection));
+                    }
                 }
                 metaAgentInputField.setText("");
             }
@@ -135,7 +140,7 @@ public final class WeissManager extends JFrame
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(tree);
-        
+
         leftPane.add(scrollPane, BorderLayout.CENTER);
         leftPane.add(leftTopPane, BorderLayout.NORTH);
         leftPane.add(leftBottomPane, BorderLayout.SOUTH);
@@ -145,12 +150,13 @@ public final class WeissManager extends JFrame
 
         this.getRootPane().setDefaultButton(metaAgentSelectBtn);
         this.pack();
-        
+
         return panel;
     }
 
     /**
      * Method to get the metaAgentSelectButton, for other GUI uses.
+     *
      * @return A JButton object.
      */
     public JButton getAgentSelectBtn()
