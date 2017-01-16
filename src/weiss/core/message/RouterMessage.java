@@ -19,6 +19,7 @@ package weiss.core.message;
 /**
  *
  * @author Scott Taylor, Teesside University Sch. of Computing
+ * @author Adam Young, Teesside University Sch. of Computing
  */
 public class RouterMessage extends Message
 {

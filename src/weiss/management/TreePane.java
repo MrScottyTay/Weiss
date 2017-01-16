@@ -130,7 +130,8 @@ public class TreePane
         if (parentPath == null)
         {
             parentNode = rootNode;
-        } else
+        }
+        else
         {
             parentNode = (TreeNode) parentPath.getLastPathComponent();
         }
@@ -214,7 +215,8 @@ public class TreePane
             if (treeNode.getImage() != null)
             {
                 image = treeNode.getImage();
-            } else
+            }
+            else
             {
                 image = new ImageIcon("Images/weiss20px.png");
             }
@@ -223,7 +225,8 @@ public class TreePane
             if (selected)
             {
                 label.setForeground(Color.red);
-            } else
+            }
+            else
             {
                 label.setForeground(Color.black);
             }
@@ -231,7 +234,8 @@ public class TreePane
             if (treeNode.getName() != null)
             {
                 label.setText(treeNode.getName());
-            } else
+            }
+            else
             {
                 label.setText("Weiss");
             }

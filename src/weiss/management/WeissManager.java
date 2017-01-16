@@ -109,7 +109,8 @@ public final class WeissManager extends JFrame
                         default:
                             break;
                     }
-                } else
+                }
+                else
                 {
                     if (metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
                     {

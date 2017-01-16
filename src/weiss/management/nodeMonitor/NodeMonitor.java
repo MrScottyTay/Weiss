@@ -60,7 +60,7 @@ public final class NodeMonitor
      *
      * @param name The name to assign to the UI panel.
      */
-    protected void createGUI(String name)
+    private void createGUI(String name)
     {
         data = new Vector();
 
@@ -108,17 +108,20 @@ public final class NodeMonitor
         if (msg instanceof UserMessage)
         {
             row.add("UserMessage");
-        } else
+        }
+        else
         {
             if (msg instanceof SysMessage)
             {
                 row.add("SysMessage");
-            } else
+            }
+            else
             {
                 if (msg instanceof RouterMessage)
                 {
                     row.add("RouterMessage");
-                } else
+                }
+                else
                 {
                     row.add("AltMessage");
                 }

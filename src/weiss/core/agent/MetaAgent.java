@@ -22,7 +22,6 @@ import weiss.core.message.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 
 /**
  * An abstract class detailing the construction of a MetaAgent object, to be
@@ -65,7 +64,8 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
             try
             {
                 msgHandler((Message) take());
-            } catch (InterruptedException ex)
+            }
+            catch (InterruptedException ex)
             {
                 Logger.getLogger(MetaAgent.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -160,7 +160,8 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
             {
                 superAgent.put(msg);
             }
-        } catch (InterruptedException ex)
+        }
+        catch (InterruptedException ex)
         {
             Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
         }

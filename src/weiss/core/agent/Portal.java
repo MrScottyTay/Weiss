@@ -83,12 +83,14 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
         if (routingTable.containsKey(msg.getTo()))
         {
             this.pushToSubAgent(msg);
-        } else
+        }
+        else
         {
             if (getSuperAgent() != null)
             {
                 this.pushToSuperAgent(msg);
-            } else
+            }
+            else
             {
                 this.pushToSubAgent(new UserMessage(this.getName(),
                         msg.getFrom(), "User not found"));
@@ -112,7 +114,8 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
             {
                 agent.put(msg);
             }
-        } catch (InterruptedException ex)
+        }
+        catch (InterruptedException ex)
         {
             Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -126,12 +129,14 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
         if (msg instanceof SysMessage)
         {
             this.sysMsgHandler((SysMessage) msg);
-        } else
+        }
+        else
         {
             if (msg instanceof RouterMessage)
             {
                 this.routerMsgHandler((RouterMessage) msg);
-            } else
+            }
+            else
             {
                 this.userMsgHandler((UserMessage) msg);
             }

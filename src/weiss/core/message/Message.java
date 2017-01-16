@@ -42,15 +42,15 @@ public abstract class Message
     /**
      * Constructor to create a generic message object.
      *
-     * @param f String of message sender.
-     * @param t String of message receiver.
-     * @param m String of message contents.
+     * @param from String of message sender.
+     * @param to String of message receiver.
+     * @param message String of message contents.
      */
-    public Message(String f, String t, String m)
+    public Message(String from, String to, String message)
     {
-        from = f;
-        to = t;
-        msg = m;
+        this.from = from;
+        this.to = to;
+        this.msg = message;
 
         //Setting the time of creation
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

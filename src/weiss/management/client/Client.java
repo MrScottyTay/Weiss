@@ -57,7 +57,7 @@ public final class Client
      *
      * @param name String containing the MetaAgent name.
      */
-    protected void createGUI(String name)
+    private void createGUI(String name)
     {
         JDialog dialog = new JDialog();
 

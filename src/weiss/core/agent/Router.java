@@ -41,10 +41,11 @@ import weiss.core.message.RouterMessage;
  */
 public class Router extends Portal implements Runnable
 {
+
     /**
      * Pointer to the last router created, to add Routers to the linked-list.
      */
-    public static volatile MetaAgent lastRouter;
+    protected static volatile MetaAgent lastRouter;
 
     /**
      * Constructor for the Router class, which calls
@@ -73,51 +74,56 @@ public class Router extends Portal implements Runnable
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
-        if (routingTable.containsKey(msg.getTo())) 
+        if (routingTable.containsKey(msg.getTo()))
         {
-            pushToSubAgent(msg);  
-        } 
-        else 
+            pushToSubAgent(msg);
+        }
+        else
         {
-                RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), msg, getName());
-                pushToSuperAgent(rMsg); 
-            
+            RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), msg, getName());
+            pushToSuperAgent(rMsg);
+
         }
     }
 
     /**
-     * Method to handle RouterMessages. If the source was this router, a reply message is sent back
-     * to the original sender. Otherwise, If the message is a UserMessage, and the target is
-     * in the Router's routingTable, the message is pushed to the correct subAgent. if the target
-     * isn't found, it's passed onto the next Router in the chain.
-     * 
+     * Method to handle RouterMessages. If the source was this router, a reply
+     * message is sent back to the original sender. Otherwise, If the message is
+     * a UserMessage, and the target is in the Router's routingTable, the
+     * message is pushed to the correct subAgent. if the target isn't found,
+     * it's passed onto the next Router in the chain.
+     *
      * @param msg A RouterMessage, passed from the message handler.
      */
     @Override
     protected void routerMsgHandler(RouterMessage msg)
     {
-        Message contents = msg.getContents();   
+        Message contents = msg.getContents();
         if (!msg.getOrigin().equals(this.getName()))
         {
-            if (contents instanceof UserMessage) 
+            if (contents instanceof UserMessage)
             {
-                if (routingTable.containsKey(contents.getTo())) 
+                if (routingTable.containsKey(contents.getTo()))
                 {
-                    pushToSubAgent(contents);    
-                } else 
+                    pushToSubAgent(contents);
+                }
+                else
                 {
-                    pushToSuperAgent(msg);  
+                    pushToSuperAgent(msg);
                 }
             }
         }
         else
+        {
             this.pushToSubAgent(new UserMessage(this.getName(),
                     contents.getFrom(), "User not found"));
+        }
     }
 
     /**
-     * A method to handle registration/de-registration, as well as superAgent assignment
-     * after instantiation.
+     * A method to handle registration/de-registration, as well as superAgent
+     * assignment after instantiation.
+     *
      * @param msg A SysMessage passed from the message handler.
      */
     @Override
@@ -145,15 +151,15 @@ public class Router extends Portal implements Runnable
      *
      * @param msg
      */
-    private void registration(Message msg) 
+    private void registration(Message msg)
     {
         SysMessage message = (SysMessage) msg;
-        routingTable.put(message.getFrom(), message.getAgent());   
+        routingTable.put(message.getFrom(), message.getAgent());
     }
-   
+
     /**
-     * Method to add new routers to the linked list, by altering the superAgents of the
-     * newest and 2nd newest routers, and adjusting the static variable 
+     * Method to add new routers to the linked list, by altering the superAgents
+     * of the newest and 2nd newest routers, and adjusting the static variable
      * {@link weiss.core.agent.Router#lastRouter lastRouter}.
      */
     private void updateLastRouter()
@@ -166,7 +172,8 @@ public class Router extends Portal implements Runnable
             {
                 lastRouter.put(new SysMessage(this.getName(), lastRouter.getName(),
                         "setSuperAgent", this));
-            } catch (InterruptedException ex)
+            }
+            catch (InterruptedException ex)
             {
                 Logger.getLogger(Router.class.getName()).log(Level.SEVERE, null, ex);
             }
