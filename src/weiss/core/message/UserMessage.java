@@ -27,7 +27,7 @@ package weiss.core.message;
  */
 public class UserMessage extends Message
 {
-
+    private final int scope; // 0: Global, 1: Router-wide, 2:Portal-wide
     /**
      * Constructor for the UserMessage class.
      *
@@ -38,5 +38,25 @@ public class UserMessage extends Message
     public UserMessage(String from, String to, String message)
     {
         super(from, to, message);
+        scope = 0;
+    }
+    
+    /**
+     * Constructor for the UserMessage class.
+     *
+     * @param from String of message sender.
+     * @param to String of message receiver.
+     * @param message String of message contents.
+     * @param scope Depth that the message can travel. 
+     */
+    public UserMessage(String from, String to, String message, int scope)
+    {
+        super(from, to, message);
+        this.scope = scope;
+    }
+    
+    public int getScope()
+    {
+        return scope;
     }
 }

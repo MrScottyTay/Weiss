@@ -47,6 +47,7 @@ import weiss.core.message.RouterMessage;
 public class Portal extends MetaAgent implements Runnable, Monitorable
 {
 
+    private final int scope = 2;
     /**
      * The routing table is a HashMap of MetaAgents, storing sub-agents for
      * reference later.
@@ -80,13 +81,13 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
-        if (routingTable.containsKey(msg.getTo()))
+        if (msg.getScope() <= scope)
         {
-            this.pushToSubAgent(msg);
-        }
-        else
-        {
-            if (getSuperAgent() != null)
+            if (routingTable.containsKey(msg.getTo()))
+            {
+                this.pushToSubAgent(msg);
+            }
+            else if (getSuperAgent() != null)
             {
                 this.pushToSuperAgent(msg);
             }
@@ -94,8 +95,13 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
             {
                 this.pushToSubAgent(new UserMessage(this.getName(),
                         msg.getFrom(), "User not found"));
-
             }
+        }
+        else
+        {
+            this.pushToSubAgent(new UserMessage(this.getName(),
+                    msg.getFrom(), "Your scope privilages are not"
+                    + " sufficient."));
         }
     }
 

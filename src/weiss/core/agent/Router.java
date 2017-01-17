@@ -42,6 +42,7 @@ import weiss.core.message.RouterMessage;
 public class Router extends Portal implements Runnable
 {
 
+    private final int scope = 1;
     /**
      * Pointer to the last router created, to add Routers to the linked-list.
      */
@@ -74,16 +75,29 @@ public class Router extends Portal implements Runnable
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
-        if (routingTable.containsKey(msg.getTo()))
+        if (msg.getScope() <= scope)
         {
-            pushToSubAgent(msg);
+            if (routingTable.containsKey(msg.getTo()))
+            {
+                pushToSubAgent(msg);
+            }
+            else
+            {
+                if (msg.getScope() == 0)
+                {
+                    RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), msg, getName());
+                    pushToSuperAgent(rMsg);
+                }
+                else
+                    this.pushToSubAgent(new UserMessage(this.getName(),
+                            msg.getFrom(), "Your scope privilages are not"
+                                    + " sufficient."));
+            }
         }
         else
-        {
-            RouterMessage rMsg = new RouterMessage(msg.getFrom(), msg.getTo(), msg, getName());
-            pushToSuperAgent(rMsg);
-
-        }
+            this.pushToSubAgent(new UserMessage(this.getName(),
+                            msg.getFrom(), "Your scope privilages are not"
+                                    + " sufficient."));
     }
 
     /**

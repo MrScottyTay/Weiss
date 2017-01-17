@@ -23,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.event.*;
 import javax.swing.tree.*;
+import weiss.core.agent.Agent;
 import weiss.core.agent.MetaAgent;
 import weiss.core.agent.Router;
 
@@ -75,23 +76,28 @@ public class TreePane
             public void valueChanged(TreeSelectionEvent e)
             {
                 TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
-
+                
                 switch (treeNode.getLevel())
                 {
                     case 0:
                         manager.getAgentSelectBtn().setText("New Router");
+                        manager.getScopeBox().setEnabled(false);
                         break;
                     case 1:
                         manager.getAgentSelectBtn().setText("New Portal");
+                        manager.getScopeBox().setEnabled(false);
                         break;
                     case 2:
                         manager.getAgentSelectBtn().setText("New Agent");
+                        manager.getScopeBox().setEnabled(true);
                         break;
                     case 3:
                         manager.getAgentSelectBtn().setText("View Agent");
+                        manager.getScopeBox().setEnabled(false);
                         break;
                     default:
                         manager.getAgentSelectBtn().setText("Select an Item");
+                        manager.getScopeBox().setEnabled(false);
                         break;
                 }
             }
@@ -211,7 +217,7 @@ public class TreePane
         {
             treeNode = ((TreeNode) value);
             ImageIcon image;
-
+            
             if (treeNode.getImage() != null)
             {
                 image = treeNode.getImage();

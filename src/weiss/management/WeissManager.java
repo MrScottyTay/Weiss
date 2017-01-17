@@ -39,6 +39,7 @@ public final class WeissManager extends JFrame
     private JButton metaAgentSelectBtn;
     private JTextField metaAgentInputField;
     private final ImageIcon icon;
+    private JComboBox agentScopeBox;
 
     /**
      * Constructor to initialise the JFrame, setting the title, size and icons.
@@ -71,7 +72,14 @@ public final class WeissManager extends JFrame
         TreePane treePane = new TreePane(this);
         JTree tree = treePane.getTree();
 
-        metaAgentInputField = new JTextField(12);
+        metaAgentInputField = new JTextField(8);
+
+        String[] scope =
+        {
+            "0", "1", "2"
+        };
+        
+        agentScopeBox = new JComboBox(scope);
 
         JPanel panel = new JPanel(new BorderLayout());
         JPanel leftPane = new JPanel(new BorderLayout());
@@ -103,7 +111,8 @@ public final class WeissManager extends JFrame
                                     new ImageIcon("Images/portal20px.png"));
                             break;
                         case 2:
-                            treePane.addNode(new Agent(metaAgentInputField.getText(), null),
+                            treePane.addNode(new Agent(metaAgentInputField.getText(), null, 
+                                    Integer.valueOf(agentScopeBox.getSelectedItem().toString())),
                                     new ImageIcon("Images/agent20px.png"));
                             break;
                         default:
@@ -119,6 +128,7 @@ public final class WeissManager extends JFrame
                     }
                 }
                 metaAgentInputField.setText("");
+                agentScopeBox.setSelectedIndex(0);
             }
         });
 
@@ -138,6 +148,7 @@ public final class WeissManager extends JFrame
 
         leftTopPane.add(metaAgentSelectBtn);
         leftTopPane.add(metaAgentInputField);
+        leftTopPane.add(agentScopeBox);
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(tree);
@@ -164,4 +175,10 @@ public final class WeissManager extends JFrame
     {
         return metaAgentSelectBtn;
     }
+    
+    public JComboBox getScopeBox()
+    {
+        return agentScopeBox;
+    }
 }
+

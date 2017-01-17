@@ -39,7 +39,8 @@ public class Agent extends MetaAgent implements Runnable, Managable
 {
 
     private Client client;
-
+    private final int scope; // 0: Global, 1: Router-wide, 2:Portal-wide
+    
     /**
      * Constructor to generate an Agent class.
      *
@@ -49,6 +50,21 @@ public class Agent extends MetaAgent implements Runnable, Managable
     public Agent(String name, MetaAgent superAgent)
     {
         super(name, superAgent);
+        scope = 0;
+    }
+    
+    /**
+     * Constructor to generate an Agent class.
+     *
+     * @param name String to set the name of the Agent.
+     * @param superAgent Set the Agent's superAgent, in this case a portal.
+     * @param scope Range that the agent can message. 0 = Global, 1 = Router-wide,
+     * 2 = Portal-wide.
+     */
+    public Agent(String name, MetaAgent superAgent, int scope)
+    {
+        super(name, superAgent);
+        this.scope = scope;
     }
 
     /**
@@ -73,7 +89,7 @@ public class Agent extends MetaAgent implements Runnable, Managable
      */
     public void sendMessage(String to, String message)
     {
-        pushToSuperAgent(new UserMessage(this.getName(), to, message));
+        pushToSuperAgent(new UserMessage(this.getName(), to, message, scope));
     }
     //--------------------------------------------------------------------------
     //INTERFACE METHODS
@@ -118,5 +134,9 @@ public class Agent extends MetaAgent implements Runnable, Managable
             client.updateClient(msg);
         }
     }
-
+    
+    public int getScope()
+    {
+        return scope;
+    }
 }
