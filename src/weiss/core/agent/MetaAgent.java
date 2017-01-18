@@ -32,9 +32,8 @@ import java.util.logging.Logger;
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable, Monitorable
+public abstract class MetaAgent extends LinkedBlockingQueue<Message> implements Runnable, Monitorable
 {
-
     private final String name;
     private NodeMonitor monitor;
     private MetaAgent superAgent;
@@ -63,7 +62,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         {
             try
             {
-                msgHandler((Message) take());
+                msgHandler(take());
             }
             catch (InterruptedException ex)
             {
@@ -207,9 +206,6 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      */
     protected void updateNodeMonitor(Message msg)
     {
-        if (this.monitor != null)
-        {
             this.monitor.insertTableData(msg);
-        }
     }
 }

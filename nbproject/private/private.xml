@@ -3,37 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/core/agent/Agent.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/core/message/SysMessageTest.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/management/TreePane.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/core/agent/PortalTest.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/projectTest/PortalMsgExchangeTest.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/core/agent/Router.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/projectTest/RouterInternalMsgExchangeTest.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/management/nodeMonitor/Monitorable.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/core/agent/Weiss.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/management/nodeMonitor/NodeMonitor.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/core/agent/MetaAgent.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/management/WeissManager.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/core/agent/MetaAgentTest.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/management/ManagementSuite.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/management/TreeNode.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/management/client/Managable.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/projectTest/MsgScopingTest.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/core/message/SysMessage.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/RootSuite.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/core/CoreSuite.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/projectTest/RouterExternalMsgExchangeTest.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/management/nodeMonitor/NodeMonitorTest.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/core/message/Message.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/core/agent/AgentTest.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/core/message/UserMessage.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/core/message/RouterMessage.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/WeissSuite.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/management/client/Client.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/src/weiss/core/agent/Portal.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/projectTest/ProjectTestSuite.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Forks/Weiss/test/weiss/projectTest/NodeMonitorTest.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/management/nodeMonitor/NodeMonitor.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/core/agent/Agent.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/management/client/Client.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/core/agent/Router.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/core/message/RouterMessage.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/core/agent/Portal.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/management/nodeMonitor/Monitorable.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/core/agent/MetaAgent.java</file>
         </group>
     </open-files>
 </project-private>

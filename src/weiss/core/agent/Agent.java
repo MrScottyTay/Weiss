@@ -35,7 +35,7 @@ import weiss.management.client.Managable;
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class Agent extends MetaAgent implements Runnable, Managable
+public class Agent extends MetaAgent implements  Managable
 {
 
     private Client client;
@@ -139,7 +139,7 @@ public class Agent extends MetaAgent implements Runnable, Managable
     {
         if (client != null && msg instanceof UserMessage)
         {
-            client.updateClient((UserMessage) msg);
+            client.updateClient(msg);
         }
     }
 

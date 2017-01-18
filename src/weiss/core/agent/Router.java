@@ -39,7 +39,7 @@ import weiss.core.message.RouterMessage;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class Router extends Portal implements Runnable
+public class Router extends Portal 
 {
 
     private final int scope = 1;
@@ -169,10 +169,9 @@ public class Router extends Portal implements Runnable
      *
      * @param msg
      */
-    private void registration(Message msg)
+    private void registration(SysMessage msg)
     {
-        SysMessage message = (SysMessage) msg;
-        routingTable.put(message.getFrom(), message.getAgent());
+        routingTable.put(msg.getFrom(), msg.getAgent());
     }
 
     /**

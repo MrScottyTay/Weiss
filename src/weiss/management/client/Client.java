@@ -110,8 +110,9 @@ public final class Client
      *
      * @param usrMsg The inputted message.
      */
-    public void updateClient(UserMessage usrMsg)
+    public void updateClient(Message usrMsg)
     {
-        textArea.append(usrMsg.toString());
+        if(usrMsg instanceof UserMessage)
+            textArea.append(usrMsg.toString());
     }
 }
