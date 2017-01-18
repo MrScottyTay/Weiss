@@ -40,7 +40,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue<Message> implements 
     private NodeMonitor monitor;
     private MetaAgent superAgent;
     private final Thread thread;
-    private static volatile ArrayList<String> registeredNames = new ArrayList(); //Need to think about moving this somewhere else
+    private static volatile ArrayList<String> registeredNames = new ArrayList();
     
     /**
      * Constructor to initialise a MetaAgetn object.
@@ -103,7 +103,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue<Message> implements 
      * @param name The name of the MetaAgent.
      * @param value The number that appears after the agent.
      */
-    private void setName(String name, int value) //Need to rethink this also, maybe somewhere else
+    private void setName(String name, int value)
     { 
         if(value == 0)
         {

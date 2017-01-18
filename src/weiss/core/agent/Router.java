@@ -119,7 +119,7 @@ public class Router extends Portal
         Message contents = msg.getContents();
         if (!msg.getOrigin().equals(this.getName()))
         {
-            if (contents instanceof UserMessage)
+            if (contents instanceof UserMessage) // Change this to use enums
             {
                 if (routingTable.containsKey(contents.getTo()))
                 {
@@ -145,7 +145,7 @@ public class Router extends Portal
      * @param msg A SysMessage passed from the message handler.
      */
     @Override
-    protected void sysMsgHandler(SysMessage msg)//Redo this to use enums
+    protected void sysMsgHandler(SysMessage msg) // Change this to use enums
     {
         switch (msg.getMsg())
         {
@@ -178,7 +178,7 @@ public class Router extends Portal
     }
     
     private void deregistration(SysMessage msg)
-    {
+    {      
         if(routingTable.containsKey(msg.getFrom()))
             routingTable.remove(msg.getFrom(), msg.getAgent());
     }

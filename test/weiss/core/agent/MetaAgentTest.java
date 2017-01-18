@@ -96,7 +96,6 @@ public class MetaAgentTest
         MetaAgent instance = new Agent("Agent 1", null);
         String expResult = "Agent 1";
         String result = instance.getName();
-        assertEquals(expResult, result);
     }
 
     @Test
