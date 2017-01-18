@@ -14,23 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.message;
+package weiss.management;
 
+import javax.swing.ImageIcon;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import weiss.core.agent.Agent;
+import weiss.core.agent.MetaAgent;
 
 /**
  *
  * @author Adam Young
  */
-public class RouterMessageTest
+public class TreeNodeTest
 {
 
-    public RouterMessageTest()
+    public TreeNodeTest()
     {
     }
 
@@ -55,33 +58,44 @@ public class RouterMessageTest
     }
 
     /**
-     * Test of getOrigin method, of class RouterMessage.
+     * Test of getAgentRef method, of class TreeNode.
      */
     @Test
-    public void testGetOrigin()
+    public void testGetAgentRef()
     {
-        System.out.println("getOrigin");
-        UserMessage msg = new UserMessage("Greg", "Fred", "Hi");
-
-        RouterMessage instance = new RouterMessage("Admin", "Test", msg, "Router 1");
-        String expResult = "Router 1";
-        String result = instance.getOrigin();
+        System.out.println("getAgentRef");
+        MetaAgent expResult = new Agent("A1", null);
+        TreeNode instance = new TreeNode(null, expResult,
+                null);
+        MetaAgent result = instance.getAgentRef();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of getContents method, of class RouterMessage.
+     * Test of getImage method, of class TreeNode.
      */
     @Test
-    public void testGetContents()
+    public void testGetImage()
     {
-        System.out.println("getContents");
+        System.out.println("getImage");
+        ImageIcon expResult = new ImageIcon("src/images/weiss20px.png");
 
-        UserMessage msg = new UserMessage("Greg", "Fred", "Hi");
+        TreeNode instance = new TreeNode(null, null, expResult);
+        ImageIcon result = instance.getImage();
+        assertEquals(expResult, result);
+    }
 
-        RouterMessage instance = new RouterMessage("Admin", "Test", msg, "Router 1");
-        Message expResult = msg;
-        Message result = instance.getContents();
+    /**
+     * Test of getName method, of class TreeNode.
+     */
+    @Test
+    public void testGetName()
+    {
+        System.out.println("getName");
+        TreeNode instance = new TreeNode("Test", null,
+                null);
+        String expResult = "Test";
+        String result = instance.getName();
         assertEquals(expResult, result);
     }
 

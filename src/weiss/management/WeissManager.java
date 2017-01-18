@@ -40,6 +40,7 @@ public final class WeissManager extends JFrame
     private JTextField metaAgentInputField;
     private final ImageIcon icon;
     private JComboBox agentScopeBox;
+    private JButton metaAgentNodeMonitorBtn;
 
     /**
      * Constructor to initialise the JFrame, setting the title, size and icons.
@@ -53,7 +54,7 @@ public final class WeissManager extends JFrame
         this.setResizable(false);
         this.setLocationRelativeTo(null);
 
-        icon = new ImageIcon("Images/weiss.png");
+        icon = new ImageIcon("src/images/weiss.png");
         this.setIconImage(icon.getImage());
 
         this.setVisible(true);
@@ -67,7 +68,7 @@ public final class WeissManager extends JFrame
      * @return A JPanel containing all other JPanels in their correct layout, as
      * well as the JTree.
      */
-    public JPanel buildPanel()
+    private JPanel buildPanel()
     {
         TreePane treePane = new TreePane(this);
         JTree tree = treePane.getTree();
@@ -78,7 +79,7 @@ public final class WeissManager extends JFrame
         {
             "0", "1", "2"
         };
-        
+
         agentScopeBox = new JComboBox(scope);
 
         JPanel panel = new JPanel(new BorderLayout());
@@ -104,16 +105,16 @@ public final class WeissManager extends JFrame
                     {
                         case 0:
                             treePane.addNode(new Router(metaAgentInputField.getText()),
-                                    new ImageIcon("Images/router20px.png"));
+                                    new ImageIcon("src/images/router20px.png"));
                             break;
                         case 1:
                             treePane.addNode(new Portal(metaAgentInputField.getText(), null),
-                                    new ImageIcon("Images/portal20px.png"));
+                                    new ImageIcon("src/images/portal20px.png"));
                             break;
                         case 2:
-                            treePane.addNode(new Agent(metaAgentInputField.getText(), null, 
+                            treePane.addNode(new Agent(metaAgentInputField.getText(), null,
                                     Integer.valueOf(agentScopeBox.getSelectedItem().toString())),
-                                    new ImageIcon("Images/agent20px.png"));
+                                    new ImageIcon("src/images/agent20px.png"));
                             break;
                         default:
                             break;
@@ -132,7 +133,7 @@ public final class WeissManager extends JFrame
             }
         });
 
-        JButton metaAgentNodeMonitorBtn = new JButton("Add Node Monitor");
+        metaAgentNodeMonitorBtn = new JButton("Add Node Monitor");
         metaAgentNodeMonitorBtn.addActionListener(new ActionListener()
         {
             @Override
@@ -141,7 +142,7 @@ public final class WeissManager extends JFrame
                 TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
                 MetaAgent treeSelection = treeNode.getAgentRef();
 
-                treeSelection.addNodeMonitor(new NodeMonitor(treeSelection));
+                treeSelection.addNodeMonitor(new NodeMonitor(treeSelection.getName()));
             }
         });
         leftBottomPane.add(metaAgentNodeMonitorBtn);
@@ -175,10 +176,14 @@ public final class WeissManager extends JFrame
     {
         return metaAgentSelectBtn;
     }
-    
+
+    public JButton getNodeMonitorBtn()
+    {
+        return metaAgentNodeMonitorBtn;
+    }
+
     public JComboBox getScopeBox()
     {
         return agentScopeBox;
     }
 }
-

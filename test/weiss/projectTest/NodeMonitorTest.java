@@ -14,55 +14,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.agent;
+package weiss.projectTest;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import weiss.core.agent.Agent;
+import weiss.core.agent.MetaAgent;
+import weiss.core.agent.Portal;
+import weiss.core.agent.Router;
+import weiss.management.nodeMonitor.NodeMonitor;
 
 /**
  *
  * @author Adam Young
  */
-public class WeissTest
+public class NodeMonitorTest
 {
 
-    public WeissTest()
-    {
-    }
-
-    @BeforeClass
-    public static void setUpClass()
-    {
-    }
-
-    @AfterClass
-    public static void tearDownClass()
-    {
-    }
-
-    @Before
-    public void setUp()
-    {
-    }
-
-    @After
-    public void tearDown()
-    {
-    }
-
-    /**
-     * Test of main method, of class Weiss.
-     */
     @Test
-    public void testMain()
+    public void nodeMonitorTest()
     {
-        System.out.println("main");
-        String[] args = null;
-        Weiss.main(args);
-    }
+        NodeMonitor node = new NodeMonitor("test");
 
+        MetaAgent portal1 = new Portal("P1", null);
+        portal1.start();
+        portal1.addNodeMonitor(node);
+
+        Agent agent1 = new Agent("A1", portal1, 2);
+        agent1.start();
+
+        Agent agent2 = new Agent("A2", portal1, 2);
+        agent2.start();
+
+        agent1.sendMessage("A2", "Hello World");
+        assertEquals(node.getLastMessage().getFrom(), "A1");
+    }
 }

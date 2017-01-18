@@ -32,26 +32,26 @@ import weiss.core.message.UserMessage;
  */
 public class PortalTest
 {
-    
+
     public PortalTest()
     {
     }
-    
+
     @BeforeClass
     public static void setUpClass()
     {
     }
-    
+
     @AfterClass
     public static void tearDownClass()
     {
     }
-    
+
     @Before
     public void setUp()
     {
     }
-    
+
     @After
     public void tearDown()
     {
@@ -65,10 +65,10 @@ public class PortalTest
     {
         System.out.println("userMsgHandler");
         UserMessage msg = new UserMessage("Admin", "A2", "Hello");
-        
+
         Portal portal = new Portal("P1", null);
         Agent agent2 = new Agent("A2", portal);
-        
+
         portal.userMsgHandler(msg);
     }
 
@@ -83,7 +83,7 @@ public class PortalTest
         Message msg = new UserMessage("A2", "A1", "Hello");
         Portal instance = new Portal("P1", null);
         Agent agent = new Agent("A1", instance);
-        
+
         instance.pushToSubAgent(msg);
     }
 
@@ -94,18 +94,18 @@ public class PortalTest
     public void testMsgHandler()
     {
         System.out.println("msgHandler");
-        
+
         Message msg = new UserMessage("A2", "A1", "Hello");
         Portal instance = new Portal("P1", null);
         Agent agent = new Agent("A1", instance);
-        
+
         instance.msgHandler(msg);
     }
 
     /**
      * Test of routerMsgHandler method, of class Portal.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRouterMsgHandler()
     {
         System.out.println("routerMsgHandler");
@@ -113,7 +113,7 @@ public class PortalTest
                 new UserMessage("Admin", "A1", "Hello"), "testCLass");
         Portal instance = new Portal("P1", null);
         instance.routerMsgHandler(msg);
-        
+
     }
 
     /**

@@ -29,9 +29,9 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses(
-{
-    weiss.core.agent.AgentSuite.class, weiss.core.message.MessageSuite.class
-})
+        {
+            weiss.core.agent.AgentSuite.class, weiss.core.message.MessageSuite.class
+        })
 public class CoreSuite
 {
 
@@ -54,5 +54,5 @@ public class CoreSuite
     public void tearDown() throws Exception
     {
     }
-    
+
 }

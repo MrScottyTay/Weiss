@@ -29,9 +29,9 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses(
-{
-    weiss.core.agent.RouterTest.class, weiss.core.agent.WeissTest.class, weiss.core.agent.AgentTest.class, weiss.core.agent.PortalTest.class, weiss.core.agent.MetaAgentTest.class
-})
+        {
+            weiss.core.agent.RouterTest.class, weiss.core.agent.WeissTest.class, weiss.core.agent.AgentTest.class, weiss.core.agent.PortalTest.class, weiss.core.agent.MetaAgentTest.class
+        })
 public class AgentSuite
 {
 
@@ -54,5 +54,5 @@ public class AgentSuite
     public void tearDown() throws Exception
     {
     }
-    
+
 }

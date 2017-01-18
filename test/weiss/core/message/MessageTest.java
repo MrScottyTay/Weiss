@@ -33,26 +33,26 @@ import static org.junit.Assert.*;
  */
 public class MessageTest
 {
-    
+
     public MessageTest()
     {
     }
-    
+
     @BeforeClass
     public static void setUpClass()
     {
     }
-    
+
     @AfterClass
     public static void tearDownClass()
     {
     }
-    
+
     @Before
     public void setUp()
     {
     }
-    
+
     @After
     public void tearDown()
     {
@@ -65,11 +65,20 @@ public class MessageTest
     public void testGetFrom()
     {
         System.out.println("getFrom");
-        Message instance = new MessageImpl("Admin","Test", "Hello World");
+        Message instance = new MessageImpl("Admin", "Test", "Hello World");
         String expResult = "Admin";
         String result = instance.getFrom();
         assertEquals(expResult, result);
 
+    }
+
+    public void testGetFrom2()
+    {
+        System.out.println("getFrom2");
+        Message instance = new MessageImpl(null, "Test", "Hello World");
+        String expResult = null;
+        String result = instance.getFrom();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -79,8 +88,18 @@ public class MessageTest
     public void testGetTo()
     {
         System.out.println("getTo");
-        Message instance = new MessageImpl("Admin","Test", "Hello World");
+        Message instance = new MessageImpl("Admin", "Test", "Hello World");
         String expResult = "Test";
+        String result = instance.getTo();
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testGetTo2()
+    {
+        System.out.println("getTo2");
+        Message instance = new MessageImpl("Admin", null, "Hello World");
+        String expResult = null;
         String result = instance.getTo();
         assertEquals(expResult, result);
     }
@@ -92,8 +111,18 @@ public class MessageTest
     public void testGetMsg()
     {
         System.out.println("getMsg");
-        Message instance = new MessageImpl("Admin","Test", "Hello World");
+        Message instance = new MessageImpl("Admin", "Test", "Hello World");
         String expResult = "Hello World";
+        String result = instance.getMsg();
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testGetMsg2()
+    {
+        System.out.println("getMsg2");
+        Message instance = new MessageImpl("Admin", "Test", null);
+        String expResult = null;
         String result = instance.getMsg();
         assertEquals(expResult, result);
     }
@@ -105,12 +134,12 @@ public class MessageTest
     public void testGetTime()
     {
         System.out.println("getTime");
-        Message instance = new MessageImpl("Admin","Test", "Hello World");
-        
+        Message instance = new MessageImpl("Admin", "Test", "Hello World");
+
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date now = Calendar.getInstance().getTime();
         String expResult = df.format(now);
-        
+
         String result = instance.getTime();
         assertEquals(expResult, result);
     }
@@ -122,12 +151,12 @@ public class MessageTest
     public void testToString()
     {
         System.out.println("toString");
-        Message instance = new MessageImpl("Admin","Test", "Hello World");
-        
+        Message instance = new MessageImpl("Admin", "Test", "Hello World");
+
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date now = Calendar.getInstance().getTime();
         String timestamp = df.format(now);
-        
+
         String expResult = "\nFrom: Admin\nTo: Test\nMessage: Hello World\nTime Sent: " + timestamp;
         String result = instance.toString();
         assertEquals(expResult, result);
@@ -138,8 +167,8 @@ public class MessageTest
 
         public MessageImpl(String from, String to, String message)
         {
-            super(from,to,message);
+            super(from, to, message);
         }
     }
-    
+
 }

@@ -93,7 +93,7 @@ public class Weiss
         Agent agent3 = new Agent("A3", portal2);
         //agent3.addNodeMonitor(new NodeMonitor(agent3));
         agent3.start();
-        
+
         Agent agent4 = new Agent("A4", portal2);
         //agent4.addNodeMonitor(new NodeMonitor(agent4));
         agent4.start();
@@ -102,6 +102,5 @@ public class Weiss
         //Create a client window for easier usage.
         //agent1.addClient(new Client(agent1));
         //agent4.addClient(new Client(agent4));
-
     }
 }

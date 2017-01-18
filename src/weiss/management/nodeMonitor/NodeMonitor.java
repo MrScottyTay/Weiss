@@ -19,6 +19,7 @@ package weiss.management.nodeMonitor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -43,16 +44,17 @@ public final class NodeMonitor
     private Vector data;
     private JTable table;
     private DefaultTableModel tableModel;
-    private String lastMessage;
+    private ArrayList<Message> messages;
 
     /**
      * Constructor to create a NodeMonitor GUI window.
      *
-     * @param agent MetaAgent the nodeMonitor is being assigned to.
+     * @param name The name the nodeMonitor should have.
      */
-    public NodeMonitor(MetaAgent agent)
+    public NodeMonitor(String name)
     {
-        this.createGUI(agent.getName());
+        messages = new ArrayList();
+        this.createGUI(name);
     }
 
     /**
@@ -98,7 +100,7 @@ public final class NodeMonitor
      */
     public void insertTableData(Message msg)
     {
-        lastMessage = msg.toString();
+        messages.add(msg);
 
         Vector row = new Vector();
         row.add(msg.getFrom());
@@ -132,8 +134,16 @@ public final class NodeMonitor
         tableModel.fireTableDataChanged();
     }
 
-    public String getLastMessage()
+    public Message getLastMessage()
     {
-        return lastMessage;
+        if (!messages.isEmpty())
+        {
+            return messages.get(messages.size());
+        }
+        else
+        {
+            return null;
+        }
     }
+
 }

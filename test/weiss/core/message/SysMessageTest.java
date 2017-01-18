@@ -35,26 +35,26 @@ import weiss.core.agent.MetaAgent;
  */
 public class SysMessageTest
 {
-    
+
     public SysMessageTest()
     {
     }
-    
+
     @BeforeClass
     public static void setUpClass()
     {
     }
-    
+
     @AfterClass
     public static void tearDownClass()
     {
     }
-    
+
     @Before
     public void setUp()
     {
     }
-    
+
     @After
     public void tearDown()
     {
@@ -68,7 +68,7 @@ public class SysMessageTest
     {
         System.out.println("getAgent");
         Agent agent = new Agent("A1", null);
-        
+
         SysMessage instance = new SysMessage("Admin", "Test", "reg", agent);
         MetaAgent expResult = agent;
         MetaAgent result = instance.getAgent();
@@ -82,19 +82,19 @@ public class SysMessageTest
     public void testToString()
     {
         System.out.println("toString");
-        
+
         Agent agent = new Agent("A1", null);
-        
+
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date now = Calendar.getInstance().getTime();
         String timestamp = df.format(now);
 
         SysMessage instance = new SysMessage("Admin", "Test", "reg", agent);
-        String expResult = "\nFrom: Admin\nTo: Test\nMessage: reg\nTime Sent: " 
+        String expResult = "\nFrom: Admin\nTo: Test\nMessage: reg\nTime Sent: "
                 + timestamp + "\nAgent: " + agent.getName();
-        
+
         String result = instance.toString();
         assertEquals(expResult, result);
     }
-    
+
 }

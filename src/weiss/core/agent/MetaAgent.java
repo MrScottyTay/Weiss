@@ -154,16 +154,19 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      */
     protected void pushToSuperAgent(Message msg)
     {
-        try
+        if (msg != null)
         {
-            if (superAgent != null)
+            try
             {
-                superAgent.put(msg);
+                if (superAgent != null)
+                {
+                    superAgent.put(msg);
+                }
             }
-        }
-        catch (InterruptedException ex)
-        {
-            Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

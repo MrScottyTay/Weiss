@@ -33,26 +33,26 @@ import weiss.management.nodeMonitor.NodeMonitor;
  */
 public class MetaAgentTest
 {
-    
+
     public MetaAgentTest()
     {
     }
-    
+
     @BeforeClass
     public static void setUpClass()
     {
     }
-    
+
     @AfterClass
     public static void tearDownClass()
     {
     }
-    
+
     @Before
     public void setUp()
     {
     }
-    
+
     @After
     public void tearDown()
     {
@@ -67,8 +67,8 @@ public class MetaAgentTest
         System.out.println("run");
         MetaAgent instance = new Portal("Portal 1", null);
         instance.start();
-        instance.addNodeMonitor(new NodeMonitor(instance));
-        
+        instance.addNodeMonitor(new NodeMonitor(instance.getName()));
+
         assertEquals(instance.hasNodeMonitor(), true);
     }
 
@@ -81,8 +81,8 @@ public class MetaAgentTest
         System.out.println("start");
         MetaAgent instance = new Portal("Portal 1", null);
         instance.start();
-        instance.addNodeMonitor(new NodeMonitor(instance));
-        
+        instance.addNodeMonitor(new NodeMonitor(instance.getName()));
+
         assertEquals(instance.hasNodeMonitor(), true);
     }
 
@@ -99,6 +99,16 @@ public class MetaAgentTest
         assertEquals(expResult, result);
     }
 
+    @Test
+    public void testGetName2()
+    {
+        System.out.println("getName2");
+        MetaAgent instance = new Agent(null, null);
+        String expResult = null;
+        String result = instance.getName();
+        assertEquals(expResult, result);
+    }
+
     /**
      * Test of getSuperAgent method, of class MetaAgent.
      */
@@ -108,11 +118,21 @@ public class MetaAgentTest
         System.out.println("getSuperAgent");
         MetaAgent expResult = new Portal("Portal 1", null);
         MetaAgent instance = new Agent("Agent 1", expResult);
-        
+
         MetaAgent result = instance.getSuperAgent();
         assertEquals(expResult, result);
     }
 
+    @Test
+    public void testGetSuperAgent2()
+    {
+        System.out.println("getSuperAgent2");
+        MetaAgent expResult = null;
+        MetaAgent instance = new Agent("Agent 1", expResult);
+
+        MetaAgent result = instance.getSuperAgent();
+        assertEquals(expResult, result);
+    }
 
     /**
      * Test of setSuperAgent method, of class MetaAgent.
@@ -121,14 +141,26 @@ public class MetaAgentTest
     public void testSetSuperAgent()
     {
         System.out.println("setSuperAgent");
-        
+
         MetaAgent superAgent = new Portal("P1", null);
         MetaAgent instance = new Agent("Agent 1", superAgent);
         instance.setSuperAgent(superAgent);
-        
+
         assertEquals(instance.getSuperAgent(), superAgent);
     }
-    
+
+    @Test
+    public void testSetSuperAgent2()
+    {
+        System.out.println("setSuperAgent2");
+
+        MetaAgent superAgent = null;
+        MetaAgent instance = new Agent("Agent 1", superAgent);
+        instance.setSuperAgent(superAgent);
+
+        assertEquals(instance.getSuperAgent(), superAgent);
+    }
+
     /**
      * Test of msgHandler method, of class MetaAgent.
      */
@@ -139,21 +171,8 @@ public class MetaAgentTest
         Message msg = new UserMessage("Admin", "Agent 1", "Hello World!");
         MetaAgent instance = new Agent("Agent 1", null);
         instance.msgHandler(msg);
-        
-        assertEquals(instance.peek(), null);
-    }
 
-    /**
-     * Test of sendMessage method, of class MetaAgent.
-     */
-    @Test
-    public void testSendMessage()
-    {
-        System.out.println("sendMessage");
-        String to = "Agent 1";
-        String message = "Hello";
-        MetaAgent instance = new Agent("Agent 1", null);
-    
+        assertEquals(instance.peek(), null);
     }
 
     /**
@@ -163,12 +182,23 @@ public class MetaAgentTest
     public void testPushToSuperAgent()
     {
         System.out.println("pushToSuperAgent");
-        
+
         MetaAgent router = new Router("R1");
         MetaAgent instance = new Portal("P1", router);
-        
+
         Message msg = new SysMessage("P1", "R1", "setSuperAgent", instance);
         instance.pushToSuperAgent(msg);
+    }
+
+    @Test
+    public void testPushToSuperAgent2()
+    {
+        System.out.println("pushToSuperAgent");
+
+        MetaAgent router = new Router("R1");
+        MetaAgent instance = new Portal("P1", router);
+
+        instance.pushToSuperAgent(null);
     }
 
     /**
@@ -179,9 +209,19 @@ public class MetaAgentTest
     {
         System.out.println("addNodeMonitor");
         MetaAgent instance = new Router("R1");
-        instance.addNodeMonitor(new NodeMonitor(instance));
-       
+        instance.addNodeMonitor(new NodeMonitor(instance.getName()));
+
         assertEquals(instance.hasNodeMonitor(), true);
+    }
+
+    @Test
+    public void testAddNodeMonitor2()
+    {
+        System.out.println("addNodeMonitor2");
+        MetaAgent instance = new Router("R1");
+        instance.addNodeMonitor(null);
+
+        assertEquals(instance.hasNodeMonitor(), false);
     }
 
     /**
@@ -190,11 +230,21 @@ public class MetaAgentTest
     @Test
     public void testRemoveNodeMonitor()
     {
-        System.out.println("addNodeMonitor");
+        System.out.println("removeNodeMonitor");
         MetaAgent instance = new Router("R1");
-        instance.addNodeMonitor(new NodeMonitor(instance));
+        instance.addNodeMonitor(new NodeMonitor(instance.getName()));
         instance.removeNodeMonitor();
-        
+
+        assertEquals(instance.hasNodeMonitor(), false);
+    }
+
+    @Test
+    public void testRemoveNodeMonitor2()
+    {
+        System.out.println("removeNodeMonitor2");
+        MetaAgent instance = new Router("R1");
+        instance.removeNodeMonitor();
+
         assertEquals(instance.hasNodeMonitor(), false);
     }
 
@@ -207,12 +257,59 @@ public class MetaAgentTest
         System.out.println("updateNodeMonitor");
         Message msg = new UserMessage("Admin", "A1", "Hello");
         MetaAgent instance = new Agent("A1", null);
-        
-        NodeMonitor nm = new NodeMonitor(instance);
+
+        NodeMonitor nm = new NodeMonitor(instance.getName());
         instance.addNodeMonitor(nm);
         instance.updateNodeMonitor(msg);
-        
-        assertEquals(nm.getLastMessage(), msg.toString());
+
+        assertEquals(nm.getLastMessage().toString(), msg.toString());
+    }
+
+    @Test
+    public void testUpdateNodeMonitor2()
+    {
+        System.out.println("updateNodeMonitor2");
+        Message msg = new UserMessage("Admin", "A1", "Hello");
+        MetaAgent instance = new Agent("A1", null);
+
+        instance.updateNodeMonitor(msg);
+    }
+
+    /**
+     * Test of userMsgHandler method, of class MetaAgent.
+     */
+    @Test
+    public void testUserMsgHandler()
+    {
+        System.out.println("userMsgHandler");
+        UserMessage msg = new UserMessage("Admin", "Test", "Hello");
+        MetaAgent instance = new MetaAgentImpl("A1");
+        instance.userMsgHandler(msg);
+        assertEquals(instance.getSuperAgent(), instance);
+    }
+
+    /**
+     * Test of hasNodeMonitor method, of class MetaAgent.
+     */
+    @Test
+    public void testHasNodeMonitor()
+    {
+        System.out.println("hasNodeMonitor");
+        MetaAgent instance = new MetaAgentImpl("A1");
+        boolean expResult = false;
+        boolean result = instance.hasNodeMonitor();
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testHasNodeMonitor2()
+    {
+        System.out.println("hasNodeMonitor2");
+        MetaAgent instance = new MetaAgentImpl("A1");
+        instance.addNodeMonitor(new NodeMonitor(instance.getName()));
+        boolean expResult = true;
+        boolean result = instance.hasNodeMonitor();
+        assertEquals(expResult, result);
     }
 
     public class MetaAgentImpl extends MetaAgent
@@ -229,5 +326,5 @@ public class MetaAgentTest
             this.setSuperAgent(this);
         }
     }
-    
+
 }

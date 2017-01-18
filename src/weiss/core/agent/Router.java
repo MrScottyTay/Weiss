@@ -89,15 +89,19 @@ public class Router extends Portal implements Runnable
                     pushToSuperAgent(rMsg);
                 }
                 else
+                {
                     this.pushToSubAgent(new UserMessage(this.getName(),
                             msg.getFrom(), "Your scope privilages are not"
-                                    + " sufficient."));
+                            + " sufficient."));
+                }
             }
         }
         else
+        {
             this.pushToSubAgent(new UserMessage(this.getName(),
-                            msg.getFrom(), "Your scope privilages are not"
-                                    + " sufficient."));
+                    msg.getFrom(), "Your scope privilages are not"
+                    + " sufficient."));
+        }
     }
 
     /**
