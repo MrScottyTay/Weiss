@@ -44,7 +44,7 @@ import weiss.core.message.RouterMessage;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch.of Computing
  */
-public class Portal extends MetaAgent implements Monitorable
+public class Portal extends MetaAgent implements Runnable, Monitorable
 {
 
     private final int scope = 2;
@@ -113,7 +113,7 @@ public class Portal extends MetaAgent implements Monitorable
      */
     protected void pushToSubAgent(Message msg)
     {
-        MetaAgent agent = routingTable.get(msg.getTo());
+        MetaAgent agent = (MetaAgent) routingTable.get(msg.getTo());
         try
         {
             if (agent != null)
@@ -128,7 +128,7 @@ public class Portal extends MetaAgent implements Monitorable
     }
 
     @Override
-    protected void msgHandler(Message msg) //Redo this to use enums instead.
+    protected void msgHandler(Message msg)
     {
         super.updateNodeMonitor(msg);
 

@@ -33,14 +33,14 @@ import java.util.logging.Logger;
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public abstract class MetaAgent extends LinkedBlockingQueue<Message> implements Runnable, Monitorable
+public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable, Monitorable
 {
 
     protected String name;
     private NodeMonitor monitor;
     private MetaAgent superAgent;
     private final Thread thread;
-    private static volatile ArrayList<String> registeredNames = new ArrayList(); //Need to think about moving this somewhere else
+    private static volatile ArrayList<String> registeredNames = new ArrayList();
     
     /**
      * Constructor to initialise a MetaAgetn object.
@@ -66,7 +66,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue<Message> implements 
         {
             try
             {
-                msgHandler(take());
+                msgHandler((Message) take());
             }
             catch (InterruptedException ex)
             {
@@ -103,7 +103,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue<Message> implements 
      * @param name The name of the MetaAgent.
      * @param value The number that appears after the agent.
      */
-    private void setName(String name, int value) //Need to rethink this also, maybe somewhere else
+    private void setName(String name, int value)
     { 
         if(value == 0)
         {

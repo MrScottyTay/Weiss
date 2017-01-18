@@ -39,7 +39,7 @@ import weiss.core.message.RouterMessage;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class Router extends Portal
+public class Router extends Portal implements Runnable
 {
 
     private final int scope = 1;
@@ -145,7 +145,7 @@ public class Router extends Portal
      * @param msg A SysMessage passed from the message handler.
      */
     @Override
-    protected void sysMsgHandler(SysMessage msg)//Redo this to use enums
+    protected void sysMsgHandler(SysMessage msg)
     {
         switch (msg.getMsg())
         {
@@ -172,15 +172,18 @@ public class Router extends Portal
      *
      * @param msg
      */
-    private void registration(SysMessage msg)
+    private void registration(Message msg)
     {
-        routingTable.put(msg.getFrom(), msg.getAgent());
+        SysMessage message = (SysMessage) msg;
+        routingTable.put(message.getFrom(), message.getAgent());
     }
     
-    private void deregistration(SysMessage msg)
+    private void deregistration(Message msg)
     {
+        SysMessage message = (SysMessage) msg;
+        
         if(routingTable.containsKey(msg.getFrom()))
-            routingTable.remove(msg.getFrom(), msg.getAgent());
+            routingTable.remove(message.getFrom(), message.getAgent());
     }
  
 
