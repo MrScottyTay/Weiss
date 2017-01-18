@@ -36,7 +36,7 @@ import weiss.management.client.Managable;
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class Agent extends MetaAgent implements Runnable, Managable
+public class Agent extends MetaAgent implements  Managable
 {
 
     private Client client;
@@ -137,11 +137,11 @@ public class Agent extends MetaAgent implements Runnable, Managable
      *
      * @param msg A Message object to push to the client hook.
      */
-    public void updateClient(Message msg)
+    public void updateClient(UserMessage msg)
     {
         if (client != null && msg instanceof UserMessage)
         {
-            client.updateClient((UserMessage) msg);
+            client.updateClient(msg);
         }
     }
 
