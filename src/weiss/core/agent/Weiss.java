@@ -57,8 +57,9 @@ public class Weiss
 
         //----------------------------------------------------------------------
         //MANAGER OPERATION
-        //WeissManager manager = new WeissManager();
+        WeissManager manager = new WeissManager();
 
+        /*
         //----------------------------------------------------------------------
         //CLI OPERATION
         //Router 1 ---
@@ -102,5 +103,6 @@ public class Weiss
         //Create a client window for easier usage.
         //agent1.addClient(new Client(agent1));
         //agent4.addClient(new Client(agent4));
+        */
     }
 }

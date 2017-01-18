@@ -16,6 +16,7 @@
  */
 package weiss.core.agent;
 
+import java.util.ArrayList;
 import weiss.management.nodeMonitor.Monitorable;
 import weiss.management.nodeMonitor.NodeMonitor;
 import weiss.core.message.*;
@@ -35,11 +36,12 @@ import java.util.logging.Logger;
 public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable, Monitorable
 {
 
-    private final String name;
+    protected String name;
     private NodeMonitor monitor;
     private MetaAgent superAgent;
     private final Thread thread;
-
+    private static volatile ArrayList<String> registeredNames = new ArrayList();
+    
     /**
      * Constructor to initialise a MetaAgetn object.
      *
@@ -50,7 +52,8 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     public MetaAgent(String name, MetaAgent superAgent)
     {
         super();
-        this.name = name;
+        
+        this.setName(name, 0);
         this.setSuperAgent(superAgent);
 
         thread = new Thread(this);
@@ -93,6 +96,38 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     {
         return name;
     }
+    
+    /**
+     * Recursive method to set the name of the MetaAgent. Checks an ArrayList of registered names
+     * to make sure no name is written twice.
+     * @param name The name of the MetaAgent.
+     * @param value The number that appears after the agent.
+     */
+    private void setName(String name, int value)
+    { 
+        if(value == 0)
+        {
+            if(registeredNames.contains(name))
+            {
+                setName(name, value = value + 1);
+            }
+            else
+            {
+                registeredNames.add(name);
+                this.name = name;
+            }
+        }
+        else if(registeredNames.contains(name + " (" + value + ")"))
+        {
+            setName(name, value = value + 1);
+        }
+        else
+        {
+            String n = name + " (" + value + ")";
+            registeredNames.add(n);
+            this.name = n;   
+        }
+    }   
 
     /**
      * Getter for {@link weiss.core.agent.MetaAgent MetaAgent} superAgent
@@ -132,7 +167,11 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     protected void msgHandler(Message msg)
     {
         updateNodeMonitor(msg);
-        userMsgHandler((UserMessage) msg);
+        if(msg instanceof UserMessage)
+        {
+            userMsgHandler((UserMessage) msg);
+        }
+            
     }
 
     /**
@@ -143,7 +182,6 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      * @param msg A UserMessage
      */
     abstract protected void userMsgHandler(UserMessage msg);   //EndUser creates a body for this method to make the agent do what it wants to do
-
     //--------------------------------------------------------------------------
     //CLASS SPECIFIC METHODS
     //-------------------------------------------------------------------------- 
@@ -152,7 +190,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      *
      * @param msg The message to be pushed.
      */
-    protected void pushToSuperAgent(Message msg)
+    public void pushToSuperAgent(Message msg)
     {
         if (msg != null)
         {
