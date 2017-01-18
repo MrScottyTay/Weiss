@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2017 Adam Young
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,31 +16,43 @@
  */
 package weiss.management.nodeMonitor;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+
 /**
- * Interface to implement the required hooks for the Client class
  *
- * @author Adam Young, Teesside University Sch. of Computing
+ * @author Adam Young
  */
-public interface Monitorable
+@RunWith(Suite.class)
+@Suite.SuiteClasses(
+        {
+            weiss.management.nodeMonitor.MonitorableTest.class, weiss.management.nodeMonitor.NodeMonitorTest.class
+        })
+public class NodeMonitorSuite
 {
 
-    /**
-     * Method to add a node monitor to the implementing class.
-     *
-     * @param nodeMonitor A nodeMonitor object.
-     */
-    public void addNodeMonitor(NodeMonitor nodeMonitor);
+    @BeforeClass
+    public static void setUpClass() throws Exception
+    {
+    }
 
-    /**
-     * Method to remove a node monitor from a implementing class.
-     */
-    public void removeNodeMonitor();
+    @AfterClass
+    public static void tearDownClass() throws Exception
+    {
+    }
 
-    /**
-     * Method to check if a node monitor has been registered to the implementing
-     * class.
-     *
-     * @return True if the node monitor is present, false if not.
-     */
-    public boolean hasNodeMonitor();
+    @Before
+    public void setUp() throws Exception
+    {
+    }
+
+    @After
+    public void tearDown() throws Exception
+    {
+    }
+
 }

@@ -14,23 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.message;
+package weiss.management;
 
+import javax.swing.ImageIcon;
+import javax.swing.JTree;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import weiss.core.agent.Agent;
+import weiss.core.agent.MetaAgent;
 
 /**
  *
  * @author Adam Young
  */
-public class RouterMessageTest
+public class TreePaneTest
 {
 
-    public RouterMessageTest()
+    public TreePaneTest()
     {
     }
 
@@ -55,34 +59,26 @@ public class RouterMessageTest
     }
 
     /**
-     * Test of getOrigin method, of class RouterMessage.
+     * Test of getTree method, of class TreePane.
      */
     @Test
-    public void testGetOrigin()
+    public void testGetTree()
     {
-        System.out.println("getOrigin");
-        UserMessage msg = new UserMessage("Greg", "Fred", "Hi");
-
-        RouterMessage instance = new RouterMessage("Admin", "Test", msg, "Router 1");
-        String expResult = "Router 1";
-        String result = instance.getOrigin();
-        assertEquals(expResult, result);
+        System.out.println("getTree");
+        TreePane instance = new TreePane(new WeissManager());
+        JTree result = instance.getTree();
     }
 
     /**
-     * Test of getContents method, of class RouterMessage.
+     * Test of addNode method, of class TreePane.
      */
     @Test
-    public void testGetContents()
+    public void testAddNode()
     {
-        System.out.println("getContents");
-
-        UserMessage msg = new UserMessage("Greg", "Fred", "Hi");
-
-        RouterMessage instance = new RouterMessage("Admin", "Test", msg, "Router 1");
-        Message expResult = msg;
-        Message result = instance.getContents();
-        assertEquals(expResult, result);
+        System.out.println("addNode");
+        MetaAgent child = new Agent("A1", null);
+        ImageIcon image = new ImageIcon("src/images/weiss20px.png");
+        TreePane instance = new TreePane(new WeissManager());
+        TreeNode result = instance.addNode(child, image);
     }
-
 }

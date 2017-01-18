@@ -14,45 +14,63 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.message;
+package weiss.management.client;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.Test;
+import static org.junit.Assert.*;
+import weiss.core.agent.Agent;
+import weiss.core.message.Message;
+import weiss.core.message.UserMessage;
 
 /**
  *
  * @author Adam Young
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses(
-        {
-            RouterMessageTest.class, SysMessageTest.class, MessageTest.class, UserMessageTest.class
-        })
-public class MessageSuite
+public class ClientTest
 {
 
+    public ClientTest()
+    {
+    }
+
     @BeforeClass
-    public static void setUpClass() throws Exception
+    public static void setUpClass()
     {
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception
+    public static void tearDownClass()
     {
     }
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
     }
 
     @After
-    public void tearDown() throws Exception
+    public void tearDown()
     {
+    }
+
+    /**
+     * Test of updateClient method, of class Client.
+     */
+    @Test
+    public void testUpdateClient()
+    {
+        System.out.println("updateClient");
+        UserMessage usrMsg = new UserMessage("Admin", "Test", "Hello");
+
+        Agent agent = new Agent("A1", null);
+        Client instance = new Client(agent);
+        agent.addClient(instance);
+
+        instance.updateClient(usrMsg);
     }
 
 }

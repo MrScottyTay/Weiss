@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.message;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -30,9 +29,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses(
         {
-            RouterMessageTest.class, SysMessageTest.class, MessageTest.class, UserMessageTest.class
+            weiss.WeissSuite.class
         })
-public class MessageSuite
+public class RootSuite
 {
 
     @BeforeClass

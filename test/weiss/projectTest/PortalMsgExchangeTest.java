@@ -14,26 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.agent;
+package weiss.projectTest;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import weiss.core.agent.Agent;
+import weiss.core.agent.MetaAgent;
+import weiss.core.agent.Portal;
+import weiss.core.message.Message;
 import weiss.core.message.RouterMessage;
 import weiss.core.message.SysMessage;
 import weiss.core.message.UserMessage;
+import weiss.management.nodeMonitor.NodeMonitor;
 
 /**
  *
  * @author Adam Young
  */
-public class RouterTest
+public class PortalMsgExchangeTest
 {
 
-    public RouterTest()
+    public PortalMsgExchangeTest()
     {
     }
 
@@ -58,44 +63,41 @@ public class RouterTest
     }
 
     /**
-     * Test of userMsgHandler method, of class Router.
+     * Test of userMsgHandler method, of class Portal.
      */
     @Test
-    public void testUserMsgHandler()
+    public void testPortalMsgExchange()
     {
-        System.out.println("userMsgHandler");
-        UserMessage msg = new UserMessage("Admin", "Test", "Hello");
-        Router instance = new Router("R1");
-        instance.userMsgHandler(msg);
+        System.out.println("portalMsgExchange");
+        MetaAgent portal1 = new Portal("P1", null);
+
+        portal1.start();
+
+        Agent agent1 = new Agent("A1", portal1);
+        agent1.start();
+
+        Agent agent2 = new Agent("A2", portal1);
+        agent2.start();
+
+        agent1.sendMessage("A2", "Hello World");
     }
 
-    /**
-     * Test of routerMsgHandler method, of class Router.
-     */
     @Test
-    public void testRouterMsgHandler()
+    public void testPortalMsgExchange2()
     {
-        System.out.println("routerMsgHandler");
+        System.out.println("portalMsgExchange2");
+        MetaAgent portal1 = new Portal("P1", null);
+        portal1.start();
 
-        UserMessage userMsg = new UserMessage("Admin", "Test", "Hello");
-        Router instance = new Router("R1");
-        Router r2 = new Router("R2");
-        RouterMessage msg = new RouterMessage("Admin", "Test", userMsg, instance.getName());
+        Agent agent1 = new Agent("A1", portal1);
+        agent1.start();
 
-        instance.routerMsgHandler(msg);
+        Agent agent2 = new Agent("A2", portal1);
+        agent2.start();
+
+        Agent agent3 = new Agent("A3", portal1);
+        agent3.start();
+
+        agent1.sendMessage("A3", "Hello World");
     }
-
-    /**
-     * Test of sysMsgHandler method, of class Router.
-     */
-    @Test
-    public void testSysMsgHandler()
-    {
-        Portal portal = new Portal("P1", null);
-        System.out.println("sysMsgHandler");
-        SysMessage msg = new SysMessage("Admin", "Test", "reg", portal);
-        Router instance = new Router("R1");
-        instance.sysMsgHandler(msg);
-    }
-
 }

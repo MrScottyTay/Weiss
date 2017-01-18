@@ -20,39 +20,61 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Adam Young
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses(
-        {
-            RouterMessageTest.class, SysMessageTest.class, MessageTest.class, UserMessageTest.class
-        })
-public class MessageSuite
+public class UserMessageTest
 {
 
+    public UserMessageTest()
+    {
+    }
+
     @BeforeClass
-    public static void setUpClass() throws Exception
+    public static void setUpClass()
     {
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception
+    public static void tearDownClass()
     {
     }
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
     }
 
     @After
-    public void tearDown() throws Exception
+    public void tearDown()
     {
+    }
+
+    /**
+     * Test of getScope method, of class UserMessage.
+     */
+    @Test
+    public void testGetScope()
+    {
+        System.out.println("getScope");
+        UserMessage instance = new UserMessage("Admin", "Test", "Hello");
+        int expResult = 0;
+        int result = instance.getScope();
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testGetScope2()
+    {
+        System.out.println("getScope2");
+        UserMessage instance = new UserMessage("Admin", "Test", "Hello", 1);
+        int expResult = 1;
+        int result = instance.getScope();
+        assertEquals(expResult, result);
     }
 
 }

@@ -26,82 +26,91 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import weiss.core.agent.MetaAgent;
+import weiss.core.agent.Agent;
 import weiss.core.message.*;
 
 /**
  * A simple, standalone GUI client to hook into the client of the MetaAgents.
+ *
  * @author Adam Young, Teesside University Sch. of Computing
  */
 public final class Client
 {
+
     private JTextArea textArea;
-    private final MetaAgent agent;
+    private final Agent agent;
     private Thread thread;
-        
+
     /**
      * Constructor to create a Client GUI
+     *
      * @param agent The agent the client is being assigned to.
      */
-    public Client(MetaAgent agent)
+    public Client(Agent agent)
     {
         this.agent = agent;
         this.createGUI(agent.getName());
     }
-    
+
     /**
      * Method to create the GUI window, using a JDialog.
+     *
      * @param name String containing the MetaAgent name.
      */
-    protected void createGUI(String name)
+    private void createGUI(String name)
     {
         JDialog dialog = new JDialog();
-        
+
         dialog.setTitle("Agent Window - " + name);
-        dialog.setMinimumSize(new Dimension(500,500));
+        dialog.setMinimumSize(new Dimension(500, 200));
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setVisible(true);
-        
+
         JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel bottomPanel = new JPanel();
-        
+
         JTextField agentSelection = new JTextField();
         textArea = new JTextArea(5, 30);
-        
+
         textArea.setEditable(false);
         JTextField messageField = new JTextField(30);
-        
+
         JButton sendButton = new JButton("Send");
-        sendButton.addActionListener(new ActionListener(){
+        sendButton.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e){
-                if(agentSelection.getText() != null)
+            public void actionPerformed(ActionEvent e)
+            {
+                if (agentSelection.getText() != null)
+                {
                     agent.sendMessage(agentSelection.getText(),
-                        messageField.getText());
-            }  
+                            messageField.getText());
+                }
+            }
         });
-        
+
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(textArea);
-        
+
         bottomPanel.add(messageField, BorderLayout.WEST);
         bottomPanel.add(sendButton, BorderLayout.EAST);
-        
+
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         mainPanel.add(agentSelection, BorderLayout.NORTH);
-        
+
         dialog.getContentPane().add(mainPanel);
         dialog.getRootPane().setDefaultButton(sendButton);
-        
+
         dialog.pack();
     }
 
     /**
      * Method to update the client window text area.
+     *
      * @param usrMsg The inputted message.
      */
-    public void updateClient(Message usrMsg)
+    public void updateClient(UserMessage usrMsg)
     {
         textArea.append(usrMsg.toString());
     }

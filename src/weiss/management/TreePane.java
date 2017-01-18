@@ -16,13 +16,9 @@
  */
 package weiss.management;
 
-import weiss.management.client.Client;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.event.*;
@@ -30,120 +26,87 @@ import javax.swing.tree.*;
 import weiss.core.agent.Agent;
 import weiss.core.agent.MetaAgent;
 import weiss.core.agent.Router;
-import weiss.management.nodeMonitor.NodeMonitor;
 
 /**
- *  Class which forms the main UI control of the program. Implements custom renderers,
- * tree models and tree nodes. Implemented by {@link WeissManager WeissManager}.
- * 
+ * Class which forms the main UI control of the program. Implements custom
+ * renderers, tree models and tree nodes. Implemented by
+ * {@link WeissManager WeissManager}.
+ *
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class TreePane {
+public class TreePane
+{
 
     private DefaultTreeModel treeModel;
     private TreeNode rootNode;
     private static JTree tree;
     private TreeNode treeNode;
+    private WeissManager manager;
 
     /**
      * A Constructor to create the JTree navigation pane.
+     *
      * @param manager The attached manager to pull information from.
      */
-    public TreePane(WeissManager manager) {
-        this.buildTree(manager);
+    public TreePane(WeissManager manager)
+    {
+        this.manager = manager;
+        this.buildTree();
     }
 
     /**
-     * All-round method to create the JTree required by the program. Implements 
+     * All-round method to create the JTree required by the program. Implements
      * TreeSelectionListeners to change button text in WeissManager.
+     *
      * @param weissManager The main window to tie the TreePane to.
      * @return A JTree object to implement into a JFrame/JPanel.
      */
-    private JTree buildTree(WeissManager weissManager) {
-        WeissManager manager = weissManager;
+    private JTree buildTree()
+    {
         DefaultTreeCellRenderer render = new DefaultTreeCellRenderer();
 
         rootNode = new TreeNode("Weiss");
         treeModel = new DefaultTreeModel(rootNode);
 
         tree = new JTree(treeModel);
-        tree.addTreeSelectionListener(new TreeSelectionListener() {
-
-            private JButton getAgentSelectBtn() {
-                return manager.getAgentSelectBtn();
-            }
+        tree.addTreeSelectionListener(new TreeSelectionListener()
+        {
 
             @Override
-            public void valueChanged(TreeSelectionEvent e) {
+            public void valueChanged(TreeSelectionEvent e)
+            {
                 TreeNode treeNode = (TreeNode) tree.getSelectionPath().getLastPathComponent();
 
-                switch (treeNode.getLevel()) {
+                switch (treeNode.getLevel())
+                {
                     case 0:
-                        this.getAgentSelectBtn().setText("New Router");
+                        manager.getAgentSelectBtn().setText("New Router");
+                        manager.getScopeBox().setEnabled(false);
+                        manager.getNodeMonitorBtn().setEnabled(false);
                         break;
                     case 1:
-                        this.getAgentSelectBtn().setText("New Portal");
+                        manager.getAgentSelectBtn().setText("New Portal");
+                        manager.getScopeBox().setEnabled(false);
+                        manager.getNodeMonitorBtn().setEnabled(true);
                         break;
                     case 2:
-                        this.getAgentSelectBtn().setText("New Agent");
+                        manager.getAgentSelectBtn().setText("New Agent");
+                        manager.getScopeBox().setEnabled(true);
+                        manager.getNodeMonitorBtn().setEnabled(true);
                         break;
                     case 3:
-                        this.getAgentSelectBtn().setText("View Agent");
+                        manager.getAgentSelectBtn().setText("View Agent");
+                        manager.getScopeBox().setEnabled(false);
+                        manager.getNodeMonitorBtn().setEnabled(true);
                         break;
                     default:
-                        this.getAgentSelectBtn().setText("Select an Item");
+                        manager.getAgentSelectBtn().setText("Select an Item");
+                        manager.getScopeBox().setEnabled(false);
+                        manager.getNodeMonitorBtn().setEnabled(false);
                         break;
                 }
             }
         });
-        tree.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                TreeNode selPath = treeNode;
-                if (e.getClickCount() == 2) {
-                    Agent treeNodeSelectionAgent = null;
-                    MetaAgent treeNodeSelectionMeta = null;
-                    
-                    
-                    if(treeNode.getAgentRef() instanceof Agent)
-                        treeNodeSelectionAgent = (Agent) treeNode.getAgentRef();
-                    else if(treeNode.getAgentRef() != null)
-                        treeNodeSelectionMeta = (MetaAgent) treeNode.getAgentRef();
-
-                    if (treeNode.getAgentRef() instanceof Agent) {
-                        treeNodeSelectionAgent.addClient(new Client(treeNodeSelectionAgent));
-                    } else if (treeNode.getAgentRef() != null) {
-                        treeNodeSelectionMeta.addNodeMonitor(new NodeMonitor(treeNodeSelectionMeta));
-                    } else {
-                        return;
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        }
-        );
 
         tree.setEditable(false);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -155,28 +118,36 @@ public class TreePane {
 
     /**
      * Method to get the JTree object.
+     *
      * @return A constructed JTree object.
      */
-    public JTree getTree() {
+    public JTree getTree()
+    {
         return tree;
     }
 
     /**
      * Method to create a TreeNode for the JTree to use.
+     *
      * @param child The MetaAgent to be added to the tree.
      * @param image The image to use for the image.
      * @return A TreeNode object with a MetaAgent assigned.
      */
-    public TreeNode addNode(MetaAgent child, ImageIcon image) {
+    public TreeNode addNode(MetaAgent child, ImageIcon image)
+    {
         TreeNode parentNode = null;
         TreePath parentPath = tree.getSelectionPath();
 
-        if (parentPath == null) {
+        if (parentPath == null)
+        {
             parentNode = rootNode;
-        } else {
+        }
+        else
+        {
             parentNode = (TreeNode) parentPath.getLastPathComponent();
         }
-        if (!(child instanceof Router)) {
+        if (!(child instanceof Router))
+        {
             child.setSuperAgent(parentNode.getAgentRef());
         }
 
@@ -195,7 +166,8 @@ public class TreePane {
     private TreeNode addNode(DefaultMutableTreeNode parent,
             MetaAgent child,
             boolean shouldBeVisible,
-            ImageIcon image) {
+            ImageIcon image)
+    {
 
         TreeNode childNode
                 = new TreeNode(child.getName(), child, image);
@@ -203,7 +175,8 @@ public class TreePane {
         treeModel.insertNodeInto(childNode, parent,
                 parent.getChildCount());
 
-        if (shouldBeVisible) {
+        if (shouldBeVisible)
+        {
             tree.scrollPathToVisible(new TreePath(childNode.getPath()));
         }
         child.start();
@@ -212,24 +185,27 @@ public class TreePane {
     }
 
     /**
-     * A custom TreeCellRenderer to assign custom names, labels and images in
-     * an easy to use way.
+     * A custom TreeCellRenderer to assign custom names, labels and images in an
+     * easy to use way.
      */
-    private class WeissTreeCellRenderer implements TreeCellRenderer {
+    private class WeissTreeCellRenderer implements TreeCellRenderer
+    {
 
         private final JLabel label;
 
         /**
          * Constructor to instantiate a new JLabel.
          */
-        WeissTreeCellRenderer() {
+        WeissTreeCellRenderer()
+        {
             label = new JLabel();
         }
 
         /**
-         * Method to create the custom tree cell, to assign the image, background/foreground
-         * colour and name. The renderer is always running for label changes such as 
-         * selection highlighting.
+         * Method to create the custom tree cell, to assign the image,
+         * background/foreground colour and name. The renderer is always running
+         * for label changes such as selection highlighting.
+         *
          * @param tree The assigned tree.
          * @param value the passed object (A treeNode).
          * @param selected Boolean for if the node is selected.
@@ -242,29 +218,38 @@ public class TreePane {
         @Override
         public Component getTreeCellRendererComponent(JTree tree, Object value,
                 boolean selected, boolean expanded, boolean leaf, int row,
-                boolean hasFocus) {
+                boolean hasFocus)
+        {
             treeNode = ((TreeNode) value);
             ImageIcon image;
 
-            if (treeNode.getImage() != null) {
+            if (treeNode.getImage() != null)
+            {
                 image = treeNode.getImage();
-            } else {
-                image = new ImageIcon("Images/weiss20px.png");
+            }
+            else
+            {
+                image = new ImageIcon("src/images/weiss20px.png");
             }
             label.setIcon(image);
 
-            if (selected) {
+            if (selected)
+            {
                 label.setForeground(Color.red);
-            } else {
+            }
+            else
+            {
                 label.setForeground(Color.black);
             }
 
-            if (treeNode.getName() != null) {
+            if (treeNode.getName() != null)
+            {
                 label.setText(treeNode.getName());
-            } else {
+            }
+            else
+            {
                 label.setText("Weiss");
             }
-
             return label;
         }
     }

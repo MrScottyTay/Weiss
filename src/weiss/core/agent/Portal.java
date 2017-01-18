@@ -24,21 +24,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import weiss.core.message.ReplyMessage;
 import weiss.core.message.RouterMessage;
 
 /**
  * * Class used for handling messages from both
  * {@link weiss.core.agent.MetaAgent MetaAgent} classes and
- * {@link weiss.core.agent.Router Router} classes, and routing them to the correct
- * destination. The class implements {@link weiss.core.agent.MetaAgent MetaAgent},
- * which is the basis for all of our MAS classes.
+ * {@link weiss.core.agent.Router Router} classes, and routing them to the
+ * correct destination. The class implements
+ * {@link weiss.core.agent.MetaAgent MetaAgent}, which is the basis for all of
+ * our MAS classes.
  * <p>
  * When the object receives a message, it checks it's own
  * {@link Portal#routingTable Routing Table} for the value found in the
- * {@link weiss.Message.Message#to To} field. If the object is found, it passes
- * the message on to the selected object. If not, the object is passed to its
- * assigned {@link weiss.core.agent.Router Router}.
+ * {@link weiss.core.message.Message#to To} field. If the object is found, it
+ * passes the message on to the selected object. If not, the object is passed to
+ * its assigned {@link weiss.core.agent.Router Router}.
  *
  *
  * @author Adam Young, Teesside University Sch. of Computing
@@ -46,6 +46,12 @@ import weiss.core.message.RouterMessage;
  */
 public class Portal extends MetaAgent implements Runnable, Monitorable
 {
+
+    private final int scope = 2;
+    /**
+     * The routing table is a HashMap of MetaAgents, storing sub-agents for
+     * reference later.
+     */
     protected final Map<String, MetaAgent> routingTable;
 
     /**
@@ -59,61 +65,63 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
         super(name, superAgent);
         this.routingTable = new HashMap<>();
     }
-    /**
-     *  Constructor for the Portal class.
-     * 
-     * @param name String of name variable.
-     * @param superAgent MetaAgent pointer of Router.
-     * @param scope Integer detailing scope of Router.
-     */
-    public Portal(String name, MetaAgent superAgent, int scope)
-    {
-        super(name, superAgent, scope);
-        this.routingTable = new HashMap<>();
-    }
 
     //--------------------------------------------------------------------------
     //MESSAGE HANDLING
     //--------------------------------------------------------------------------
     /**
-     * Handler for the UserMessage type. The method checks the routing table for the
-     * specified Agent, and if present it pushes it to the assigned subAgent. Otherwise,
-     * the message is passed to the superAgent. If no superAgent is assigned, an error message
-     * is sent back to the original sender.
+     * Handler for the UserMessage type. The method checks the routing table for
+     * the specified Agent, and if present it pushes it to the assigned
+     * subAgent. Otherwise, the message is passed to the superAgent. If no
+     * superAgent is assigned, an error message is sent back to the original
+     * sender.
+     *
      * @param msg A UserMessge object passed from the message handler
      */
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
-        if (routingTable.containsKey(msg.getTo())) //checks if the routing table has address
+        if (msg.getScope() <= scope)
         {
-            this.pushToSubAgent(msg);
-        }
-            else   //if the portal does not have the addressed agent in its routing table... 
+            if (routingTable.containsKey(msg.getTo()))
             {
-                if (getSuperAgent() != null)
-                    this.pushToSuperAgent(msg);
-                else
-                {
-                    this.pushToSubAgent(new UserMessage(this.getName(),
+                this.pushToSubAgent(msg);
+            }
+            else if (getSuperAgent() != null)
+            {
+                this.pushToSuperAgent(msg);
+            }
+            else
+            {
+                this.pushToSubAgent(new UserMessage(this.getName(),
                         msg.getFrom(), "User not found"));
-                }
-            }    
+            }
+        }
+        else
+        {
+            this.pushToSubAgent(new UserMessage(this.getName(),
+                    msg.getFrom(), "Your scope privilages are not"
+                    + " sufficient."));
+        }
     }
-    
+
     /**
-     * Method to get the relevant MetaAgent, and then attempt to push the message 
-     * onto it's linked blocking queue.
+     * Method to get the relevant MetaAgent, and then attempt to push the
+     * message onto it's linked blocking queue.
+     *
      * @param msg A Message object to push to the subAgent.
      */
     protected void pushToSubAgent(Message msg)
     {
-        MetaAgent agent = (MetaAgent) routingTable.get(msg.getTo()); //gets the addressed agent
+        MetaAgent agent = (MetaAgent) routingTable.get(msg.getTo());
         try
         {
-            if(agent != null)
-                agent.put(msg); //puts the message onto the agent's blocking queue
-        } catch (InterruptedException ex)
+            if (agent != null)
+            {
+                agent.put(msg);
+            }
+        }
+        catch (InterruptedException ex)
         {
             Logger.getLogger(Portal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -126,22 +134,21 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
 
         if (msg instanceof SysMessage)
         {
-            this.sysMsgHandler((SysMessage) msg); //it gets sent to the handler specifically for SysMessages
-        }
-        else if(msg instanceof RouterMessage)
-        {
-            this.routerMsgHandler((RouterMessage) msg); //gets sent to the handler specifically for RouterMessages
-        }
-        else if(msg instanceof ReplyMessage)
-        {
-            this.replyMsgHandler((ReplyMessage) msg);   //gets sent to the handler specifically for ReplyMessages
+            this.sysMsgHandler((SysMessage) msg);
         }
         else
         {
-            this.userMsgHandler((UserMessage) msg); //gets sent to the handler specifically for UserMessages
+            if (msg instanceof RouterMessage)
+            {
+                this.routerMsgHandler((RouterMessage) msg);
+            }
+            else
+            {
+                this.userMsgHandler((UserMessage) msg);
+            }
         }
     }
-    
+
     /**
      * Method to handle RouterMessages. If the message reaches a portal, an
      * error is thrown, as the message should stop at the router level.
@@ -152,66 +159,40 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     {
         throw new IllegalArgumentException("Router message passed to invalid target");
     }
-    
+
     /**
-     * Method to handle SysMessages. The main implementation of this is to handle
-     * MetaAgent registration/de-registration.
+     * Method to handle SysMessages. The main implementation of this is to
+     * handle MetaAgent registration/de-registration.
+     *
      * @param msg A SysMessage object passed from the message handler.
      */
     protected void sysMsgHandler(SysMessage msg)
     {
-        String[] s = msg.getMsg().split(" ");   //splits the msg up into words, future proofing in case commands become more complicated than just one word
-        
-        switch (s[0])   //looks at the first word which will ALWAYS show what kind of command it is
+        switch (msg.getMsg())
         {
             case "reg":
                 this.registration(msg);
                 break;
-            case "dereg":
-                this.deregistration(msg);
-                break;
-            case "NameCheck":
-                SysMessage sMsg = new SysMessage(msg.getFrom(), getSuperAgent().getName(), msg.getMsg(), msg.getAgent());
-                this.pushToSuperAgent(sMsg);
-                break;
         }
     }
-    
+
     //--------------------------------------------------------------------------
     //REGISTRATION
     //--------------------------------------------------------------------------
-    
-/**
-     * Method to register a subAgent to this MetaAgent. The method adds the passed
-     * MetaAgent to the routingTable, and then pushes it to the superAgent.
+    /**
+     * Method to register a subAgent to this MetaAgent. The method adds the
+     * passed MetaAgent to the routingTable, and then pushes it to the
+     * superAgent.
      *
      * @param msg A SysMessage object
      */
     private void registration(SysMessage msg)
     {
         routingTable.put(msg.getAgent().getName(), msg.getAgent());
-        if(this.getSuperAgent() != null)
+        if (getSuperAgent() != null)
         {
             SysMessage sMsg = new SysMessage(msg.getAgent().getName(), getSuperAgent().getName(), "reg", this);
             pushToSuperAgent(sMsg);
         }
     }
-
-    private void deregistration(SysMessage msg)
-    {
-        //To do
-    }
-    
-    //--------------------------------------------------------------------------
-    //MetaAgent Creation
-    //--------------------------------------------------------------------------
-    
-    private void insertMetaAgent(MetaAgent a)
-    {
-        a.setSuperAgent(this);
-        routingTable.put(a.getName(), a);
-    }
-    
-    //The End-User could create a creation method of their own Agents that extend MetaAgent here
-    //use the newPortal() and newRouter() methods in Router.java as an example of this
 }

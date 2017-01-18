@@ -19,42 +19,52 @@ package weiss.core.message;
 /**
  *
  * @author Scott Taylor, Teesside University Sch. of Computing
+ * @author Adam Young, Teesside University Sch. of Computing
  */
-public class RouterMessage extends DecoratedMessage
+public class RouterMessage extends Message
 {
-    private String origin;
-    
-    
-    public RouterMessage(String f, String t, String m, Message c, String o)
-    {
-        super(f, t, m, c);
-        origin = o;
-    }
-    
-    /** Constructor for a RouterMessage object. The object is used for Router to Router
-     * communication, allowing for use in a linked list.
+
+    private final String origin;
+    private final Message wrappedMessage;
+
+    /**
+     * Constructor for a RouterMessage object. The object is used for Router to
+     * Router communication, allowing for use in a linked list.
      *
-     * @param f String variable detailing where the message is from.
-     * @param t String variable detailing where the message is going.
-     * @param c The Message object to be wrapped.
-     * @param o The Router the message was created in originally.
+     * @param from String variable detailing where the message is from.
+     * @param to String variable detailing where the message is going.
+     * @param wrappedMessage The Message object to be wrapped.
+     * @param origin The Router the message was created in originally.
      */
-    public RouterMessage(String f, String t, String m, Message c)
+    public RouterMessage(String from, String to,
+            Message wrappedMessage, String origin)
     {
-        super(f, t, m, c);
+        super(from, to, null);
+        this.wrappedMessage = wrappedMessage;
+        this.origin = origin;
     }
-    
-    
+
     //--------------------------------------------------------------------------
     //Getters
     //--------------------------------------------------------------------------
     /**
      * Method to get the origin of the message.
+     *
      * @return String of the origin variable.
      */
     public String getOrigin()
     {
         return origin;
     }
-    
+
+    /**
+     * Method to get the contents of the message.
+     *
+     * @return A Message variable.
+     */
+    public Message getContents()
+    {
+        return wrappedMessage;
+    }
+
 }

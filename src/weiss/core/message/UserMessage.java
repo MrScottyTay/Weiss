@@ -16,10 +16,10 @@
  */
 package weiss.core.message;
 
-import java.util.UUID;
-
-/** Class extending the {@link Message Message} class, to be used for user to user message transmission.
- * This type of message is to be read by user implemented classes, rather than the middleware infrastructure.
+/**
+ * Class extending the {@link Message Message} class, to be used for user to
+ * user message transmission. This type of message is to be read by user
+ * implemented classes, rather than the middleware infrastructure.
  * <p>
  * The alternative of this message type is {@link SysMessage SysMessage}.
  *
@@ -27,10 +27,12 @@ import java.util.UUID;
  */
 public class UserMessage extends Message
 {
-    private String id;
-    
+
+    private final int scope; // 0: Global, 1: Router-wide, 2:Portal-wide
+
     /**
      * Constructor for the UserMessage class.
+     *
      * @param from String of message sender.
      * @param to String of message receiver.
      * @param message String of message contents.
@@ -38,26 +40,29 @@ public class UserMessage extends Message
     public UserMessage(String from, String to, String message)
     {
         super(from, to, message);
-        id = UUID.randomUUID().toString();
+        scope = 0;
     }
-    
-    public UserMessage(String from, String to, String message, String id)
+
+    /**
+     * Constructor for the UserMessage class.
+     *
+     * @param from String of message sender.
+     * @param to String of message receiver.
+     * @param message String of message contents.
+     * @param scope Depth that the message can travel.
+     */
+    public UserMessage(String from, String to, String message, int scope)
     {
         super(from, to, message);
+        this.scope = scope;
     }
-    
+
     /**
-     * Method to return the ID of the message.
-     * @return A String of the ID associated with the message.
+     * Method to get the scope value from the message.
+     * @return An Integer detailing the scope level.
      */
-    public String getId()
+    public int getScope()
     {
-        return id;
-    }
-    
-    @Override
-    public String toString()
-    {
-        return super.toString() + "\nID: " + id;
+        return scope;
     }
 }

@@ -18,8 +18,10 @@ package weiss.core.message;
 
 import weiss.core.agent.MetaAgent;
 
-/** Class extending the {@link Message Message} class, to be used for system message transmission.
- * This type of message can be read by all MetaAgents, and contains instructions rather than text.
+/**
+ * Class extending the {@link Message Message} class, to be used for system
+ * message transmission. This type of message can be read by all MetaAgents, and
+ * contains instructions rather than text.
  * <p>
  * The alternative of this message type is {@link UserMessage UserMessage}.
  *
@@ -28,45 +30,47 @@ import weiss.core.agent.MetaAgent;
  */
 public class SysMessage extends Message
 {
+
     private MetaAgent agent;
-    
+
     /**
      * Constructor for the SysMessage class.
-     * @param f String of message sender.
-     * @param t String of message receiver.
-     * @param m String of message contents.
-     * @param a MetaAgent to be used in routing tables.
+     *
+     * @param from String of message sender.
+     * @param to String of message receiver.
+     * @param message String of message contents.
+     * @param agent MetaAgent to be used in routing tables.
      */
-    public SysMessage(String f, String t, String m, MetaAgent a)
+    public SysMessage(String from, String to, String message, MetaAgent agent)
     {
-        super(f, t, m);
-        agent = a;
-        //Needs additional fields adding.
+        super(from, to, message);
+        this.agent = agent;
     }
-    
+
     /**
      * Constructor for the SysMessage class.
-     * @param f String of message sender.
-     * @param t String of message receiver.
-     * @param m String of message contents.
+     *
+     * @param from String of message sender.
+     * @param to String of message receiver.
+     * @param message String of message contents.
      */
-    public SysMessage(String f, String t, String m)
+    public SysMessage(String from, String to, String message)
     {
-        super(f, t, m);
+        super(from, to, message);
     }
-    
+
     //--------------------------------------------------------------------------
     //GETTERS
-    
     /**
      * Method to return the agent stored.
+     *
      * @return A MetaAgent variable.
      */
     public MetaAgent getAgent()
     {
         return agent;
     }
-    
+
     @Override
     public String toString()
     {

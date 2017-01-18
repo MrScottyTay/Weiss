@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.message;
+package weiss.management.nodeMonitor;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -22,15 +22,18 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import weiss.core.agent.Agent;
+import weiss.core.message.Message;
+import weiss.core.message.UserMessage;
 
 /**
  *
  * @author Adam Young
  */
-public class RouterMessageTest
+public class NodeMonitorTest
 {
 
-    public RouterMessageTest()
+    public NodeMonitorTest()
     {
     }
 
@@ -55,33 +58,32 @@ public class RouterMessageTest
     }
 
     /**
-     * Test of getOrigin method, of class RouterMessage.
+     * Test of insertTableData method, of class NodeMonitor.
      */
     @Test
-    public void testGetOrigin()
+    public void testInsertTableData()
     {
-        System.out.println("getOrigin");
-        UserMessage msg = new UserMessage("Greg", "Fred", "Hi");
-
-        RouterMessage instance = new RouterMessage("Admin", "Test", msg, "Router 1");
-        String expResult = "Router 1";
-        String result = instance.getOrigin();
-        assertEquals(expResult, result);
+        System.out.println("insertTableData");
+        Message msg = new UserMessage("Admin", "Test", "Hello");
+        NodeMonitor instance = new NodeMonitor("NM1");
+        instance.insertTableData(msg);
+        assertEquals(instance.getLastMessage().toString(), msg.toString());
     }
 
     /**
-     * Test of getContents method, of class RouterMessage.
+     * Test of getLastMessage method, of class NodeMonitor.
      */
     @Test
-    public void testGetContents()
+    public void testGetLastMessage()
     {
-        System.out.println("getContents");
+        System.out.println("getLastMessage");
+        NodeMonitor instance = new NodeMonitor("NM1");
+        Message msg = new UserMessage("Admin", "Test", "Hello");
+        instance.insertTableData(msg);
 
-        UserMessage msg = new UserMessage("Greg", "Fred", "Hi");
+        String expResult = msg.toString();
+        String result = instance.getLastMessage().toString();
 
-        RouterMessage instance = new RouterMessage("Admin", "Test", msg, "Router 1");
-        Message expResult = msg;
-        Message result = instance.getContents();
         assertEquals(expResult, result);
     }
 

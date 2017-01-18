@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.message;
+package weiss.management;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -30,9 +30,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses(
         {
-            RouterMessageTest.class, SysMessageTest.class, MessageTest.class, UserMessageTest.class
+            weiss.management.nodeMonitor.NodeMonitorSuite.class, weiss.management.client.ClientSuite.class, weiss.management.TreeNodeTest.class, weiss.management.TreePaneTest.class, weiss.management.WeissManagerTest.class
         })
-public class MessageSuite
+public class ManagementSuite
 {
 
     @BeforeClass

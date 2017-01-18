@@ -14,8 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.message;
+package weiss.management;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -27,10 +30,10 @@ import static org.junit.Assert.*;
  *
  * @author Adam Young
  */
-public class RouterMessageTest
+public class WeissManagerTest
 {
 
-    public RouterMessageTest()
+    public WeissManagerTest()
     {
     }
 
@@ -55,33 +58,41 @@ public class RouterMessageTest
     }
 
     /**
-     * Test of getOrigin method, of class RouterMessage.
+     * Test of getAgentSelectBtn method, of class WeissManager.
      */
     @Test
-    public void testGetOrigin()
+    public void testGetAgentSelectBtn()
     {
-        System.out.println("getOrigin");
-        UserMessage msg = new UserMessage("Greg", "Fred", "Hi");
-
-        RouterMessage instance = new RouterMessage("Admin", "Test", msg, "Router 1");
-        String expResult = "Router 1";
-        String result = instance.getOrigin();
+        System.out.println("getAgentSelectBtn");
+        WeissManager instance = new WeissManager();
+        JButton expResult = instance.getAgentSelectBtn();
+        JButton result = instance.getAgentSelectBtn();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of getContents method, of class RouterMessage.
+     * Test of getNodeMonitorBtn method, of class WeissManager.
      */
     @Test
-    public void testGetContents()
+    public void testGetNodeMonitorBtn()
     {
-        System.out.println("getContents");
+        System.out.println("getNodeMonitorBtn");
+        WeissManager instance = new WeissManager();
+        JButton expResult = instance.getNodeMonitorBtn();
+        JButton result = instance.getNodeMonitorBtn();
+        assertEquals(expResult, result);;
+    }
 
-        UserMessage msg = new UserMessage("Greg", "Fred", "Hi");
-
-        RouterMessage instance = new RouterMessage("Admin", "Test", msg, "Router 1");
-        Message expResult = msg;
-        Message result = instance.getContents();
+    /**
+     * Test of getScopeBox method, of class WeissManager.
+     */
+    @Test
+    public void testGetScopeBox()
+    {
+        System.out.println("getScopeBox");
+        WeissManager instance = new WeissManager();
+        JComboBox expResult = instance.getScopeBox();
+        JComboBox result = instance.getScopeBox();
         assertEquals(expResult, result);
     }
 
