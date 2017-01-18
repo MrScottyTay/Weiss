@@ -44,7 +44,7 @@ public final class NodeMonitor
     private Vector data;
     private JTable table;
     private DefaultTableModel tableModel;
-    private ArrayList<Message> messages;
+    private Message lastMessage;
 
     /**
      * Constructor to create a NodeMonitor GUI window.
@@ -53,7 +53,6 @@ public final class NodeMonitor
      */
     public NodeMonitor(String name)
     {
-        messages = new ArrayList();
         this.createGUI(name);
     }
 
@@ -100,7 +99,7 @@ public final class NodeMonitor
      */
     public void insertTableData(Message msg)
     {
-        messages.add(msg);
+        lastMessage = msg;
 
         Vector row = new Vector();
         row.add(msg.getFrom());
@@ -136,14 +135,8 @@ public final class NodeMonitor
 
     public Message getLastMessage()
     {
-        if (!messages.isEmpty())
-        {
-            return messages.get(messages.size());
-        }
-        else
-        {
-            return null;
-        }
+        return lastMessage;
     }
+
 
 }

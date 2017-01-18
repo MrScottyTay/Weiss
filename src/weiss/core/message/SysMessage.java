@@ -36,27 +36,27 @@ public class SysMessage extends Message
     /**
      * Constructor for the SysMessage class.
      *
-     * @param f String of message sender.
-     * @param t String of message receiver.
-     * @param m String of message contents.
-     * @param a MetaAgent to be used in routing tables.
+     * @param from String of message sender.
+     * @param to String of message receiver.
+     * @param message String of message contents.
+     * @param agent MetaAgent to be used in routing tables.
      */
-    public SysMessage(String f, String t, String m, MetaAgent a)
+    public SysMessage(String from, String to, String message, MetaAgent agent)
     {
-        super(f, t, m);
-        agent = a;
+        super(from, to, message);
+        this.agent = agent;
     }
 
     /**
      * Constructor for the SysMessage class.
      *
-     * @param f String of message sender.
-     * @param t String of message receiver.
-     * @param m String of message contents.
+     * @param from String of message sender.
+     * @param to String of message receiver.
+     * @param message String of message contents.
      */
-    public SysMessage(String f, String t, String m)
+    public SysMessage(String from, String to, String message)
     {
-        super(f, t, m);
+        super(from, to, message);
     }
 
     //--------------------------------------------------------------------------
