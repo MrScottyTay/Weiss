@@ -143,6 +143,10 @@ public class Agent extends MetaAgent implements Runnable, Managable
         }
     }
 
+    /**
+     * Method to get the scope value from the Agent.
+     * @return An Integer detailing the scope level.
+     */
     public int getScope()
     {
         return scope;

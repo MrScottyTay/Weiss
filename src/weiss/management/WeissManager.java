@@ -176,12 +176,21 @@ public final class WeissManager extends JFrame
     {
         return metaAgentSelectBtn;
     }
-
+    
+    /**
+     * Method to get the metaAgentNodeMonitorBtn, for other GUI uses.
+     * @return a JButton object.
+     */
     public JButton getNodeMonitorBtn()
     {
         return metaAgentNodeMonitorBtn;
     }
 
+    /**
+     * /**
+     * Method to get the agentScopeBox, for other GUI uses.
+     * @return a JComboBox object.
+     */
     public JComboBox getScopeBox()
     {
         return agentScopeBox;

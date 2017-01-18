@@ -57,6 +57,10 @@ public class UserMessage extends Message
         this.scope = scope;
     }
 
+    /**
+     * Method to get the scope value from the message.
+     * @return An Integer detailing the scope level.
+     */
     public int getScope()
     {
         return scope;

@@ -132,7 +132,11 @@ public final class NodeMonitor
         data.add(row);
         tableModel.fireTableDataChanged();
     }
-
+    
+    /**
+     * Method to get the last passed message, of any type.
+     * @return A Message object.
+     */
     public Message getLastMessage()
     {
         return lastMessage;
