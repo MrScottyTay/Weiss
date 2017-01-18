@@ -17,6 +17,7 @@
 package weiss.core.agent;
 
 import weiss.core.message.Message;
+import weiss.core.message.SysMessage;
 import weiss.core.message.UserMessage;
 import weiss.management.client.Client;
 import weiss.management.client.Managable;
@@ -35,7 +36,7 @@ import weiss.management.client.Managable;
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class Agent extends MetaAgent implements  Managable
+public class Agent extends MetaAgent implements Runnable, Managable
 {
 
     private Client client;
@@ -48,8 +49,9 @@ public class Agent extends MetaAgent implements  Managable
      * @param superAgent Set the Agent's superAgent, in this case a portal.
      */
     public Agent(String name, MetaAgent superAgent)
-    {
+    { 
         super(name, superAgent);
+
         scope = 0;
     }
 
@@ -64,6 +66,7 @@ public class Agent extends MetaAgent implements  Managable
     public Agent(String name, MetaAgent superAgent, int scope)
     {
         super(name, superAgent);
+        
         this.scope = scope;
     }
 
@@ -77,7 +80,6 @@ public class Agent extends MetaAgent implements  Managable
     @Override
     protected void userMsgHandler(UserMessage msg)
     {
-        this.updateNodeMonitor(msg);
         this.updateClient(msg);
     }
 
@@ -139,7 +141,7 @@ public class Agent extends MetaAgent implements  Managable
     {
         if (client != null && msg instanceof UserMessage)
         {
-            client.updateClient(msg);
+            client.updateClient((UserMessage) msg);
         }
     }
 

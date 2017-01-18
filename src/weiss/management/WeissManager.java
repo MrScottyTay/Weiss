@@ -50,7 +50,7 @@ public final class WeissManager extends JFrame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(buildPanel());
         this.setTitle("Weiss");
-        this.setSize(new Dimension(280, 500));
+        this.setSize(new Dimension(360, 500));
         this.setResizable(false);
         this.setLocationRelativeTo(null);
 
@@ -72,12 +72,13 @@ public final class WeissManager extends JFrame
     {
         TreePane treePane = new TreePane(this);
         JTree tree = treePane.getTree();
-
+        
+        
         metaAgentInputField = new JTextField(8);
 
         String[] scope =
         {
-            "0", "1", "2"
+            "Global", "Router-wide", "Portal-wide"
         };
 
         agentScopeBox = new JComboBox(scope);
@@ -113,7 +114,7 @@ public final class WeissManager extends JFrame
                             break;
                         case 2:
                             treePane.addNode(new Agent(metaAgentInputField.getText(), null,
-                                    Integer.valueOf(agentScopeBox.getSelectedItem().toString())),
+                                    agentScopeBox.getSelectedIndex()),
                                     new ImageIcon("src/images/agent20px.png"));
                             break;
                         default:
@@ -132,7 +133,7 @@ public final class WeissManager extends JFrame
                 agentScopeBox.setSelectedIndex(0);
             }
         });
-
+        
         metaAgentNodeMonitorBtn = new JButton("Add Node Monitor");
         metaAgentNodeMonitorBtn.addActionListener(new ActionListener()
         {
@@ -145,7 +146,9 @@ public final class WeissManager extends JFrame
                 treeSelection.addNodeMonitor(new NodeMonitor(treeSelection.getName()));
             }
         });
-        leftBottomPane.add(metaAgentNodeMonitorBtn);
+
+        
+        leftBottomPane.add(metaAgentNodeMonitorBtn, BorderLayout.WEST);
 
         leftTopPane.add(metaAgentSelectBtn);
         leftTopPane.add(metaAgentInputField);
@@ -161,6 +164,8 @@ public final class WeissManager extends JFrame
         panel.add(leftPane, BorderLayout.WEST);
         panel.add(centerPanel, BorderLayout.CENTER);
 
+        tree.setSelectionRow(0);
+        
         this.getRootPane().setDefaultButton(metaAgentSelectBtn);
         this.pack();
 

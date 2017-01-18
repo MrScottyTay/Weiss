@@ -39,7 +39,7 @@ import weiss.core.message.RouterMessage;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class Router extends Portal 
+public class Router extends Portal implements Runnable
 {
 
     private final int scope = 1;
@@ -152,6 +152,9 @@ public class Router extends Portal
             case "reg":
                 registration(msg);
                 break;
+            case "dereg":
+                deregistration(msg);
+                break;
             case "setSuperAgent":
                 setSuperAgent(msg.getAgent());
                 break;
@@ -169,10 +172,20 @@ public class Router extends Portal
      *
      * @param msg
      */
-    private void registration(SysMessage msg)
+    private void registration(Message msg)
     {
-        routingTable.put(msg.getFrom(), msg.getAgent());
+        SysMessage message = (SysMessage) msg;
+        routingTable.put(message.getFrom(), message.getAgent());
     }
+    
+    private void deregistration(Message msg)
+    {
+        SysMessage message = (SysMessage) msg;
+        
+        if(routingTable.containsKey(msg.getFrom()))
+            routingTable.remove(message.getFrom(), message.getAgent());
+    }
+ 
 
     /**
      * Method to add new routers to the linked list, by altering the superAgents

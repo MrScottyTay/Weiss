@@ -66,7 +66,7 @@ public class TreeNodeTest
         System.out.println("getAgentRef");
         MetaAgent expResult = new Agent("A1", null);
         TreeNode instance = new TreeNode(null, expResult,
-                null);
+                null, -1);
         MetaAgent result = instance.getAgentRef();
         assertEquals(expResult, result);
     }
@@ -80,7 +80,7 @@ public class TreeNodeTest
         System.out.println("getImage");
         ImageIcon expResult = new ImageIcon("src/images/weiss20px.png");
 
-        TreeNode instance = new TreeNode(null, null, expResult);
+        TreeNode instance = new TreeNode(null, null, expResult, -1);
         ImageIcon result = instance.getImage();
         assertEquals(expResult, result);
     }
@@ -93,7 +93,7 @@ public class TreeNodeTest
     {
         System.out.println("getName");
         TreeNode instance = new TreeNode("Test", null,
-                null);
+                null, -1);
         String expResult = "Test";
         String result = instance.getName();
         assertEquals(expResult, result);

@@ -39,6 +39,7 @@ public class TreeNode extends DefaultMutableTreeNode
     private MetaAgent agentRef;
     private ImageIcon image;
     private String name;
+    private int scopeVal;
 
     /**
      * Constructor to create a TreeNode, to be used in the
@@ -48,12 +49,13 @@ public class TreeNode extends DefaultMutableTreeNode
      * @param agent MetaAgent reference to attach to the treeNode.
      * @param image ImageIcon to assign to the treeNode.
      */
-    public TreeNode(String name, MetaAgent agent, ImageIcon image)
+    public TreeNode(String name, MetaAgent agent, ImageIcon image, int scopeVal)
     {
         super(name);
-        this.name = name;
         agentRef = agent;
+        this.name = name;
         this.image = image;
+        this.scopeVal = scopeVal;
     }
 
     /**
@@ -95,5 +97,20 @@ public class TreeNode extends DefaultMutableTreeNode
     public String getName()
     {
         return name;
+    }
+    
+    public String getScopeVal()
+    {
+        switch (scopeVal)
+        {
+            case 0:
+                return "(Global)";
+            case 1:
+                return "(Router-wide)";
+            case 2:
+                return "(Portal-wide)";
+            default:
+                return "";
+        }
     }
 }
