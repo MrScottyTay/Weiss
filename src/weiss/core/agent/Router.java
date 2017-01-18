@@ -39,7 +39,7 @@ import weiss.core.message.RouterMessage;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class Router extends Portal implements Runnable
+public class Router extends Portal
 {
 
     private final int scope = 1;
@@ -119,7 +119,7 @@ public class Router extends Portal implements Runnable
         Message contents = msg.getContents();
         if (!msg.getOrigin().equals(this.getName()))
         {
-            if (contents instanceof UserMessage)
+            if (contents instanceof UserMessage) // Change this to use enums
             {
                 if (routingTable.containsKey(contents.getTo()))
                 {
@@ -145,7 +145,7 @@ public class Router extends Portal implements Runnable
      * @param msg A SysMessage passed from the message handler.
      */
     @Override
-    protected void sysMsgHandler(SysMessage msg)
+    protected void sysMsgHandler(SysMessage msg) // Change this to use enums
     {
         switch (msg.getMsg())
         {
@@ -172,18 +172,15 @@ public class Router extends Portal implements Runnable
      *
      * @param msg
      */
-    private void registration(Message msg)
+    private void registration(SysMessage msg)
     {
-        SysMessage message = (SysMessage) msg;
-        routingTable.put(message.getFrom(), message.getAgent());
+        routingTable.put(msg.getFrom(), msg.getAgent());
     }
     
-    private void deregistration(Message msg)
-    {
-        SysMessage message = (SysMessage) msg;
-        
+    private void deregistration(SysMessage msg)
+    {      
         if(routingTable.containsKey(msg.getFrom()))
-            routingTable.remove(message.getFrom(), message.getAgent());
+            routingTable.remove(msg.getFrom(), msg.getAgent());
     }
  
 

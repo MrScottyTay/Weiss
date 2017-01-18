@@ -17,7 +17,6 @@
 package weiss.core.agent;
 
 import weiss.core.message.Message;
-import weiss.core.message.SysMessage;
 import weiss.core.message.UserMessage;
 import weiss.management.client.Client;
 import weiss.management.client.Managable;
@@ -36,7 +35,7 @@ import weiss.management.client.Managable;
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class Agent extends MetaAgent implements Runnable, Managable
+public class Agent extends MetaAgent implements Managable
 {
 
     private Client client;

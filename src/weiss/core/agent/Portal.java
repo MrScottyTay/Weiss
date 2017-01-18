@@ -44,7 +44,7 @@ import weiss.core.message.RouterMessage;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch.of Computing
  */
-public class Portal extends MetaAgent implements Runnable, Monitorable
+public class Portal extends MetaAgent
 {
 
     private final int scope = 2;
@@ -128,7 +128,7 @@ public class Portal extends MetaAgent implements Runnable, Monitorable
     }
 
     @Override
-    protected void msgHandler(Message msg)
+    protected void msgHandler(Message msg) // Change this to use enums
     {
         super.updateNodeMonitor(msg);
 
