@@ -29,6 +29,7 @@ public class UserMessage extends Message
 {
 
     private final int scope; // 0: Global, 1: Router-wide, 2:Portal-wide
+    private final String message;
 
     /**
      * Constructor for the UserMessage class.
@@ -39,7 +40,8 @@ public class UserMessage extends Message
      */
     public UserMessage(String from, String to, String message)
     {
-        super(from, to, message);
+        super(from, to);
+        this.message = message;
         scope = 0;
     }
 
@@ -53,10 +55,21 @@ public class UserMessage extends Message
      */
     public UserMessage(String from, String to, String message, int scope)
     {
-        super(from, to, message);
+        super(from, to);
+        this.message = message;
         this.scope = scope;
     }
 
+    /**
+     * Getter for the message variable.
+     *
+     * @return String of message variable.
+     */
+    public String getMsg()
+    {
+        return message;
+    }
+    
     /**
      * Method to get the scope value from the message.
      * @return An Integer detailing the scope level.
@@ -64,5 +77,11 @@ public class UserMessage extends Message
     public int getScope()
     {
         return scope;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return super.toString() + "Message: " + message + "\n";
     }
 }

@@ -16,7 +16,6 @@
  */
 package weiss.core.agent;
 
-import weiss.management.nodeMonitor.Monitorable;
 import weiss.core.message.Message;
 import weiss.core.message.UserMessage;
 import weiss.core.message.SysMessage;
@@ -25,6 +24,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weiss.core.message.RouterMessage;
+import weiss.core.message.SysMessage.SysType;
 
 /**
  * * Class used for handling messages from both
@@ -63,7 +63,7 @@ public class Portal extends MetaAgent
     public Portal(String name, MetaAgent superAgent)
     {
         super(name, superAgent);
-        this.routingTable = new HashMap<>();
+        routingTable = new HashMap<>();
     }
 
     //--------------------------------------------------------------------------
@@ -85,21 +85,21 @@ public class Portal extends MetaAgent
         {
             if (routingTable.containsKey(msg.getTo()))
             {
-                this.pushToSubAgent(msg);
+                pushToSubAgent(msg);
             }
             else if (getSuperAgent() != null)
             {
-                this.pushToSuperAgent(msg);
+                pushToSuperAgent(msg);
             }
             else
             {
-                this.pushToSubAgent(new UserMessage(this.getName(),
+                pushToSubAgent(new UserMessage(this.getName(),
                         msg.getFrom(), "User not found"));
             }
         }
         else
         {
-            this.pushToSubAgent(new UserMessage(this.getName(),
+            pushToSubAgent(new UserMessage(this.getName(),
                     msg.getFrom(), "Your scope privilages are not"
                     + " sufficient."));
         }
@@ -134,17 +134,17 @@ public class Portal extends MetaAgent
 
         if (msg instanceof SysMessage)
         {
-            this.sysMsgHandler((SysMessage) msg);
+            sysMsgHandler((SysMessage) msg);
         }
         else
         {
             if (msg instanceof RouterMessage)
             {
-                this.routerMsgHandler((RouterMessage) msg);
+                routerMsgHandler((RouterMessage) msg);
             }
             else
             {
-                this.userMsgHandler((UserMessage) msg);
+                userMsgHandler((UserMessage) msg);
             }
         }
     }
@@ -168,9 +168,10 @@ public class Portal extends MetaAgent
      */
     protected void sysMsgHandler(SysMessage msg)
     {
-        switch (msg.getMsg())
+        
+        switch (msg.getSysType())
         {
-            case "reg":
+            case REGISTER:
                 this.registration(msg);
                 break;
         }
@@ -191,7 +192,7 @@ public class Portal extends MetaAgent
         routingTable.put(msg.getAgent().getName(), msg.getAgent());
         if (getSuperAgent() != null)
         {
-            SysMessage sMsg = new SysMessage(msg.getAgent().getName(), getSuperAgent().getName(), "reg", this);
+            SysMessage sMsg = new SysMessage(msg.getAgent().getName(), getSuperAgent().getName(), SysType.REGISTER, this);
             pushToSuperAgent(sMsg);
         }
     }

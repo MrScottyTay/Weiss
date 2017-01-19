@@ -16,6 +16,8 @@
  */
 package weiss.management.client;
 
+import weiss.core.message.UserMessage;
+
 /**
  * Interface to implement the hooks for the nodeMonitor class
  *
@@ -43,4 +45,6 @@ public interface Managable
      * @return True if the client is present, false if not.
      */
     public boolean hasClient();
+    
+    public void updateClient(UserMessage msg);
 }

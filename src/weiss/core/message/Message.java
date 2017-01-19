@@ -36,7 +36,6 @@ public abstract class Message
 
     private final String from;
     private final String to;
-    private final String msg;
     private final String timestamp;
 
     /**
@@ -44,13 +43,11 @@ public abstract class Message
      *
      * @param from String of message sender.
      * @param to String of message receiver.
-     * @param message String of message contents.
      */
-    public Message(String from, String to, String message)
+    public Message(String from, String to)
     {
         this.from = from;
         this.to = to;
-        this.msg = message;
 
         //Setting the time of creation
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -81,16 +78,6 @@ public abstract class Message
     }
 
     /**
-     * Getter for the message variable.
-     *
-     * @return String of message variable.
-     */
-    public String getMsg()
-    {
-        return msg;
-    }
-
-    /**
      * Getter for the time variable.
      *
      * @return String of time variable.
@@ -103,6 +90,6 @@ public abstract class Message
     @Override
     public String toString()
     {
-        return "\nFrom: " + from + "\nTo: " + to + "\nMessage: " + msg + "\nTime Sent: " + timestamp;
+        return "\nFrom: " + from + "\nTo: " + to + "\nTime Sent: " + timestamp;
     }
 }
