@@ -30,21 +30,25 @@ import weiss.core.agent.MetaAgent;
  */
 public class SysMessage extends Message
 {
+    public enum SysType { REGISTER, DEREGISTER, SETSUPER }
 
+    
     private MetaAgent agent;
+    private final SysType msgType;
 
     /**
      * Constructor for the SysMessage class.
      *
      * @param from String of message sender.
      * @param to String of message receiver.
-     * @param message String of message contents.
+     * @param msgType Enum of message type.
      * @param agent MetaAgent to be used in routing tables.
      */
-    public SysMessage(String from, String to, String message, MetaAgent agent)
+    public SysMessage(String from, String to, SysType msgType, MetaAgent agent)
     {
-        super(from, to, message);
+        super(from,to);
         this.agent = agent;
+        this.msgType = msgType;
     }
 
     /**
@@ -52,11 +56,12 @@ public class SysMessage extends Message
      *
      * @param from String of message sender.
      * @param to String of message receiver.
-     * @param message String of message contents.
+     * @param msgType Enum of message type.
      */
-    public SysMessage(String from, String to, String message)
+    public SysMessage(String from, String to, SysType msgType)
     {
-        super(from, to, message);
+        super(from,to);
+        this.msgType = msgType; 
     }
 
     //--------------------------------------------------------------------------
@@ -69,6 +74,11 @@ public class SysMessage extends Message
     public MetaAgent getAgent()
     {
         return agent;
+    }
+    
+    public SysType getSysType()
+    {
+        return msgType;
     }
 
     @Override

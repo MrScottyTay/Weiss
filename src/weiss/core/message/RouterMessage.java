@@ -39,7 +39,7 @@ public class RouterMessage extends Message
     public RouterMessage(String from, String to,
             Message wrappedMessage, String origin)
     {
-        super(from, to, null);
+        super(from, to);
         this.wrappedMessage = wrappedMessage;
         this.origin = origin;
     }
@@ -66,5 +66,4 @@ public class RouterMessage extends Message
     {
         return wrappedMessage;
     }
-
 }

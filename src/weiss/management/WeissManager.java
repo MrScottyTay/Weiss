@@ -125,7 +125,7 @@ public final class WeissManager extends JFrame
                 {
                     if (metaAgentSelectBtn.getText().equalsIgnoreCase("View Agent"))
                     {
-                        Agent treeSelection = (Agent) treeNode.getAgentRef();
+                        AgentImpl treeSelection = (AgentImpl) treeNode.getAgentRef();
                         treeSelection.addClient(new Client(treeSelection));
                     }
                 }

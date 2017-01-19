@@ -22,6 +22,7 @@ import weiss.core.message.Message;
 import weiss.core.message.UserMessage;
 import weiss.core.message.SysMessage;
 import weiss.core.message.RouterMessage;
+import weiss.core.message.SysMessage.SysType;
 
 /**
  * * Class used for handling messages from
@@ -57,8 +58,8 @@ public class Router extends Portal
     public Router(String name)
     {
         super(name, null);
-        this.setSuperAgent(this);
-        this.updateLastRouter();
+        setSuperAgent(this);
+        updateLastRouter();
     }
 
     //--------------------------------------------------------------------------
@@ -90,7 +91,7 @@ public class Router extends Portal
                 }
                 else
                 {
-                    this.pushToSubAgent(new UserMessage(this.getName(),
+                    pushToSubAgent(new UserMessage(getName(),
                             msg.getFrom(), "Your scope privilages are not"
                             + " sufficient."));
                 }
@@ -98,7 +99,7 @@ public class Router extends Portal
         }
         else
         {
-            this.pushToSubAgent(new UserMessage(this.getName(),
+            pushToSubAgent(new UserMessage(getName(),
                     msg.getFrom(), "Your scope privilages are not"
                     + " sufficient."));
         }
@@ -117,7 +118,7 @@ public class Router extends Portal
     protected void routerMsgHandler(RouterMessage msg)
     {
         Message contents = msg.getContents();
-        if (!msg.getOrigin().equals(this.getName()))
+        if (!msg.getOrigin().equals(getName()))
         {
             if (contents instanceof UserMessage) // Change this to use enums
             {
@@ -133,7 +134,7 @@ public class Router extends Portal
         }
         else
         {
-            this.pushToSubAgent(new UserMessage(this.getName(),
+            pushToSubAgent(new UserMessage(getName(),
                     contents.getFrom(), "User not found"));
         }
     }
@@ -147,15 +148,15 @@ public class Router extends Portal
     @Override
     protected void sysMsgHandler(SysMessage msg) // Change this to use enums
     {
-        switch (msg.getMsg())
+        switch (msg.getSysType())
         {
-            case "reg":
+            case REGISTER:
                 registration(msg);
                 break;
-            case "dereg":
+            case DEREGISTER:
                 deregistration(msg);
                 break;
-            case "setSuperAgent":
+            case SETSUPER:
                 setSuperAgent(msg.getAgent());
                 break;
         }
@@ -193,12 +194,12 @@ public class Router extends Portal
     {
         if (lastRouter != null)
         {
-            this.setSuperAgent(lastRouter.getSuperAgent());
+            setSuperAgent(lastRouter.getSuperAgent());
 
             try
             {
-                lastRouter.put(new SysMessage(this.getName(), lastRouter.getName(),
-                        "setSuperAgent", this));
+                lastRouter.put(new SysMessage(getName(), lastRouter.getName(),
+                        SysType.SETSUPER, this));
             }
             catch (InterruptedException ex)
             {
