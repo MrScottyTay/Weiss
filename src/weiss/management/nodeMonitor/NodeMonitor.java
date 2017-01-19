@@ -110,37 +110,30 @@ public final class NodeMonitor
         {
             row.add("UserMessage");
         }
+        else if (msg instanceof SysMessage)
+        {
+            row.add("SysMessage");
+        }
+        else if (msg instanceof RouterMessage)
+        {
+            row.add("RouterMessage");
+        }
         else
         {
-            if (msg instanceof SysMessage)
-            {
-                row.add("SysMessage");
-            }
-            else
-            {
-                if (msg instanceof RouterMessage)
-                {
-                    row.add("RouterMessage");
-                }
-                else
-                {
-                    row.add("AltMessage");
-                }
-            }
+            row.add("AltMessage");
         }
 
         data.add(row);
         tableModel.fireTableDataChanged();
     }
-    
+
     /**
      * Method to get the last passed message, of any type.
+     *
      * @return A Message object.
      */
     public Message getLastMessage()
     {
         return lastMessage;
     }
-
-
 }

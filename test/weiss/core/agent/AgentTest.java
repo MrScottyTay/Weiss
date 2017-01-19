@@ -70,75 +70,7 @@ public class AgentTest
         instance.userMsgHandler(msg);
     }
 
-    /**
-     * Test of addClient method, of class Agent.
-     */
-    @Test
-    public void testAddClient1()
-    {
-        System.out.println("addClient1");
-        Agent instance = new Agent("Agent 1", null);
-        instance.addClient(new Client(instance));
-
-        assertEquals(instance.hasClient(), true);
-    }
-
-    /**
-     * Test of removeClient method, of class Agent.
-     */
-    @Test
-    public void testRemoveClient1()
-    {
-        System.out.println("removeClient1");
-        Agent instance = new Agent("Agent 1", null);
-
-        //Add new client.
-        instance.addClient(new Client(instance));
-        instance.removeClient();
-
-        assertEquals(instance.hasClient(), false);
-    }
-
-    @Test
-    public void testRemoveClient2()
-    {
-        System.out.println("removeClient2");
-        Agent instance = new Agent("Agent 1", null);
-
-        instance.removeClient();
-
-        assertEquals(instance.hasClient(), false);
-    }
-
-    /**
-     * Test of updateClient method, of class Agent.
-     */
-    @Test
-    public void testUpdateClient1()
-    {
-        System.out.println("updateClient1");
-
-        Agent instance = new Agent("Agent 1", null);
-        Message msg = new UserMessage("admin", instance.getName(), "Test");
-        instance.updateClient(msg);
-
-        assertEquals(instance.hasClient(), false);
-    }
-
-    @Test
-    public void testUpdateClient2()
-    {
-        System.out.println("updateClient2");
-
-        Agent instance = new Agent("Agent 1", null);
-        Client client = new Client(instance);
-
-        instance.addClient(client);
-        Message msg = new UserMessage("admin", instance.getName(), "Test");
-        instance.updateClient(msg);
-
-        assertEquals(instance.hasClient(), true);
-    }
+    
 
     /**
      * Test of sendMessage method, of class Agent.
@@ -182,26 +114,7 @@ public class AgentTest
     /**
      * Test of hasClient method, of class Agent.
      */
-    @Test
-    public void testHasClient()
-    {
-        System.out.println("hasClient");
-        Agent instance = new Agent("A1", null);
-        boolean expResult = false;
-        boolean result = instance.hasClient();
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testHasClient2()
-    {
-        System.out.println("hasClient2");
-        Agent instance = new Agent("A1", null);
-        instance.addClient(new Client(instance));
-        boolean expResult = true;
-        boolean result = instance.hasClient();
-        assertEquals(expResult, result);
-    }
+    
 
     /**
      * Test of getScope method, of class Agent.
