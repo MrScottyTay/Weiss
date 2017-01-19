@@ -34,21 +34,21 @@ public class SysMessage extends Message
 
     
     private MetaAgent agent;
-    private final SysType msgType;
+    private final SysType sysType;
 
     /**
      * Constructor for the SysMessage class.
      *
      * @param from String of message sender.
      * @param to String of message receiver.
-     * @param msgType Enum of message type.
+     * @param sysType Enum of message type.
      * @param agent MetaAgent to be used in routing tables.
      */
-    public SysMessage(String from, String to, SysType msgType, MetaAgent agent)
+    public SysMessage(String from, String to, SysType sysType, MetaAgent agent)
     {
         super(from,to);
         this.agent = agent;
-        this.msgType = msgType;
+        this.sysType = sysType;
     }
 
     /**
@@ -56,12 +56,12 @@ public class SysMessage extends Message
      *
      * @param from String of message sender.
      * @param to String of message receiver.
-     * @param msgType Enum of message type.
+     * @param sysType Enum of message type.
      */
-    public SysMessage(String from, String to, SysType msgType)
+    public SysMessage(String from, String to, SysType sysType)
     {
         super(from,to);
-        this.msgType = msgType; 
+        this.sysType = sysType; 
     }
 
     //--------------------------------------------------------------------------
@@ -78,12 +78,12 @@ public class SysMessage extends Message
     
     public SysType getSysType()
     {
-        return msgType;
+        return sysType;
     }
 
     @Override
     public String toString()
     {
-        return super.toString() + "\nAgent: " + agent.getName();
+        return super.toString()  + "\nAgent: " + agent.getName() + "\nMessage: " + sysType.name();
     }
 }

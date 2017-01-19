@@ -111,7 +111,7 @@ public class MessageTest
     public void testGetMsg()
     {
         System.out.println("getMsg");
-        Message instance = new MessageImpl("Admin", "Test", "Hello World");
+        MessageImpl instance = new MessageImpl("Admin", "Test", "Hello World");
         String expResult = "Hello World";
         String result = instance.getMsg();
         assertEquals(expResult, result);
@@ -121,7 +121,7 @@ public class MessageTest
     public void testGetMsg2()
     {
         System.out.println("getMsg2");
-        Message instance = new MessageImpl("Admin", "Test", null);
+        MessageImpl instance = new MessageImpl("Admin", "Test", null);
         String expResult = null;
         String result = instance.getMsg();
         assertEquals(expResult, result);
@@ -157,17 +157,24 @@ public class MessageTest
         Date now = Calendar.getInstance().getTime();
         String timestamp = df.format(now);
 
-        String expResult = "\nFrom: Admin\nTo: Test\nMessage: Hello World\nTime Sent: " + timestamp;
+        String expResult = "\nFrom: Admin\nTo: Test\nTime Sent: " + timestamp;
         String result = instance.toString();
         assertEquals(expResult, result);
     }
 
     public class MessageImpl extends Message
     {
-
+        private String message;
+        
         public MessageImpl(String from, String to, String message)
         {
-            super(from, to, message);
+            super(from, to);
+            this.message = message;
+        }
+        
+        public String getMsg()
+        {
+            return message;
         }
     }
 

@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
 import weiss.core.agent.Agent;
 import weiss.core.message.Message;
 import weiss.core.message.UserMessage;
+import weiss.management.AgentImpl;
 
 /**
  *
@@ -66,7 +67,7 @@ public class ClientTest
         System.out.println("updateClient");
         UserMessage usrMsg = new UserMessage("Admin", "Test", "Hello");
 
-        Agent agent = new Agent("A1", null);
+        AgentImpl agent = new AgentImpl("A1", null);
         Client instance = new Client(agent);
         agent.addClient(instance);
 

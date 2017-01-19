@@ -24,6 +24,7 @@ import org.junit.Test;
 import weiss.core.message.Message;
 import weiss.core.message.RouterMessage;
 import weiss.core.message.SysMessage;
+import weiss.core.message.SysMessage.SysType;
 import weiss.core.message.UserMessage;
 
 /**
@@ -123,7 +124,7 @@ public class PortalTest
     public void testSysMsgHandler()
     {
         System.out.println("sysMsgHandler");
-        SysMessage msg = new SysMessage("Admin", "P1", "reg", new Portal("P2", null));
+        SysMessage msg = new SysMessage("Admin", "P1", SysType.REGISTER, new Portal("P2", null));
         Portal instance = new Portal("P1", null);
         instance.sysMsgHandler(msg);
     }

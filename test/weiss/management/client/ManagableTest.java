@@ -23,6 +23,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import weiss.core.agent.Agent;
+import weiss.core.message.UserMessage;
+import weiss.management.AgentImpl;
 
 /**
  *
@@ -64,7 +66,7 @@ public class ManagableTest
         System.out.println("addClient");
 
         Managable instance = new ManagableImpl();
-        Client client = new Client(new Agent("A1", null));
+        Client client = new Client(new AgentImpl("A1", null));
         instance.addClient(client);
         assertEquals(instance.hasClient(), true);
     }
@@ -100,7 +102,7 @@ public class ManagableTest
         System.out.println("hasClient2");
         Managable instance = new ManagableImpl();
         boolean expResult = true;
-        instance.addClient(new Client(new Agent("A1", null)));
+        instance.addClient(new Client(new AgentImpl("A1", null)));
         boolean result = instance.hasClient();
         assertEquals(expResult, result);
     }
@@ -119,13 +121,20 @@ public class ManagableTest
         @Override
         public void removeClient()
         {
-            this.client = null;
+            client = null;
         }
 
         @Override
         public boolean hasClient()
         {
             return client != null;
+        }
+
+        @Override
+        public void updateClient(UserMessage msg)
+        {
+            if(client != null)
+                client.updateClient(msg);
         }
     }
 

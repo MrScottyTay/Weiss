@@ -28,6 +28,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import weiss.core.agent.Agent;
 import weiss.core.agent.MetaAgent;
+import weiss.core.message.SysMessage.SysType;
 
 /**
  *
@@ -69,7 +70,7 @@ public class SysMessageTest
         System.out.println("getAgent");
         Agent agent = new Agent("A1", null);
 
-        SysMessage instance = new SysMessage("Admin", "Test", "reg", agent);
+        SysMessage instance = new SysMessage("Admin", "Test", SysType.REGISTER, agent);
         MetaAgent expResult = agent;
         MetaAgent result = instance.getAgent();
         assertEquals(expResult, result);
@@ -89,9 +90,9 @@ public class SysMessageTest
         Date now = Calendar.getInstance().getTime();
         String timestamp = df.format(now);
 
-        SysMessage instance = new SysMessage("Admin", "Test", "reg", agent);
-        String expResult = "\nFrom: Admin\nTo: Test\nMessage: reg\nTime Sent: "
-                + timestamp + "\nAgent: " + agent.getName();
+        SysMessage instance = new SysMessage("Admin", "Test", SysType.REGISTER, agent);
+        String expResult = "\nFrom: Admin\nTo: Test\nTime Sent: "
+                + timestamp + "\nAgent: " + agent.getName() + "\nMessage: REGISTER";
 
         String result = instance.toString();
         assertEquals(expResult, result);
