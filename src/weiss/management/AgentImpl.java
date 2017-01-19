@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package weiss.core.agent;
+package weiss.management;
 
-import weiss.core.message.Message;
+import weiss.core.agent.*;
 import weiss.core.message.UserMessage;
 import weiss.management.client.Client;
 import weiss.management.client.Managable;
@@ -35,10 +35,11 @@ import weiss.management.client.Managable;
  *
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public class Agent extends MetaAgent
+public class AgentImpl extends MetaAgent implements Managable      
 {
     public enum AgentScope  {GLOBAL, ROUTER, PORTAL}
     
+    private Client client;
     private final int scope; // 0: Global, 1: Router-wide, 2:Portal-wide
 
     /**
@@ -47,7 +48,7 @@ public class Agent extends MetaAgent
      * @param name String to set the name of the Agent.
      * @param superAgent Set the Agent's superAgent, in this case a portal.
      */
-    public Agent(String name, MetaAgent superAgent)
+    public AgentImpl(String name, MetaAgent superAgent)
     { 
         super(name, superAgent);
 
@@ -62,7 +63,7 @@ public class Agent extends MetaAgent
      * @param scope Range that the agent can message. 0 = Global, 1 =
      * Router-wide, 2 = Portal-wide.
      */
-    public Agent(String name, MetaAgent superAgent, int scope)
+    public AgentImpl(String name, MetaAgent superAgent, int scope)
     {
         super(name, superAgent);
         
@@ -103,5 +104,31 @@ public class Agent extends MetaAgent
     public int getScope()
     {
         return scope;
+    }
+    
+    @Override
+    public void addClient(Client client)
+    {
+        if(client != null)
+            this.client = client;
+    }
+
+    @Override
+    public void removeClient()
+    {
+        this.client = null;
+    }
+
+    @Override
+    public boolean hasClient()
+    {
+        return client != null;
+    }
+    
+    @Override
+    public void updateClient(UserMessage msg)
+    {
+        if(client != null)
+            client.updateClient(msg);
     }
 }

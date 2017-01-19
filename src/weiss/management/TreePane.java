@@ -100,7 +100,7 @@ public class TreePane
                         manager.getNodeMonitorBtn().setEnabled(true);
                         break;
                     default:
-                        manager.getAgentSelectBtn().setText("Select an Item");
+                        manager.getAgentSelectBtn().setText("New Router");
                         manager.getScopeBox().setEnabled(false);
                         manager.getNodeMonitorBtn().setEnabled(false);
                         break;
@@ -168,9 +168,17 @@ public class TreePane
             boolean shouldBeVisible,
             ImageIcon image)
     {
-
-        TreeNode childNode
-                = new TreeNode(child.getName(), child, image);
+        
+        TreeNode childNode = null;
+        
+        if(child instanceof Agent)
+        {
+                Agent agent = (Agent) child;
+                childNode = new TreeNode(child.getName(), child, image, agent.getScope());
+                
+        }
+        else if(!(child instanceof Agent))
+            childNode = new TreeNode(child.getName(), child, image, -1);
 
         treeModel.insertNodeInto(childNode, parent,
                 parent.getChildCount());
@@ -183,6 +191,7 @@ public class TreePane
 
         return childNode;
     }
+    
 
     /**
      * A custom TreeCellRenderer to assign custom names, labels and images in an
@@ -222,7 +231,7 @@ public class TreePane
         {
             treeNode = ((TreeNode) value);
             ImageIcon image;
-
+            
             if (treeNode.getImage() != null)
             {
                 image = treeNode.getImage();
@@ -244,7 +253,7 @@ public class TreePane
 
             if (treeNode.getName() != null)
             {
-                label.setText(treeNode.getName());
+                label.setText(treeNode.getName() + " " + treeNode.getScopeVal());
             }
             else
             {

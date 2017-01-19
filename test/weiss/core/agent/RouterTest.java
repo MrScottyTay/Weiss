@@ -24,6 +24,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import weiss.core.message.RouterMessage;
 import weiss.core.message.SysMessage;
+import weiss.core.message.SysMessage.SysType;
 import weiss.core.message.UserMessage;
 
 /**
@@ -93,7 +94,7 @@ public class RouterTest
     {
         Portal portal = new Portal("P1", null);
         System.out.println("sysMsgHandler");
-        SysMessage msg = new SysMessage("Admin", "Test", "reg", portal);
+        SysMessage msg = new SysMessage("Admin", "Test", SysType.REGISTER, portal);
         Router instance = new Router("R1");
         instance.sysMsgHandler(msg);
     }

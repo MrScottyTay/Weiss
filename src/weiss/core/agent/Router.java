@@ -22,6 +22,7 @@ import weiss.core.message.Message;
 import weiss.core.message.UserMessage;
 import weiss.core.message.SysMessage;
 import weiss.core.message.RouterMessage;
+import weiss.core.message.SysMessage.SysType;
 
 /**
  * * Class used for handling messages from
@@ -39,7 +40,7 @@ import weiss.core.message.RouterMessage;
  * @author Adam Young, Teesside University Sch. of Computing
  * @author Scott Taylor, Teesside University Sch. of Computing
  */
-public class Router extends Portal implements Runnable
+public class Router extends Portal
 {
 
     private final int scope = 1;
@@ -57,8 +58,8 @@ public class Router extends Portal implements Runnable
     public Router(String name)
     {
         super(name, null);
-        this.setSuperAgent(this);
-        this.updateLastRouter();
+        setSuperAgent(this);
+        updateLastRouter();
     }
 
     //--------------------------------------------------------------------------
@@ -90,7 +91,7 @@ public class Router extends Portal implements Runnable
                 }
                 else
                 {
-                    this.pushToSubAgent(new UserMessage(this.getName(),
+                    pushToSubAgent(new UserMessage(getName(),
                             msg.getFrom(), "Your scope privilages are not"
                             + " sufficient."));
                 }
@@ -98,7 +99,7 @@ public class Router extends Portal implements Runnable
         }
         else
         {
-            this.pushToSubAgent(new UserMessage(this.getName(),
+            pushToSubAgent(new UserMessage(getName(),
                     msg.getFrom(), "Your scope privilages are not"
                     + " sufficient."));
         }
@@ -117,9 +118,9 @@ public class Router extends Portal implements Runnable
     protected void routerMsgHandler(RouterMessage msg)
     {
         Message contents = msg.getContents();
-        if (!msg.getOrigin().equals(this.getName()))
+        if (!msg.getOrigin().equals(getName()))
         {
-            if (contents instanceof UserMessage)
+            if (contents instanceof UserMessage) // Change this to use enums
             {
                 if (routingTable.containsKey(contents.getTo()))
                 {
@@ -133,7 +134,7 @@ public class Router extends Portal implements Runnable
         }
         else
         {
-            this.pushToSubAgent(new UserMessage(this.getName(),
+            pushToSubAgent(new UserMessage(getName(),
                     contents.getFrom(), "User not found"));
         }
     }
@@ -145,14 +146,17 @@ public class Router extends Portal implements Runnable
      * @param msg A SysMessage passed from the message handler.
      */
     @Override
-    protected void sysMsgHandler(SysMessage msg)
+    protected void sysMsgHandler(SysMessage msg) // Change this to use enums
     {
-        switch (msg.getMsg())
+        switch (msg.getSysType())
         {
-            case "reg":
+            case REGISTER:
                 registration(msg);
                 break;
-            case "setSuperAgent":
+            case DEREGISTER:
+                deregistration(msg);
+                break;
+            case SETSUPER:
                 setSuperAgent(msg.getAgent());
                 break;
         }
@@ -169,11 +173,17 @@ public class Router extends Portal implements Runnable
      *
      * @param msg
      */
-    private void registration(Message msg)
+    private void registration(SysMessage msg)
     {
-        SysMessage message = (SysMessage) msg;
-        routingTable.put(message.getFrom(), message.getAgent());
+        routingTable.put(msg.getFrom(), msg.getAgent());
     }
+    
+    private void deregistration(SysMessage msg)
+    {      
+        if(routingTable.containsKey(msg.getFrom()))
+            routingTable.remove(msg.getFrom(), msg.getAgent());
+    }
+ 
 
     /**
      * Method to add new routers to the linked list, by altering the superAgents
@@ -184,12 +194,12 @@ public class Router extends Portal implements Runnable
     {
         if (lastRouter != null)
         {
-            this.setSuperAgent(lastRouter.getSuperAgent());
+            setSuperAgent(lastRouter.getSuperAgent());
 
             try
             {
-                lastRouter.put(new SysMessage(this.getName(), lastRouter.getName(),
-                        "setSuperAgent", this));
+                lastRouter.put(new SysMessage(getName(), lastRouter.getName(),
+                        SysType.SETSUPER, this));
             }
             catch (InterruptedException ex)
             {

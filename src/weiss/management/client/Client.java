@@ -28,6 +28,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import weiss.core.agent.Agent;
 import weiss.core.message.*;
+import weiss.management.AgentImpl;
 
 /**
  * A simple, standalone GUI client to hook into the client of the MetaAgents.
@@ -38,7 +39,7 @@ public final class Client
 {
 
     private JTextArea textArea;
-    private final Agent agent;
+    private final AgentImpl agent;
     private Thread thread;
 
     /**
@@ -46,7 +47,7 @@ public final class Client
      *
      * @param agent The agent the client is being assigned to.
      */
-    public Client(Agent agent)
+    public Client(AgentImpl agent)
     {
         this.agent = agent;
         this.createGUI(agent.getName());

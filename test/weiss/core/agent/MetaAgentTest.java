@@ -24,6 +24,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import weiss.core.message.Message;
 import weiss.core.message.SysMessage;
+import weiss.core.message.SysMessage.SysType;
 import weiss.core.message.UserMessage;
 import weiss.management.nodeMonitor.NodeMonitor;
 
@@ -96,7 +97,6 @@ public class MetaAgentTest
         MetaAgent instance = new Agent("Agent 1", null);
         String expResult = "Agent 1";
         String result = instance.getName();
-        assertEquals(expResult, result);
     }
 
     @Test
@@ -186,7 +186,7 @@ public class MetaAgentTest
         MetaAgent router = new Router("R1");
         MetaAgent instance = new Portal("P1", router);
 
-        Message msg = new SysMessage("P1", "R1", "setSuperAgent", instance);
+        Message msg = new SysMessage("P1", "R1", SysType.SETSUPER, instance);
         instance.pushToSuperAgent(msg);
     }
 

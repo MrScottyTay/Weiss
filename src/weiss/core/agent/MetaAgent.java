@@ -16,12 +16,14 @@
  */
 package weiss.core.agent;
 
+import java.util.ArrayList;
 import weiss.management.nodeMonitor.Monitorable;
 import weiss.management.nodeMonitor.NodeMonitor;
 import weiss.core.message.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import weiss.core.message.SysMessage.SysType;
 
 /**
  * An abstract class detailing the construction of a MetaAgent object, to be
@@ -32,14 +34,15 @@ import java.util.logging.Logger;
  * @author Scott Taylor, Teesside University Sch. of Computing
  * @author Adam Young, Teesside University Sch. of Computing
  */
-public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable, Monitorable
+public abstract class MetaAgent extends LinkedBlockingQueue<Message> implements Runnable, Monitorable
 {
 
-    private final String name;
+    protected String name;
     private NodeMonitor monitor;
     private MetaAgent superAgent;
     private final Thread thread;
-
+    
+    
     /**
      * Constructor to initialise a MetaAgetn object.
      *
@@ -50,8 +53,9 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     public MetaAgent(String name, MetaAgent superAgent)
     {
         super();
-        this.name = name;
-        this.setSuperAgent(superAgent);
+        
+        this.name = RegManagement.setName(name);
+        setSuperAgent(superAgent);
 
         thread = new Thread(this);
     }
@@ -63,7 +67,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         {
             try
             {
-                msgHandler((Message) take());
+                msgHandler(take());
             }
             catch (InterruptedException ex)
             {
@@ -93,6 +97,8 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     {
         return name;
     }
+    
+    
 
     /**
      * Getter for {@link weiss.core.agent.MetaAgent MetaAgent} superAgent
@@ -115,7 +121,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
         this.superAgent = superAgent;
         if (this.superAgent != null)
         {
-            pushToSuperAgent(new SysMessage(this.getName(), getSuperAgent().getName(), "reg", this));
+            pushToSuperAgent(new SysMessage(getName(), getSuperAgent().getName(), SysType.REGISTER, this));
         }
     }
 
@@ -132,7 +138,11 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     protected void msgHandler(Message msg)
     {
         updateNodeMonitor(msg);
-        userMsgHandler((UserMessage) msg);
+        if(msg instanceof UserMessage)
+        {
+            userMsgHandler((UserMessage) msg);
+        }
+            
     }
 
     /**
@@ -143,7 +153,6 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      * @param msg A UserMessage
      */
     abstract protected void userMsgHandler(UserMessage msg);   //EndUser creates a body for this method to make the agent do what it wants to do
-
     //--------------------------------------------------------------------------
     //CLASS SPECIFIC METHODS
     //-------------------------------------------------------------------------- 
@@ -152,7 +161,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      *
      * @param msg The message to be pushed.
      */
-    protected void pushToSuperAgent(Message msg)
+    public void pushToSuperAgent(Message msg)
     {
         if (msg != null)
         {
@@ -191,7 +200,7 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
     @Override
     public void removeNodeMonitor()
     {
-        this.monitor = null;
+        monitor = null;
     }
 
     @Override
@@ -207,9 +216,9 @@ public abstract class MetaAgent extends LinkedBlockingQueue implements Runnable,
      */
     protected void updateNodeMonitor(Message msg)
     {
-        if (this.monitor != null)
+        if (monitor != null)
         {
-            this.monitor.insertTableData(msg);
+            monitor.insertTableData(msg);
         }
     }
 }

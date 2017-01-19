@@ -32,7 +32,8 @@ import org.junit.runners.Suite;
         {
             weiss.projectTest.MsgScopingTest.class, weiss.projectTest.PortalMsgExchangeTest.class,
             weiss.projectTest.RouterExternalMsgExchangeTest.class,
-            weiss.projectTest.RouterInternalMsgExchangeTest.class
+            weiss.projectTest.RouterInternalMsgExchangeTest.class,
+            
         })
 public class ProjectTestSuite
 {
