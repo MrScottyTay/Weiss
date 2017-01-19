@@ -10,12 +10,16 @@
             <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/management/AgentImpl.java</file>
             <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/test/weiss/core/message/SysMessageTest.java</file>
             <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/test/weiss/core/agent/AgentTest.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/core/agent/Portal.java</file>
             <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/test/weiss/core/agent/RouterTest.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/core/message/UserMessage.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/management/client/Client.java</file>
             <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/test/weiss/management/client/ClientTest.java</file>
             <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/test/weiss/management/client/ManagableTest.java</file>
-            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/test/weiss/core/agent/MetaAgentTest.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/management/WeissManager.java</file>
             <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/test/weiss/core/message/MessageTest.java</file>
             <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/core/agent/MetaAgent.java</file>
+            <file>file:/C:/Users/Adam%20Young/Documents/GitHub/Weiss/src/weiss/core/agent/RegManagement.java</file>
         </group>
     </open-files>
 </project-private>
