@@ -50,7 +50,7 @@ public final class WeissManager extends JFrame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(buildPanel());
         this.setTitle("Weiss");
-        this.setSize(new Dimension(360, 500));
+        this.setSize(new Dimension(334, 500));
         this.setResizable(false);
         this.setLocationRelativeTo(null);
 
